@@ -1,6 +1,7 @@
 {
 	"scripts": {
-		"compile": "tsc ."
+		"build": "tsc",
+		"watch": "tsc -w"
 	},
 	"dependencies": {
 		"canvas": "^2.7.0"
