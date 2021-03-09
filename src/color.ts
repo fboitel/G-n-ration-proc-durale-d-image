@@ -9,20 +9,24 @@ function color(r: number, g: number, b: number, a: number = 255): Color {
 	);
 }
 
-function red(c: Color): number {
+export function red(c: Color): number {
 	return car(car(c));
 }
 
-function blue(c: Color): number {
+export function blue(c: Color): number {
 	return car(cdr(c));
 }
 
-function green(c: Color): number {
+export function green(c: Color): number {
 	return cdr(car(c));
 }
 
-function alpha(c: Color): number {
+export function alpha(c: Color): number {
 	return cdr(cdr(c));
+}
+
+export function colorToString(c: Color): string {
+	return `[ ${red(c)}, ${green(c)}, ${blue(c)} ]` 
 }
 
 export const WHITE        = color(255, 255, 255);
