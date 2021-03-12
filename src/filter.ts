@@ -1,8 +1,5 @@
 import { Image } from './image'
 import { BLACK, Color, GREEN, mixColor, WHITE } from './color';
-import { isEmpty, List, head, tail } from './list';
-import { cons } from './pointed-pair';
-import { nil } from './nil';
 
 
 type Filter<T extends any[]> = (image: Image, ...params: T) => Image;

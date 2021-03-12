@@ -1,4 +1,3 @@
-import { head, isEmpty, List, tail } from './list';
 import { Color } from './color';
 import { Context } from 'vm';
 import { NodeCanvasRenderingContext2DSettings } from 'canvas';
