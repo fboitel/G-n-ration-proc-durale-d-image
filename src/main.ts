@@ -1,22 +1,19 @@
-import { GREEN, WHITE } from "./color";
-import { displayImage, Image } from "./image";
-import { filters } from "./filter"
+import { createCanvas } from 'canvas';
+import { writeFileSync } from 'fs';
+import { WHITE } from './color';
+import { filters } from './filter';
+import { toRaster } from './image';
 
-import { createCanvas, createImageData } from 'canvas';
-const fs = require('fs');
+// TEST
 
-let w = 100;
-let h = 100;
+const src = (x: number, y:number) => WHITE
+const out = filters.darken(src)
 
-let images = (x: number, y:number) => WHITE;
+// OUTPUT
 
-//images = filters.damier(images);
-
-let canvas = createCanvas(w, h);
-let context = canvas.getContext('2d');
-
-displayImage(filters.darken(images), context);
-
-let buffer = canvas.toBuffer('image/png');
-fs.writeFileSync('test.png', buffer);
-
+const size = 500;
+const canvas = createCanvas(size, size);
+const context = canvas.getContext('2d');
+context.putImageData(toRaster(out, size), 0, 0);
+const buffer = canvas.toBuffer('image/png');
+writeFileSync('test.png', buffer);
