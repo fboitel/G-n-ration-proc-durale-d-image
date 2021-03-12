@@ -1,0 +1,16 @@
+Séance du 9/03 :
+
+- implémentation d'une couleur
+--> triple pair pointée
+
+- implémentation d'une image
+--> tableau de tableau
+
+- implémentation d'un filtre
+--> fonction qui prend une image et qui retourne une image
+
+
+Séance du 12/03 :
+
+- pas besoin de pair pointée pour les couleurs
+-->
