@@ -1,5 +1,7 @@
-import { BLACK, GREEN, RED } from "../color";
+import { BLACK, BLUE, GREEN, RED, WHITE } from "../color";
 import { Image } from "../image";
+
+const DELTA_DISPLAY = 0.01;
 
 export function voronoi(): Image {
     
@@ -7,21 +9,26 @@ export function voronoi(): Image {
     // find min of distances
     // return color d
 
-    let points = [ [2,3], [80,60]];
+    let nb_points = 4;
+
+    let points = generateRandomPoints(nb_points);
 
     function image(x: number, y:number) {
 
+        // TODO seed
+
         // add delta
-        if ( (x == 2 && y == 3) || (x == 80 && y == 60)) {
+        if ( isOnAPoint(x,y, points)) {
             return BLACK;
         }
 
-        let c = [GREEN, RED];
+        let c = [GREEN, RED, BLUE, WHITE];
 
         let min_distance = Math.sqrt( (x - points[0][0])**2 + (y - points[0][1])**2); 
         let min_id = 0;
 
-        for (let i = 0; i < 2; ++i) {
+        // for is legal ?
+        for (let i = 0; i < nb_points; ++i) {
             let distance = Math.sqrt( (x - points[i][0])**2 + (y - points[i][1])**2); 
             if ( distance < min_distance ) {
                 min_distance = distance;
@@ -34,3 +41,32 @@ export function voronoi(): Image {
 
     return image;
 }
+
+function isOnAPoint(x: number, y: number, p: number[][]): boolean {
+
+    for (let i = 0; i < p.length; ++i ) {
+        let distance = Math.sqrt( (x - p[i][0])**2 + (y - p[i][1])**2); 
+
+        if ( distance < DELTA_DISPLAY) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function generateRandomPoints(n: number): number[][] {
+    return (new Array(n)).fill(undefined).map(() => { return [Math.random()*2 - 1, Math.random()*2 - 1]},0);
+}
+
+function generateRandomColor(n: number) {
+    let colors = new Array(n);
+    colors.fill(0);
+
+    for (let i = 0; i < colors.length; ++i ) {
+        colors[i] = color()
+    }
+
+
+    return colors;
+}
+

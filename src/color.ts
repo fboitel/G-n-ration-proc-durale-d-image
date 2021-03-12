@@ -1,5 +1,9 @@
 export type Color = number[];
 
+export function color(r: number, g: number, b: number, a: number) {
+	return [r, g, b, a];
+}
+
 export const WHITE:       Color = [255, 255, 255, 255];
 export const BLACK:       Color = [  0,   0,   0, 255];
 export const RED:         Color = [255,   0,   0, 255];
