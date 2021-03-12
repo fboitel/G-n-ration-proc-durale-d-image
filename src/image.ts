@@ -1,31 +1,40 @@
 import { head, isEmpty, List, tail } from './list';
 import { Color } from './color';
 import { Context } from 'vm';
+import { NodeCanvasRenderingContext2DSettings } from 'canvas';
 
 export type Image = (x: number, y: number) => Color;
 export type Generator = () => Image;
 
-export function displayImage(image: Image, context: Context): void {
-	// TODO effet de bord on context
+export function displayImage(image: Image, context: any): void {
+	// TODO effet de bord on context + type context
 
-	function modifyColumn(column: List<Color>, x: number, y: number) {
-		if (!isEmpty(column)) {
-			var id = context.createImageData(1, 1); // only do this once per page
-			var d = id.data;                        // only do this once per page
-			d[0] = red(head(column));
-			d[1] = green(head(column));
-			d[2] = blue(head(column));;
-			d[3] = alpha(head(column));
+	function displayColumn(x: number, y: number) {
+		if (y <= 100) {
+			// ajoute un pixel au canvas
+			let id = context.createImageData(1, 1); // only do this once per page
+			let d = id.data;
+			let color = image(x, y);
+
 			context.putImageData(id, x, y);
-			modifyColumn(tail(column), x, y + 1);
+
+			// hide in function dupplicate color
+			d[0] = color[0]; // red
+			d[1] = color[1]; // green
+			d[2] = color[2]; // blue
+			d[3] = color[3]; // alpha
+
+			context.putImageData(id, x, y);
+
+			displayColumn(x, y + 1);
 		}
 	}
 
-	function modifyRow(image: Image, x: number)  {
-		if ( ! isEmpty(image)) {
-			modifyColumn(head(image), x, 0);
-			modifyRow(tail(image), x + 1);
+	function displayRow(x: number) {
+		if (x <= 100) {
+			displayColumn(x, 0);
+			displayRow(x + 1);
 		}
 	}
-	return modifyRow(image, 0);
+	return displayRow(0);
 }

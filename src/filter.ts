@@ -1,36 +1,31 @@
 import { Image } from './image'
-import { Color, GREEN } from './color';
+import { BLACK, Color, GREEN, mixColor, WHITE } from './color';
 import { isEmpty, List, head, tail } from './list';
 import { cons } from './pointed-pair';
 import { nil } from './nil';
 
+
 type Filter<T extends any[]> = (image: Image, ...params: T) => Image;
 
 export const filters = {
-    green
+    green,
+    zebra,
+    damier,
+    darken
 }
 
-function green(image1: Image): Image {
-    return modifyImage(image1, (color, x, y) => GREEN);
+function green(image: Image): Image {
+    return (x, y) => GREEN;
 }
 
-function modifyImage(image: Image, cb: (color: Color, x: number, y: number) => Color): Image {
-
-    function modifyColumn(column: List<Color>, x: number, y: number): List<Color> {
-        if (isEmpty(column)) {
-            return nil;
-        } else {
-            return cons(cb(head(column), x, y), modifyColumn(tail(column), x, y + 1));
-        }
-    }
-
-    function modifyRow(image: Image, x: number): Image {
-        if (isEmpty(image)) {
-            return nil;
-        } else {
-            return cons(modifyColumn(head(image), x, 0), modifyRow(tail(image), x + 1));
-        }
-    }
-    return modifyRow(image, 0);
+function zebra(image: Image): Image {
+  return (x,y) => (x + y)%10 < 5 ? BLACK : WHITE;
 }
 
+function damier(image: Image): Image {
+    return (x,y) => (x)%10 < 5 !== y%10 < 5 ? BLACK : WHITE;
+}
+
+function darken(image: Image) {
+    return (x,y) => mixColor( image(x,y), BLACK);
+}
