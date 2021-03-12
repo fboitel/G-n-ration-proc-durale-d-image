@@ -24,5 +24,5 @@ function damier(image: Image): Image {
 }
 
 function darken(image: Image) {
-    return (x,y) => mixColor( image(x,y), BLACK);
+    return (x: number, y: number) => mixColor( image(x,y), BLACK);
 }
