@@ -1,37 +1,8 @@
-import { car, cdr, cons, PointedPair } from './pointed-pair';
+export type Color = [number, number, number, number]
 
-export type Color = PointedPair<PointedPair<number, number>, PointedPair<number, number>>;
-
-function color(r: number, g: number, b: number, a: number = 255): Color {
-	return cons(
-		cons(r, g),
-		cons(b, a),
-	);
-}
-
-export function red(c: Color): number {
-	return car(car(c));
-}
-
-export function blue(c: Color): number {
-	return car(cdr(c));
-}
-
-export function green(c: Color): number {
-	return cdr(car(c));
-}
-
-export function alpha(c: Color): number {
-	return cdr(cdr(c));
-}
-
-export function colorToString(c: Color): string {
-	return `[ ${red(c)}, ${green(c)}, ${blue(c)} ]` 
-}
-
-export const WHITE        = color(255, 255, 255);
-export const BLACK        = color(  0,   0,   0);
-export const RED          = color(255,   0,   0);
-export const GREEN        = color(  0, 255,   0);
-export const BLUE         = color(  0,   0, 255);
-export const TRANSPARENT  = color(255, 255, 255, 0);
+export const WHITE        = [255, 255, 255, 255]
+export const BLACK        = [  0,   0,   0, 255]
+export const RED          = [255,   0,   0, 255]
+export const GREEN        = [  0, 255,   0, 255]
+export const BLUE         = [  0,   0, 255, 255]
+export const TRANSPARENT  = [255, 255, 255,   0]

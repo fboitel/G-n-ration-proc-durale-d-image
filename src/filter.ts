@@ -1,16 +1,13 @@
 import { Image } from './image'
 import { Color, GREEN } from './color';
-import { isEmpty, List, NonEmptyList, head, tail } from './list';
+import { isEmpty, List, head, tail } from './list';
 import { cons } from './pointed-pair';
 import { nil } from './nil';
 
 type Filter<T extends any[]> = (image: Image, ...params: T) => Image;
 
 export const filters = {
-
     green
-
-
 }
 
 function green(image1: Image): Image {
