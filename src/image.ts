@@ -11,6 +11,7 @@ export function toRaster(image: Image, size: number): ImageData {
 	for (let y = 0; y < size; y++) {
 		for (let x = 0; x < size; x++) {
 			const color = image(x / size * 2 - 1, y / size * 2 - 1)
+			//const color = image(x, y)
 			raster.data[n++] = color[0];
 			raster.data[n++] = color[1];
 			raster.data[n++] = color[2];
