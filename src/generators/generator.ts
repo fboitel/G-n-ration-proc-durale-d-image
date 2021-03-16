@@ -3,7 +3,7 @@ import { pavageCarréGen, pavageTriangleGen, pavageHexaGen } from './pavage.js';
 import {voronoi, radialDistance} from './distance';
 
 
-type Generator<T extends any[]> = (...params: T) => Image;
+type Generator<T extends any[]> = (width: number, height: number, ...params: T) => Image;
 
 export const generators = {
 

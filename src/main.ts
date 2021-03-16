@@ -5,7 +5,7 @@ import { whiteNoise } from './generators/noise'
 
 // TEST
 
-const img = whiteNoise()
+const img = whiteNoise(100, 100)
 
 // OUTPUT
 

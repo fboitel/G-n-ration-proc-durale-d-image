@@ -16,3 +16,19 @@ export function whiteNoise(width: number, height: number): Image {
 		function: randomColor,
 	};
 }
+
+export function limitedByFrequencyWhiteNoise(width: number, height: number): Image {
+	let cache: Color[] = []
+
+	return {
+		width,
+		height,
+		function: (x, y) => {
+			const index = width * Math.floor(y / 2) + Math.floor(x / 2);
+			if (x % 2 === 0 && y % 2 === 0) {
+				cache[index] = randomColor()
+			}
+			return cache[index]
+		}
+	};
+}
