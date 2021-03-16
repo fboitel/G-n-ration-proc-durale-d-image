@@ -7,8 +7,6 @@ export type Image = {
 	function: (x: number, y: number) => Color,
 };
 
-export type Generator = (width: number, height: number) => Image;
-
 export function toRaster(image: Image, size: number): ImageData {
 	const raster = createImageData(size, size);
 	let n = 0; // Index inside the image array
