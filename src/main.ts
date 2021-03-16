@@ -1,17 +1,18 @@
 import { createCanvas } from 'canvas';
 import { writeFileSync } from 'fs';
 import { toRaster } from './image';
-import { whiteNoise } from './generators/noise'
+import { limitedByFrequencyWhiteNoise, perlinNoise, whiteNoise } from './generators/noise'
 
 // TEST
 
-const img = whiteNoise(100, 100)
+const width = 1000;
+const height = 1000;
+const img = perlinNoise(width, height, 150)
 
 // OUTPUT
 
-const size = 2000;
-const canvas = createCanvas(size, size);
+const canvas = createCanvas(width, height);
 const context = canvas.getContext('2d');
-context.putImageData(toRaster(img, size), 0, 0);
+context.putImageData(toRaster(img), 0, 0);
 const buffer = canvas.toBuffer('image/png');
 writeFileSync('public/test.png', buffer);
