@@ -1,4 +1,4 @@
-import { Color, BLACK, BLUE, color, GREEN, RED, WHITE, percentageColor, mean } from "../color";
+import { Color, BLACK, BLUE, color, GREEN, RED, WHITE, mean, meanWeighted } from "../color";
 import { Image } from "../image";
 
 const DELTA_DISPLAY = 0.01;
@@ -76,7 +76,7 @@ function generateRandomColor(n: number, p: number[][]) {
 }
 
 export function radialDistance(color_start: Color, color_end: Color, center_x: number, center_y: number) {
-   
+
     // get maximum distance between all corners
     let max_distance = Math.sqrt((-1 - center_x) ** 2 + (-1 - center_y) ** 2);
     max_distance = Math.max(Math.sqrt((-1 - center_x) ** 2 + (1 - center_y) ** 2));
@@ -89,7 +89,7 @@ export function radialDistance(color_start: Color, color_end: Color, center_x: n
 
         let coefColor = distance / max_distance;
 
-        return mean(percentageColor(color_start, 1 - coefColor), percentageColor(color_end, coefColor))
+        return meanWeighted(color_start, 1 - coefColor, color_end, coefColor);
     }
 
     return image;

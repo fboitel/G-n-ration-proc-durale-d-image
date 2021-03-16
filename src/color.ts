@@ -22,15 +22,15 @@ export function mean(c1: Color, c2: Color): Color {
     return c1.map((c, i) => (c + c2[i]) / 2);
 }
 
-export function percentageColor(color: Color, percentage: number) {
+export function meanWeighted(c1: Color, p1: number, c2: Color, p2: number) {
 
 	function callback(c: number, i: number) {
 		if ( i < 3 ) {
-			return c * percentage;
+			return c * p1 + c2[i] * p2;
 		}
 		return c;
 	}
-	return color.map( callback);
+	return c1.map( callback);
 }
 
 export function plus(c1: Color, c2: Color): Color {
