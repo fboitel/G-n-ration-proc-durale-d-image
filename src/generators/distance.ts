@@ -3,16 +3,14 @@ import { Image } from "../image";
 
 const DELTA_DISPLAY = 0.01;
 
-export function voronoi(): Image {
+export function voronoi(nb_points: number): Image {
 
     // generate points
     // find min of distances
     // return color d
 
-    let nb_points = 4;
-
-    //    let points = generateRandomPoints(nb_points);
-    let points = [[-0.5, -0.5], [-0.5, 0.5], [0.5, -0.5], [0.5, 0.5]];
+    let points = generateRandomPoints(nb_points);
+    //  let points = [[-0.5, -0.5], [-0.5, 0.5], [0.5, -0.5], [0.5, 0.5]];
 
     function image(x: number, y: number) {
 
@@ -36,7 +34,6 @@ export function voronoi(): Image {
                 min_id = i;
             }
         }
-
         return c[min_id];
     }
 
@@ -71,12 +68,36 @@ function generateRandomColor(n: number, p: number[][]) {
 */
         let r = 127 + 127 * p[i][0];
         let g = 127 - 127 * p[i][0];
-        let b = 0;//255 * (p[i][0] - p[i][1])/2;
+        let b = 255 * p[i][1]
 
         colors[i] = color(r, g, b, 255);
-
     }
-
     return colors;
 }
 
+export function radialDistance() {
+   
+    let center_x = 0;
+    let center_y = 0;
+
+    // get maximum distance between all corners
+    let max_distance = Math.sqrt((-1 - center_x) ** 2 + (-1 - center_y) ** 2);
+    max_distance = Math.max(Math.sqrt((-1 - center_x) ** 2 + (1 - center_y) ** 2));
+    max_distance = Math.max(Math.sqrt((1 - center_x) ** 2 + (-1 - center_y) ** 2));
+    max_distance = Math.max(Math.sqrt((1 - center_x) ** 2 + (1 - center_y) ** 2));
+
+    function image(x: number, y: number) {
+
+        let distance = Math.sqrt((x - center_x) ** 2 + (y - center_y) ** 2);
+
+        let coef_color = distance / max_distance;
+
+        let r = 255 * coef_color;
+        let g = 255 * coef_color;
+        let b = 255 * coef_color;
+
+        return color(r, g, b, 255);
+    }
+
+    return image;
+}
