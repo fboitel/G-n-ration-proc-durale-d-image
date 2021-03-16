@@ -1,4 +1,4 @@
-import { Color } from './color';
+import { Color } from './color.js';
 import { createImageData, ImageData } from 'canvas';
 
 export type Image = {
@@ -7,6 +7,13 @@ export type Image = {
 	function: (x: number, y: number) => Color,
 };
 
+export function consImage(w: number, h: number, f: (x: number, y: number) => Color) {
+    return {
+        width: w,
+        height: h,
+        function: f
+    }
+}
 
 export function toRaster(image: Image): ImageData {
 	const raster = createImageData(image.width, image.height);
