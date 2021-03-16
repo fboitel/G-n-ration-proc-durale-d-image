@@ -8,8 +8,8 @@ export function toRaster(image: Image, size: number): ImageData {
 	const raster = createImageData(size, size);
 	let n = 0; // Index inside the image array
 
-	for (let y = 0; y < size; y++) {
-		for (let x = 0; x < size; x++) {
+	for (let y = size - 1; y >= 0; --y) {
+		for (let x = 0; x < size; ++x) {
 			const color = image(x / size * 2 - 1, y / size * 2 - 1)
 			raster.data[n++] = color[0];
 			raster.data[n++] = color[1];

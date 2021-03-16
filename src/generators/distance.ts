@@ -58,15 +58,4 @@ function generateRandomPoints(n: number): number[][] {
     return (new Array(n)).fill(undefined).map(() => { return [Math.random()*2 - 1, Math.random()*2 - 1]},0);
 }
 
-function generateRandomColor(n: number) {
-    let colors = new Array(n);
-    colors.fill(0);
-
-    for (let i = 0; i < colors.length; ++i ) {
-        colors[i] = color()
-    }
-
-
-    return colors;
-}
 
