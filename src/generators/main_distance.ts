@@ -12,8 +12,9 @@ import { BLACK, color, GREEN, WHITE} from '../color';
 //const out = filters.darken(src)
 
 //const out = generators.voronoi(200, 200, 10);
+const out = generators.signedDistance(2000, 2000, WHITE, BLACK, 100, 100, true);
 
-const out = {width: 100, height: 100, function: (x: number, y: number) => GREEN};
+
 // OUTPUT
 
 const canvas = createCanvas(out.width, out.height);
