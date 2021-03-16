@@ -1,5 +1,5 @@
 import { Image } from './image.js';
-import { BLACK, WHITE, RED, GREEN, BLUE, mean } from './color.js';
+import { BLACK, WHITE, RED, GREEN, BLUE, mean, Color } from './color.js';
 
 type Filter<T extends any[]> = (image: Image, ...params: T) => Image;
 
@@ -10,20 +10,29 @@ export const filters = {
     darken
 };
 
+function applyFunction(image: Image, func: (color: Color) => Color): Image {
+    return {
+        ...image,
+        function: (x, y) => {
+            return func(image.function(x, y))
+        }
+    };
+}
+
 function red(image: Image): Image {
-    return (x, y) => mean(image(x, y), RED);
+    return applyFunction(image, color => mean(color, RED))
 }
 
 function green(image: Image): Image {
-    return (x, y) => mean(image(x, y), GREEN);
+    return applyFunction(image, color => mean(color, GREEN))
 }
 
 function blue(image: Image): Image {
-    return (x, y) => mean(image(x, y), BLUE);
+    return applyFunction(image, color => mean(color, BLUE))
 }
 
 function darken(image: Image): Image {
-    return (x, y) => mean(image(x, y), BLACK);
+    return applyFunction(image, color => mean(color, BLACK))
 }
 
 
