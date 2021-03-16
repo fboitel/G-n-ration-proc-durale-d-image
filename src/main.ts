@@ -9,7 +9,7 @@ const img = whiteNoise()
 
 // OUTPUT
 
-const size = 500;
+const size = 2000;
 const canvas = createCanvas(size, size);
 const context = canvas.getContext('2d');
 context.putImageData(toRaster(img, size), 0, 0);

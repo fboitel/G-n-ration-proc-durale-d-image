@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Génération procédurale</title>
+    <link href="web/style.css" type="text/css" rel="stylesheet">
+    <script type="module" src="build/app.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Génération procédurale d'images</h1>
+    </header>
+    <div class="container">
+        <div class="block">
+
+            <div class="title">Générateurs</div>
+            <div class="category">
+                <h3>Monochromes</h3>
+                <button id="red">Rouge</button>
+                <button id="green">Vert</button>
+                <button id="blue">Bleu</button>
+            </div>
+            <div class="category">
+                <h3>Pavages</h3>
+                <button id="pavageTriang">Triangulaire</button>
+                <button id="pavageCarre">Carré</button>
+                <button id="pavageHexa">Hexagonal</button>
+            </div>
+        </div>
+
+        <div class="block">
+            <div class="title">Filtres</div>
+            <div class="category">
+                <h3>Colorimétrie</h3>
+                <button id="filter-red">Rouge</button>
+                <button id="filter-green">Vert</button>
+                <button id="filter-blue">Bleu</button>
+                <button id="filter-darken">Sombre</button>
+            </div>
+            <div class="category">
+                <h3>Composition</h3>
+            </div>
+            <div class="category">
+                <h3>Convolution</h3>
+            </div>
+        </div>
+        <div class="block">
+            <div class="title">Résultat</div>
+            <div class="output">
+                <canvas id="output" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
