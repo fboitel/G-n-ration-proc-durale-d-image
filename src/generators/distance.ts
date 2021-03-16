@@ -3,13 +3,13 @@ import { Image } from "../image";
 
 const DELTA_DISPLAY = 0.01;
 
-export function voronoi(nb_points: number): Image {
+export function voronoi(width: number, height: number, nb_points: number): Image {
 
     // generate points
     // find min of distances
     // return color d
 
-    let points = generateRandomPoints(nb_points);
+    let points = generateRandomPoints(width, height, nb_points);
     //  let points = [[-0.5, -0.5], [-0.5, 0.5], [0.5, -0.5], [0.5, 0.5]];
 
     function image(x: number, y: number) {
@@ -37,7 +37,7 @@ export function voronoi(nb_points: number): Image {
         return c[min_id];
     }
 
-    return image;
+    return {width, height, function: image};
 }
 
 function isOnAPoint(x: number, y: number, p: number[][]): boolean {
@@ -52,8 +52,8 @@ function isOnAPoint(x: number, y: number, p: number[][]): boolean {
     return false;
 }
 
-function generateRandomPoints(n: number): number[][] {
-    return (new Array(n)).fill(undefined).map(() => { return [Math.random() * 2 - 1, Math.random() * 2 - 1] }, 0);
+function generateRandomPoints(w: number, h: number, n: number): number[][] {
+    return (new Array(n)).fill(undefined).map(() => { return [Math.random() * w, Math.random() * h] }, 0);
 }
 
 function generateRandomColor(n: number, p: number[][]) {
