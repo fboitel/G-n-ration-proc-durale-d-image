@@ -1,6 +1,6 @@
 import { Image } from '../image';
 import { rand } from '../random';
-import { Color, color } from '../color';
+import { BLACK, Color, color, mean } from '../color';
 
 function randomColor(): Color {
 	function randomChannel(): number {
@@ -102,5 +102,22 @@ export function perlinNoise(width: number, height: number, gridSize: number): Im
 		width,
 		height,
 		function: perlin,
+	}
+}
+
+export function fractalNoise(width: number, height: number, steps: number): Image {
+	const size = (width + height) / 2;
+	const layers: Image[] = (new Array(steps))
+		.fill(undefined)
+		.map((_, step) => perlinNoise(width, height, size / 10 / (steps - step)))
+
+	return {
+		width,
+		height,
+		function: (x, y) => {
+			return layers
+				.map(img => img.function(x, y))
+				.reduce(mean)
+		}
 	}
 }

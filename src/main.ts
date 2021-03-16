@@ -1,13 +1,13 @@
 import { createCanvas } from 'canvas';
 import { writeFileSync } from 'fs';
 import { toRaster } from './image';
-import { limitedByFrequencyWhiteNoise, perlinNoise, whiteNoise } from './generators/noise'
+import { fractalNoise, limitedByFrequencyWhiteNoise, perlinNoise, whiteNoise } from './generators/noise'
 
 // TEST
 
 const width = 1000;
 const height = 1000;
-const img = perlinNoise(width, height, 150)
+const img = fractalNoise(width, height, 2)
 
 // OUTPUT
 
