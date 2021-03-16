@@ -51,4 +51,7 @@ document.getElementById('pavageCarre').onclick = _ => update(generators.pavageCa
 document.getElementById('pavageHexa').onclick = _ => update(generators.pavageHexaGen(200, RED, BLUE, GREEN));
 
 // Filters
+document.getElementById('filter-red').onclick = _ => update(filters.red(actualImage));
+document.getElementById('filter-green').onclick = _ => update(filters.green(actualImage));
+document.getElementById('filter-blue').onclick = _ => update(filters.blue(actualImage));
 document.getElementById('filter-darken').onclick = _ => update(filters.darken(actualImage));

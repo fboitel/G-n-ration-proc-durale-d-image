@@ -1,5 +1,5 @@
-import { Image } from '../image';
-import { pavageCarréGen, pavageTriangleGen, pavageHexaGen } from './pavage';
+import { Image } from '../image.js';
+import { pavageCarréGen, pavageTriangleGen, pavageHexaGen } from './pavage.js';
 
 
 type Generator<T extends any[]> = (...params: T) => Image;
