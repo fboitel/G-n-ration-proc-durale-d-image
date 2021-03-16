@@ -1,15 +1,15 @@
-import { Color, BLACK, BLUE, color, GREEN, RED, WHITE, percentageColor, mean } from "../color";
+import { Color, BLACK, BLUE, color, GREEN, RED, WHITE, mean, meanWeighted } from "../color";
 import { Image } from "../image";
 
 const DELTA_DISPLAY = 0.01;
 
-export function voronoi(nb_points: number): Image {
+export function voronoi(width: number, height: number, nb_points: number): Image {
 
     // generate points
     // find min of distances
     // return color d
 
-    let points = generateRandomPoints(nb_points);
+    let points = generateRandomPoints(width, height, nb_points);
     //  let points = [[-0.5, -0.5], [-0.5, 0.5], [0.5, -0.5], [0.5, 0.5]];
 
     function image(x: number, y: number) {
@@ -37,7 +37,7 @@ export function voronoi(nb_points: number): Image {
         return c[min_id];
     }
 
-    return image;
+    return {width, height, function: image};
 }
 
 function isOnAPoint(x: number, y: number, p: number[][]): boolean {
@@ -52,8 +52,8 @@ function isOnAPoint(x: number, y: number, p: number[][]): boolean {
     return false;
 }
 
-function generateRandomPoints(n: number): number[][] {
-    return (new Array(n)).fill(undefined).map(() => { return [Math.random() * 2 - 1, Math.random() * 2 - 1] }, 0);
+function generateRandomPoints(w: number, h: number, n: number): number[][] {
+    return (new Array(n)).fill(undefined).map(() => { return [Math.random() * w, Math.random() * h] }, 0);
 }
 
 function generateRandomColor(n: number, p: number[][]) {
@@ -76,7 +76,7 @@ function generateRandomColor(n: number, p: number[][]) {
 }
 
 export function radialDistance(color_start: Color, color_end: Color, center_x: number, center_y: number) {
-   
+
     // get maximum distance between all corners
     let max_distance = Math.sqrt((-1 - center_x) ** 2 + (-1 - center_y) ** 2);
     max_distance = Math.max(Math.sqrt((-1 - center_x) ** 2 + (1 - center_y) ** 2));
@@ -89,7 +89,7 @@ export function radialDistance(color_start: Color, color_end: Color, center_x: n
 
         let coefColor = distance / max_distance;
 
-        return mean(percentageColor(color_start, 1 - coefColor), percentageColor(color_end, coefColor))
+        return meanWeighted(color_start, 1 - coefColor, color_end, coefColor);
     }
 
     return image;
