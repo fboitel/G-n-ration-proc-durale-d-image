@@ -7,7 +7,7 @@ import { limitedByFrequencyWhiteNoise, whiteNoise } from './generators/noise'
 
 const width = 500;
 const height = 500;
-const img = limitedByFrequencyWhiteNoise(width, height)
+const img = limitedByFrequencyWhiteNoise(width, height, 20)
 
 // OUTPUT
 
