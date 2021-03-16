@@ -1,6 +1,6 @@
 export type Color = number[];
 
-export function color(r: number, g: number, b: number, a: number): Color {
+export function color(r: number, g: number, b: number, a: number = 255): Color {
     return [r, g, b, a];
 }
 
