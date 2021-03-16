@@ -14,3 +14,15 @@ export const TRANSPARENT: Color = [255, 255, 255,   0];
 export function mean(c1: Color, c2: Color): Color {
 	return c1.map((c, i) => (c + c2[i]) / 2);
 }
+
+export function percentageColor(color: Color, percentage: number) {
+
+	function callback(c: number, i: number) {
+		if ( i < 3 ) {
+			return c * percentage;
+		}
+		return c;
+	}
+
+	return color.map( callback);
+}

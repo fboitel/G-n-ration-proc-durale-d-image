@@ -1,4 +1,4 @@
-import { BLACK, BLUE, color, GREEN, RED, WHITE } from "../color";
+import { Color, BLACK, BLUE, color, GREEN, RED, WHITE, percentageColor, mean } from "../color";
 import { Image } from "../image";
 
 const DELTA_DISPLAY = 0.01;
@@ -14,7 +14,7 @@ export function voronoi(nb_points: number): Image {
 
     function image(x: number, y: number) {
 
-        // TODO seed
+        // TODO use map insted of for
 
         // add delta
         if (isOnAPoint(x, y, points)) {
@@ -75,11 +75,8 @@ function generateRandomColor(n: number, p: number[][]) {
     return colors;
 }
 
-export function radialDistance() {
+export function radialDistance(color_start: Color, color_end: Color, center_x: number, center_y: number) {
    
-    let center_x = 0;
-    let center_y = 0;
-
     // get maximum distance between all corners
     let max_distance = Math.sqrt((-1 - center_x) ** 2 + (-1 - center_y) ** 2);
     max_distance = Math.max(Math.sqrt((-1 - center_x) ** 2 + (1 - center_y) ** 2));
@@ -90,13 +87,9 @@ export function radialDistance() {
 
         let distance = Math.sqrt((x - center_x) ** 2 + (y - center_y) ** 2);
 
-        let coef_color = distance / max_distance;
+        let coefColor = distance / max_distance;
 
-        let r = 255 * coef_color;
-        let g = 255 * coef_color;
-        let b = 255 * coef_color;
-
-        return color(r, g, b, 255);
+        return mean(percentageColor(color_start, 1 - coefColor), percentageColor(color_end, coefColor))
     }
 
     return image;

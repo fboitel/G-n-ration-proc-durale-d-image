@@ -4,14 +4,14 @@ import { filters } from '../filter';
 import { toRaster } from '../image';
 import { voronoi } from '../generators/distance'
 import { generators } from '../generators/generator'
-import { color} from '../color';
+import { BLACK, color, WHITE} from '../color';
 
 // TEST
 
 //const src = voronoi()
 //const out = filters.darken(src)
 
-const out = generators.radialDistance();
+const out = generators.radialDistance(WHITE, BLACK, -1,-1);
 
 // OUTPUT
 
