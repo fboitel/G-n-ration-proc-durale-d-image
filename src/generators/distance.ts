@@ -4,7 +4,7 @@ import { Image } from "../image";
 const DELTA_DISPLAY = 0;
 
 export function voronoi(width: number, height: number, nb_points: number): Image {
-    
+
     let points = generateRandomPoints(width, height, nb_points);
 
     function image(x: number, y: number) {
@@ -66,7 +66,7 @@ function generateRandomColor(n: number, p: number[][], w: number, h: number) {
     return colors;
 }
 
-export function radialDistance(width: number, height: number, color_start: Color, color_end: Color, center_x: number, center_y: number, inscribed: boolean) {
+export function radialDistance(width: number, height: number, colorStart: Color, colorEnd: Color, center_x: number, center_y: number, inscribed: boolean) {
 
     let max_distance = 0;
 
@@ -87,12 +87,64 @@ export function radialDistance(width: number, height: number, color_start: Color
         let distance = Math.sqrt((x - center_x) ** 2 + (y - center_y) ** 2);
 
         if (inscribed && distance > max_distance) {
-            return color_end;
+            return colorEnd;
         }
 
         let coefColor = distance / max_distance;
 
-        return meanWeighted(color_start, 1 - coefColor, color_end, coefColor);
+        return meanWeighted(colorStart, 1 - coefColor, colorEnd, coefColor);
+    }
+
+    return { width, height, function: image };
+}
+
+export function signedDistance(width: number, height: number, colorStart: Color,  colorEnd: Color, center_x: number, center_y: number, inscribed: boolean) {
+
+    // care about max_distance
+    let size_x = 200;
+    let size_y = 100;
+
+    let max_distance = 0;
+
+    if (inscribed) {
+        // get maximum distance between all side
+        max_distance = Math.max(center_x, width - center_x);
+        max_distance = Math.max(max_distance, center_y);
+        max_distance = Math.max(max_distance, height - center_y);
+    } else {
+        // get maximum distance between all corners
+        max_distance = Math.sqrt((0 - center_x) ** 2 + (0 - center_y) ** 2), Math.sqrt((0 - center_x) ** 2 + (height - center_y) ** 2);
+        max_distance = Math.max(max_distance, Math.sqrt((width - center_x) ** 2 + (0 - center_y) ** 2));
+        max_distance = Math.max(max_distance, Math.sqrt((width - center_x) ** 2 + (height - center_y) ** 2));
+    }
+
+    function image(x: number, y: number) {
+
+        // symétrie par rapport au centre de la figure
+        if (x < center_x) {
+            x = center_x - x;
+        } else {
+            x = x - center_x;
+        }
+        
+        if (y < center_y) {
+            y = center_y - y;
+        } else {
+            y = y - center_y;
+        }
+
+        // TODO : call special function depending on params (triangle, rectangle ...)
+        let distance = Math.sqrt(Math.max(x - size_x, 0) ** 2 + Math.max(y - size_y, 0) ** 2);
+
+        if (distance <= 0) {
+            return colorStart;
+        } /*else {
+            return BLACK;
+        }*/
+
+        let coefColor = distance / max_distance;
+
+        return meanWeighted(colorStart, 1 - coefColor, colorEnd, coefColor);
     }
 
     return { width, height, function: image };

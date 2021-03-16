@@ -12,7 +12,7 @@ import { BLACK, color, GREEN, WHITE} from '../color';
 //const out = filters.darken(src)
 
 //const out = generators.voronoi(200, 200, 10);
-const out = generators.radialDistance(2000, 2000, WHITE, BLACK, 1000, 1000, true);
+const out = generators.signedDistance(2000, 2000, WHITE, BLACK, 100, 100, true);
 
 
 // OUTPUT
