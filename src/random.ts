@@ -1,7 +1,7 @@
 // Random implementation inspired from here:
 // https://stackoverflow.com/a/47593316/9515617
 
-// nothing-up-my-sleeve number
+// nothing-up-my-sleeve numbers
 // https://en.wikipedia.org/wiki/Nothing-up-my-sleeve_number
 let a = 0x9E3779B9;
 let b = 0x243F6A88;

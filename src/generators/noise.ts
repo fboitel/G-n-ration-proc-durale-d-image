@@ -9,6 +9,10 @@ function randomColor(): Color {
 	return color(randomChannel(), randomChannel(), randomChannel(), 255);
 }
 
-export function whiteNoise(): Image {
-	return randomColor;
+export function whiteNoise(width: number, height: number): Image {
+	return {
+		width,
+		height,
+		function: randomColor,
+	};
 }
