@@ -19,7 +19,7 @@ export function contour(image : (x : number, y : number) => Color) : (x : number
     return contourAux;
 }
 
-
+//pavages réguliers
 export function pavageCarréGen(width : number, height : number, nbOfPatterns: number, color1: Color, color2: Color): Image {
     function pavageInt(x: number, y: number): Color {
         let scale = width/nbOfPatterns;
@@ -108,6 +108,70 @@ export function pavageHexaGen(width : number, height : number, nbOfPatterns: num
                 else
                     return color2;
             }
+        }
+    }
+    return {width, height, function : contour(pavageInt)};
+}
+
+//pavages semi-réguliers
+export function pavageCarréAdouciGen(width : number, height : number, nbOfPatterns : number, color1 : Color, color2 : Color, color3 : Color) : Image {
+    function pavageInt(x : number, y : number) : Color {
+        let size = width/nbOfPatterns;
+        let sinPis3 = Math.sin(Math.PI/3);
+        let cosPis3 = Math.cos(Math.PI/3);
+        let cosPis6 = Math.cos(Math.PI/6);
+        x = x%((2*sinPis3 + 1)*size);
+        y = y%((2*sinPis3 + 1)*size);
+        if (x < (sinPis3 + 0.5)*size){
+            if (y < (sinPis3 + 0.5)*size){
+                if (y > 2*sinPis3*x + 0.5*size)
+                    return color1;
+                if (y < -1/(2*sinPis3)*x + 0.5*size)
+                    return color1;
+                if (y > -1/(2*sinPis3)*x + (0.5 + 1/cosPis6)*size)
+                    return color2;
+                if (y < 2*sinPis3*x - (1/cosPis3 - 0.5)*size)
+                    return color2;
+                return color3;
+            }
+            else {
+                y = (2*sinPis3 + 1)*size - y;
+                if (y > 2*sinPis3*x + 0.5*size)
+                    return color2;
+                if (y < -1/(2*sinPis3)*x + 0.5*size)
+                    return color1;
+                if (y > -1/(2*sinPis3)*x + (0.5 + 1/cosPis6)*size)
+                    return color2;
+                if (y < 2*sinPis3*x - (1/cosPis3 - 0.5)*size)
+                    return color1;
+                return color3;
+            }            
+        }
+        else {
+            x = (2*sinPis3 + 1)*size - x;
+            if (y < (sinPis3 + 0.5)*size){
+                if (y > 2*sinPis3*x + 0.5*size)
+                    return color1;
+                if (y < -1/(2*sinPis3)*x + 0.5*size)
+                    return color2;
+                if (y > -1/(2*sinPis3)*x + (0.5 + 1/cosPis6)*size)
+                    return color1;
+                if (y < 2*sinPis3*x - (1/cosPis3 - 0.5)*size)
+                    return color2;
+                return color3;
+            }
+            else {
+                y = (2*sinPis3 + 1)*size - y;
+                if (y > 2*sinPis3*x + 0.5*size)
+                    return color2;
+                if (y < -1/(2*sinPis3)*x + 0.5*size)
+                    return color2;
+                if (y > -1/(2*sinPis3)*x + (0.5 + 1/cosPis6)*size)
+                    return color1;
+                if (y < 2*sinPis3*x - (1/cosPis3 - 0.5)*size)
+                    return color1;
+                return color3;
+            }            
         }
     }
     return {width, height, function : contour(pavageInt)};
