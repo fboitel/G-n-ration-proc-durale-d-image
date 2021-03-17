@@ -53,6 +53,11 @@ export function blueify(c: Color): Color {
     return color(0, 0, getBlue(c), getAlpha(c));
 }
 
+// Get the negative of a color
+export function negate(c: Color): Color {
+    return color(255 - getRed(c), 255 - getGreen(c), 255 - getRed(c), getAlpha(c));
+}
+
 export function opacite(c: Color): Color {
     c[c.length - 1] = 255;
     return c;
