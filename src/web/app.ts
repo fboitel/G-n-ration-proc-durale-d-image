@@ -1,7 +1,7 @@
-import { RED, GREEN, BLUE, WHITE } from './color.js';
-import { Image } from './image.js';
-import { filters } from './filter.js';
-import { generators } from './generators/generator.js';
+import { RED, GREEN, BLUE, WHITE } from '../common/color.js';
+import { Image } from '../common/image.js';
+import { filters } from '../common/filter.js';
+import { generators } from '../common/generators/generator.js';
 
 // Monochromatic images
 let whiteImage = (x: number, y: number) => WHITE;

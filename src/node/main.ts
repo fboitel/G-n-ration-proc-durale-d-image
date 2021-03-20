@@ -1,7 +1,7 @@
 import { createCanvas } from 'canvas';
 import { writeFileSync } from 'fs';
-import { toRaster } from './image';
-import { fractalNoise, limitedByFrequencyWhiteNoise, perlinNoise, whiteNoise } from './generators/noise'
+import { toRaster } from '../common/image';
+import { fractalNoise, limitedByFrequencyWhiteNoise, perlinNoise, whiteNoise } from '../common/generators/noise'
 
 // TEST
 

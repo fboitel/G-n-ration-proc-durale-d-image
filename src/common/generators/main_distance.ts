@@ -2,8 +2,8 @@ import { createCanvas } from 'canvas';
 import { writeFileSync } from 'fs';
 import { filters } from '../filter';
 import { toRaster } from '../image';
-import { voronoi } from '../generators/distance'
-import { generators } from '../generators/generator'
+import { voronoi } from './distance'
+import { generators } from './generator'
 import { BLACK, color, GREEN, WHITE} from '../color';
 
 // TEST
