@@ -48,9 +48,9 @@
 
 | nom         | raison                                                                  |
 | :---------- | :---------------------------------------------------------------------- |
-| @babel/core | dépendance paire de parcel                                              |
-| @types/node | définition de types permettant de développer pour Node.js en typescript |
+| @babel/core | dépendance paire de Parcel                                              |
+| @types/node | définition de types permettant de développer pour Node.js en TypeScript |
 | canvas      | implémentation de l'API canvas avec Node.js                             |
 | parcel      | bundler permettant de générer une version Web et Node.js                |
-| postcss     | dépendance paire de parcel                                              |
+| postcss     | dépendance paire de Parcel                                              |
 | typescript  | transpileur permettant de compiler le code source                       |
