@@ -5,6 +5,12 @@
 
 ## Scripts
 
+### Installation
+
+`npm install`
+
+* installation des dépendances
+
 ### Développement
 
 `npm run dev-web`
