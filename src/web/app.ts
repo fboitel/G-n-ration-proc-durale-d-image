@@ -1,5 +1,5 @@
 import { RED, GREEN, BLUE, WHITE } from '../common/color';
-import { Image } from '../common/image';
+import { Image, toRaster } from '../common/image';
 import { filters } from '../common/filter';
 import { generators } from '../common/generators/generator';
 
@@ -11,30 +11,15 @@ const blueImage = (x: number, y: number) => BLUE;
 
 let actualImage = whiteImage; // Default image is white
 
-function toRasterWeb(image: Image, size: [number, number], context: CanvasRenderingContext2D): ImageData {
-    const [ w, h ] = size;
-	const raster = context.createImageData(w, h);
-	let n = 0; // Index inside the image array
-
-	for (let y = 0; y < h; y++) {
-		for (let x = 0; x < w; x++) {
-			const color = image(x / w * 2 - 1, y / h * 2 - 1);
-			raster.data[n++] = color[0];
-			raster.data[n++] = color[1];
-			raster.data[n++] = color[2];
-			raster.data[n++] = color[3];
-		}
-	}
-	return raster;
-}
-
 // Put image in canvas
 function display(image: Image) {
-    let canvas = document.getElementById('output') as HTMLCanvasElement;
-    let [w, h] = [canvas.width, canvas.height];
-    let context = canvas.getContext('2d');
-    context.putImageData(toRasterWeb(image, [400, 400], context), 0, 0);
-};
+    const canvas = document.getElementById('output') as HTMLCanvasElement;
+    canvas.width = image.width
+    canvas.height = image.height
+    const context = canvas.getContext('2d');
+    const imageData = toRaster(image, context.createImageData)
+    context.putImageData(imageData, 0, 0);
+}
 
 // Update the actual image
 function update(image: Image) {

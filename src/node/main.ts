@@ -1,4 +1,4 @@
-import { createCanvas } from 'canvas';
+import { createCanvas, createImageData } from 'canvas';
 import { writeFileSync } from 'fs';
 import { toRaster } from '../common/image';
 import { fractalNoise, limitedByFrequencyWhiteNoise, perlinNoise, whiteNoise } from '../common/generators/noise'
@@ -7,12 +7,12 @@ import { fractalNoise, limitedByFrequencyWhiteNoise, perlinNoise, whiteNoise } f
 
 const width = 1000;
 const height = 1000;
-const img = fractalNoise(width, height, 2)
+const img = fractalNoise(width, height, 2);
 
 // OUTPUT
 
 const canvas = createCanvas(width, height);
 const context = canvas.getContext('2d');
-context.putImageData(toRaster(img), 0, 0);
+context.putImageData(toRaster(img, createImageData), 0, 0);
 const buffer = canvas.toBuffer('image/png');
 writeFileSync('public/test.png', buffer);
