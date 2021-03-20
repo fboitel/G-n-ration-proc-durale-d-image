@@ -1,0 +1,12 @@
+{
+	"targets": {
+		"node-target": {
+			"source":  "main.ts",
+			"distDir": "../../build/",
+			"context": "node",
+			"engines": {
+				"node": ">=14.x"
+			}
+		}
+	}
+}

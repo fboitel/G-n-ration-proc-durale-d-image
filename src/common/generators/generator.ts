@@ -1,5 +1,5 @@
-import { Image } from '../image.js';
-import { pavageCarréGen, pavageTriangleGen, pavageHexaGen } from './pavage.js';
+import { Image } from '../image';
+import { pavageCarréGen, pavageTriangleGen, pavageHexaGen } from './pavage';
 import {voronoi, radialDistance, signedDistance} from './distance';
 
 

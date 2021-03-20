@@ -1,5 +1,5 @@
-import { Image, consImage } from './image.js';
-import { Color, BLACK, WHITE, RED, GREEN, BLUE, mean, plus, minus, multiply, divide, redify, greenify, blueify, negate } from './color.js';
+import { Image, consImage } from './image';
+import { Color, BLACK, WHITE, RED, GREEN, BLUE, mean, plus, minus, multiply, divide, redify, greenify, blueify, negate } from './color';
 
 type Filter<T extends any[]> = (image: Image, ...params: T) => Image;
 

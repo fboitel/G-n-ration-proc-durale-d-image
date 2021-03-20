@@ -1,6 +1,5 @@
-import { Image } from '../image.js';
-import { WHITE, BLACK, RED, GREEN, BLUE, Color } from '../color.js';
-import { ESTALE } from 'node:constants';
+import { Image } from '../image';
+import { WHITE, BLACK, RED, GREEN, BLUE, Color } from '../color';
 
 
 export function contour(image : (x : number, y : number) => Color) : (x : number, y : number) => Color {
