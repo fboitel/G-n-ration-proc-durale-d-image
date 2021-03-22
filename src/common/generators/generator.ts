@@ -1,5 +1,5 @@
 import { Image } from '../image';
-import { pavageCarréGen, pavageTriangleGen, pavageHexaGen } from './pavage';
+import { pavageCarréGen, pavageTriangleGen, pavageHexaGen } from './tiling';
 import {voronoi, radialDistance, signedDistance} from './distance';
 
 
