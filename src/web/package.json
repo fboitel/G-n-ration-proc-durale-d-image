@@ -1,0 +1,12 @@
+{
+	"targets": {
+		"web-target": {
+			"source": "index.html",
+			"distDir": "../../build",
+			"context": "browser",
+			"engines": {
+				"browserslist": "last 2 versions"
+			}
+		}
+	}
+}

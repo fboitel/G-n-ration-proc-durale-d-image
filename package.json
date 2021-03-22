@@ -1,15 +1,19 @@
 {
 	"scripts": {
-		"build": "tsc",
-		"watch": "tsc -w",
-        "build-web": "tsc --module ES6",
-        "watch-web": "tsc --module ES6 -w"
+		"dev-web": "parcel serve src/web",
+		"dev-node": "parcel watch --no-hmr src/node",
+		"build-web": "if [ -d build/web ]; then rm -rf build/web; fi && parcel build src/web",
+		"build-node": "if [ -d build/node ]; then rm -rf build/node; fi && parcel build src/node",
+		"run-node": "node --enable-source-maps build/node/main.js"
 	},
 	"dependencies": {
 		"canvas": "^2.7.0"
 	},
 	"devDependencies": {
+		"@babel/core": "^7.13.10",
 		"@types/node": "^14.14.32",
+		"parcel": "^2.0.0-beta.2",
+		"postcss": "^8.2.8",
 		"typescript": "^4.2.3"
 	}
 }
