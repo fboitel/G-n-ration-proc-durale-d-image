@@ -13,7 +13,7 @@ const rep = 10;
 
 //const img = rotate(Math.PI/3, pavageCarreGen());
 //const img = rotate(Math.PI/4, pavageCarreGen());
-const img = rotate(Math.PI/6, translate(50, 50, pavageGrandRhombitrihexagonalGen()));
+const img = rotate(Math.PI/6, translate(50, 50, pavageGrandRhombitrihexagonalGen(500)));
 
 // OUTPUT
 
