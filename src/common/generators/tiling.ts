@@ -114,7 +114,7 @@ export function pavageHexaGen(width : number, height : number, nbOfPatterns: num
 }
 
 //pavages semi-réguliers
-export function pavageCarréAdouciGen(width : number, height : number, nbOfPatterns : number, color1 : Color, color2 : Color, color3 : Color) : Image {
+export function pavageCarreAdouciGen(width = 1000, height = 1000, nbOfPatterns = 10, color1 = RED, color2 = GREEN, color3 = BLUE) : Image {
     function pavageInt(x : number, y : number) : Color {
         let size = width/nbOfPatterns;
         let sinPis3 = Math.sin(Math.PI/3);
@@ -178,7 +178,7 @@ export function pavageCarréAdouciGen(width : number, height : number, nbOfPatte
 }
 
 
-export function pavageGrandRhombitrihexagonalGen(width : number, height : number, nbOfPatterns : number, color1 : Color, color2 : Color, color3 : Color) : Image {
+export function pavageGrandRhombitrihexagonalGen(width = 1000, height = 1000, nbOfPatterns = 10, color1 = RED, color2 = GREEN, color3 = BLUE) : Image {
     function pavageInt(x : number, y : number) : Color {
         let size = width/nbOfPatterns; //size is the scale
         y = y%(2*1.26*size); //Reducing x and y on a rectangle which is 1 repetition of the motif
@@ -193,20 +193,20 @@ export function pavageGrandRhombitrihexagonalGen(width : number, height : number
             else
                 return color3;
         if (x < 0.71*size)
-            if (0.02*x + 0.04*y > 0.05*size )
+            if (0.26*x + 0.45*y > 0.52*size )
                 return color2;
             else 
                 return color3;
         if (x < 0.97*size){
-            if (-0.25*x+0.45*y > 0.15*size)
+            if (-0.26*x+0.45*y > 0.15*size)
                 return color2;
-            if (0.08*x + 0.04*y > 0.09*size)
+            if (0.45*x + 0.26*y > 0.51*size)
                 return color1;
             else 
                 return color3;
         }
         if (x < 1.16*size){
-            if (-0.25*x + 0.45*y > 0.15*size)
+            if (-0.26*x + 0.45*y > 0.15*size)
                 return color2;
             if (-0.09*x + 0.16*y > -0.04*size)
                 return color1;
