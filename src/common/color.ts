@@ -4,7 +4,7 @@ export type Color = number[];
 //// API
 
 // Create a color
-export function color(r: number, g: number, b: number, a: number = 255): Color {
+export function consColor(r: number, g: number, b: number, a: number = 255): Color {
     return [r, g, b, a];
 }
 
@@ -40,22 +40,22 @@ export function normalize(color: Color): Color {
 
 // Keep only the red component of a color
 export function redify(c: Color): Color {
-    return color(getRed(c), 0, 0, getAlpha(c));
+    return consColor(getRed(c), 0, 0, getAlpha(c));
 }
 
 // Keep only the green component of a color
 export function greenify(c: Color): Color {
-    return color(0, getGreen(c), 0, getAlpha(c));
+    return consColor(0, getGreen(c), 0, getAlpha(c));
 }
 
 // Keep only the blue component of a color
 export function blueify(c: Color): Color {
-    return color(0, 0, getBlue(c), getAlpha(c));
+    return consColor(0, 0, getBlue(c), getAlpha(c));
 }
 
 // Get the negative of a color
 export function negate(c: Color): Color {
-    return color(255 - getRed(c), 255 - getGreen(c), 255 - getRed(c), getAlpha(c));
+    return consColor(255 - getRed(c), 255 - getGreen(c), 255 - getRed(c), getAlpha(c));
 }
 
 export function opacite(c: Color): Color {
@@ -110,9 +110,9 @@ export function meanWeighted(c1: Color, p1: number, c2: Color, p2: number) {
 
 
 //// Examples
-export const WHITE: Color = color(255, 255, 255);
-export const BLACK: Color = color(0, 0, 0);
-export const RED: Color = color(255, 0, 0);
-export const GREEN: Color = color(0, 255, 0);
-export const BLUE: Color = color(0, 0, 255);
-export const TRANSPARENT: Color = color(255, 255, 255, 0);
+export const WHITE: Color = consColor(255, 255, 255);
+export const BLACK: Color = consColor(0, 0, 0);
+export const RED: Color = consColor(255, 0, 0);
+export const GREEN: Color = consColor(0, 255, 0);
+export const BLUE: Color = consColor(0, 0, 255);
+export const TRANSPARENT: Color = consColor(255, 255, 255, 0);

@@ -3,7 +3,7 @@ import { writeFileSync } from 'fs';
 import { toRaster } from '../common/image';
 import { generators } from '../common/generators/generator'
 import { pavageCarreGen, pavageHexaGen, pavageTriangleGen, pavageCarreAdouciGen, pavageGrandRhombitrihexagonalGen, translate, rotate } from '../common/generators/tiling';
-import { color } from '../common/color'
+import { consColor } from '../common/color'
 
 // TEST
 
