@@ -1,5 +1,5 @@
 import { Image } from '../image';
-import { pavageCarréGen, pavageTriangleGen, pavageHexaGen } from './tiling';
+import { pavageCarreGen, pavageTriangleGen, pavageHexaGen } from './tiling';
 import {voronoi, radialDistance, signedDistance} from './distance';
 
 
@@ -8,7 +8,7 @@ type Generator<T extends any[]> = (width: number, height: number, ...params: T) 
 export const generators:{ [key: string] : Generator<any>} = {
 
     // pavages
-    pavageCarréGen,
+    pavageCarreGen,
     pavageTriangleGen,
     pavageHexaGen,
 
