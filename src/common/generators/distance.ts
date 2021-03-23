@@ -3,9 +3,9 @@ import { Image } from "../image";
 
 const DELTA_DISPLAY = 0;
 
-export function voronoi(width: number, height: number, nb_points: number): Image {
+export function voronoi(width: number, height: number, nbPoints: number): Image {
 
-    let points = generateRandomPoints(width, height, nb_points);
+    let points = generateRandomPoints(width, height, nbPoints);
 
     function image(x: number, y: number) {
 
@@ -15,12 +15,12 @@ export function voronoi(width: number, height: number, nb_points: number): Image
             return BLACK;
         }
 
-        let c = generateRandomColor(nb_points, points, width, height);
+        let c = generateRandomColor(nbPoints, points, width, height);
 
         let min_distance = Math.sqrt((x - points[0][0]) ** 2 + (y - points[0][1]) ** 2);
         let min_id = 0;
 
-        for (let i = 0; i < nb_points; ++i) {
+        for (let i = 0; i < nbPoints; ++i) {
             let distance = Math.sqrt((x - points[i][0]) ** 2 + (y - points[i][1]) ** 2);
             if (distance < min_distance) {
                 min_distance = distance;

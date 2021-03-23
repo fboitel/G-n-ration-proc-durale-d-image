@@ -1,4 +1,4 @@
-import { createCanvas } from 'canvas';
+import { createCanvas, createImageData } from 'canvas';
 import { writeFileSync } from 'fs';
 import { filters } from '../filter';
 import { toRaster } from '../image';
@@ -19,6 +19,6 @@ const out = generators.signedDistance(2000, 2000, WHITE, BLACK, 100, 100, true);
 
 const canvas = createCanvas(out.width, out.height);
 const context = canvas.getContext('2d');
-context.putImageData(toRaster(out), 0, 0);
+context.putImageData(toRaster(out, createImageData), 0, 0);
 const buffer = canvas.toBuffer('image/png');
 writeFileSync('public/test.png', buffer);
