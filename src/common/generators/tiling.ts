@@ -20,7 +20,7 @@ export function contour(image : (x : number, y : number) => Color) : (x : number
 }
 
 //pavages réguliers
-export function pavageCarréGen(width : number, height : number, nbOfPatterns: number, color1: Color, color2: Color): Image {
+export function pavageCarreGen(width : number, height : number, nbOfPatterns: number, color1: Color, color2: Color): Image {
     function pavageInt(x: number, y: number): Color {
         let scale = width/nbOfPatterns;
         scale = Math.trunc(scale);
@@ -114,7 +114,7 @@ export function pavageHexaGen(width : number, height : number, nbOfPatterns: num
 }
 
 //pavages semi-réguliers
-export function pavageCarréAdouciGen(width : number, height : number, nbOfPatterns : number, color1 : Color, color2 : Color, color3 : Color) : Image {
+export function pavageCarreAdouciGen(width = 1000, height = 1000, nbOfPatterns = 10, color1 = RED, color2 = GREEN, color3 = BLUE) : Image {
     function pavageInt(x : number, y : number) : Color {
         let size = width/nbOfPatterns;
         let sinPis3 = Math.sin(Math.PI/3);
@@ -176,20 +176,60 @@ export function pavageCarréAdouciGen(width : number, height : number, nbOfPatte
     }
     return {width, height, function : contour(pavageInt)};
 }
-/*
-export function pavageGrandRhombitrihexagonalGen(width : number, height : number, nbOfPatterns : number, color1 : Color, color2 : Color, color3 : Color) : Image {
+
+
+export function pavageGrandRhombitrihexagonalGen(width = 1000, height = 1000, nbOfPatterns = 10, color1 = RED, color2 = GREEN, color3 = BLUE) : Image {
     function pavageInt(x : number, y : number) : Color {
         let size = width/nbOfPatterns; //size is the scale
-        let sinPis12 = Math.sin(Math.PI/12);
-        let sinPis3 = Math.sin(Math.PI/3);
-        let c = 2*sinPis12*size; //c is the length of a side of the dodecagone, if we take a radius of 1.
-        y = y%((1 + sinPis12)*size); //Reducing x and y on a rectangle which is 1 repetition of the motif
-        x = x%((1 + sinPis12 + sinPis12*sinPis3)*size);
-        if (x > (1 + sinPis12 + sinPis12*sinPis3)/2*size) //Using the symetries
-            x = (1 + sinPis12 + sinPis12*sinPis3)*size - x;
-        if (y > (1 + sinPis12)/2*size)
-            y = (1 + sinPis12)*size - y;
-        
-    }
+        y = y%(2*1.26*size); //Reducing x and y on a rectangle which is 1 repetition of the motif
+        x = x%(2*2.12*size);
+        if (y > 1.26*size) //Using the symetries
+            y = 2*1.26*size - y;
+        if (x > 2.12*size)
+            x = 2*2.12*size - x;
+        if (x < 0.26*size)
+            if (y > 1*size)
+                return color1;
+            else
+                return color3;
+        if (x < 0.71*size)
+            if (0.26*x + 0.45*y > 0.52*size )
+                return color2;
+            else 
+                return color3;
+        if (x < 0.97*size){
+            if (-0.26*x+0.45*y > 0.15*size)
+                return color2;
+            if (0.45*x + 0.26*y > 0.51*size)
+                return color1;
+            else 
+                return color3;
+        }
+        if (x < 1.16*size){
+            if (-0.26*x + 0.45*y > 0.15*size)
+                return color2;
+            if (-0.09*x + 0.16*y > -0.04*size)
+                return color1;
+            else 
+                return color2
+        }
+        if (x < 1.41*size){
+            if (-0.08*x - 0.05*y < -0.14*size)
+                return color3;
+            if (-0.09*x + 0.16*y > -0.04*size)
+                return color1;
+            else 
+                return color2;
+        }
+        if (x < 1.86*size)
+            if (-0.26*x - 0.45*y < -0.61*size)
+                return color3;
+            else 
+                return color2;
+        if (y < 0.29*size)
+            return color1;
+        else 
+            return color3;
+    }  
+    return {width, height, function : contour(pavageInt)}
 }
-*/
