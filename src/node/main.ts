@@ -3,8 +3,8 @@ import { writeFileSync } from 'fs';
 import { toRaster, Image } from '../common/image';
 import { fractalNoise, limitedByFrequencyWhiteNoise, perlinNoise, whiteNoise } from '../common/generators/noise'
 import { generators } from '../common/generators/generator';
-import { pavageCarréGen } from '../common/generators/tiling';
 import { voronoi } from '../common/generators/distance';
+import { filters } from '../common/filter';
 // TEST
 
 const width = 1000;
@@ -24,32 +24,52 @@ function main() {
 		}
 	}
 
-	exportToPNG(img);
+	exportToPNG(img, "test");
 }
 
-function exportToPNG(img: Image) {
+function exportToPNG(img: Image, name: string) {
 	const canvas = createCanvas(width, height);
 	const context = canvas.getContext('2d');
 	context.putImageData(toRaster(img, createImageData), 0, 0);
 	const buffer = canvas.toBuffer('image/png');
-	writeFileSync('public/test.png', buffer);
+	writeFileSync('public/' + name + '.png', buffer);
 
 }
 
 
 function mainJSON() {
-	const json = '{ "name": "voronoi", "params" : { "width": 1000, "height": 1000, "nbPoints" : 3 }}';
-	const obj = JSON.parse(json);
+	const str = `{ "filter1" : {"name": "voronoi", "params" : { "width": 1000, "height": 1000, "nbPoints" : 100 }},
+					"filter2" : {"name": "blue", "params" : { }},
+					"filter3" : {"name": "brighten", "params" : { }}}`;
+
+	const json = JSON.parse(str);
 
 	let img: Image;
 
-	let params = obj["params"];
-	console.log(params);
-	let fn = obj["name"];
-	img = generators[ fn ](width, height, 2);
+	for (let filter in json) {
 
-	exportToPNG(img);
+		let params = json[filter]["params"];
+		let parsedParams = parseParams(params);
 
+		let fn = json[filter]["name"];
+
+		if (fn in generators) { // check if it's inside
+			img = generators[fn].apply(this, parsedParams);
+		} else if (fn in filters) {
+			parsedParams.unshift(img)
+			img = filters[fn].apply(this, parsedParams);
+		}
+		exportToPNG(img, filter);
+	}
+}
+
+function parseParams(params: any) {
+	let array = [];
+
+	for (let p in params) {
+		array.push(params[p]);
+	}
+	return array;
 }
 
 mainJSON();

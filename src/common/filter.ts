@@ -3,7 +3,7 @@ import { Color, BLACK, WHITE, RED, GREEN, BLUE, mean, plus, minus, multiply, div
 
 type Filter<T extends any[]> = (image: Image, ...params: T) => Image;
 
-export const filters = {
+export const filters: { [key: string] : Filter<any>} = {
     red,
     green,
     blue,
