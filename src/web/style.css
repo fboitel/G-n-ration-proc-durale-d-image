@@ -9,7 +9,6 @@ header {
     padding: 0 .5em;
     display: flex;
     align-items: center;
-    background-color: coral;
 }
 
 header h1 {
@@ -27,24 +26,29 @@ main {
 }
 
 #toolbar {
-    height: 2em;
-    background-color: aquamarine;
+    height: 3em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#toolbar > * {
+    margin-left: .5em;
 }
 
 #graph {
-    height: calc(100vh - 5em);
-    background-color: cornflowerblue;
+    height: calc(100vh - 6em - 2px);
+    border: 1px solid black;
 }
 
 #view {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: darkcyan;
 }
 
 #img {
-    width: 1200px;
-    height: 200px;
+    width: 500px;
+    height: 500px;
     background-color: red;
 }
