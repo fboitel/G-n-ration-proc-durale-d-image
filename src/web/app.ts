@@ -1,14 +1,4 @@
-const generators = [
-	'gen 1',
-	'gen 2',
-	'gen 3',
-];
-
-const filters = [
-	'filter 1',
-	'filter 2',
-	'filter 3',
-];
+import { filters, generators } from '../common/registry'
 
 function createOptionGroup(name: string, options: string[]): HTMLOptGroupElement {
 	const group = document.createElement('optgroup');
@@ -25,8 +15,8 @@ function createOptionGroup(name: string, options: string[]): HTMLOptGroupElement
 }
 
 const select = document.getElementById('generator-and-filters') as HTMLSelectElement;
-select.appendChild(createOptionGroup('Générateurs', generators));
-select.appendChild(createOptionGroup('Filtres', filters));
+select.appendChild(createOptionGroup('Générateurs', Object.values(generators).map(g => g.name)));
+select.appendChild(createOptionGroup('Filtres', Object.values(filters).map(g => g.name)));
 
 const graph = document.getElementById('graph') as HTMLDivElement;
 

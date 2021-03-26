@@ -1,7 +1,7 @@
 import { Image, consImage } from './image';
 import { Color, BLACK, WHITE, RED, GREEN, BLUE, mean, plus, minus, multiply, divide, redify, greenify, blueify, negate } from './color';
 
-type Filter<T extends any[]> = (image: Image, ...params: T) => Image;
+export type Filter<T extends any[]> = (image: Image, ...params: T) => Image;
 
 export const filters = {
     red,
@@ -35,17 +35,17 @@ function composeFunction(image1: Image, image2: Image, func: (c1: Color, c2: Col
 //// Colorimetric filters
 
 // Apply a red filter
-function red(image: Image): Image {
+export function red(image: Image): Image {
     return applyFunction(image, color => redify(color));
 }
 
 // Apply a green filter
-function green(image: Image): Image {
+export function green(image: Image): Image {
     return applyFunction(image, color => greenify(color));
 }
 
 // Apply a blue filter
-function blue(image: Image): Image {
+export function blue(image: Image): Image {
     return applyFunction(image, color => blueify(color));
 }
 
