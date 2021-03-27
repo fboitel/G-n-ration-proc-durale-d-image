@@ -1,3 +1,19 @@
+#graph.link-building {
+	cursor: grabbing;
+}
+
+#graph.link-building .io.in {
+	cursor: grab;
+}
+
+#graph:not(.link-building) {
+	cursor: move;
+}
+
+#graph:not(.link-building) .io.out {
+	cursor: alias;
+}
+
 .block {
 	--border-radius: 5px;
 	position: absolute;
@@ -11,7 +27,6 @@
 	border-radius: var(--border-radius);
 	background-color: var(--background-color);
 	border: 1px solid var(--separator-color);
-	cursor: move;
 }
 
 .block :first-child {
@@ -38,10 +53,6 @@
 	border-radius: 10px;
 	background-color: lightgray;
 	background-image: radial-gradient(var(--font-color), var(--background-color));
-}
-
-.io.out {
-	cursor: alias;
 }
 
 .block-body {

@@ -27,24 +27,38 @@ export interface IO {
 }
 
 export interface Edge {
-	from: Block;
-	to: BlockType;
+	from: IO;
+	to: IO;
 	element: SVGLineElement;
 }
 
 const graph = document.getElementById('graph');
+const lines = document.getElementById('lines');
 let zIndex = 1;
+let overedIO: IO = null;
 
 function createIO(type: IOType, parent: Block): IO {
 	const element = document.createElement('div');
 	const ioType = ['in', 'out'][type];
 	element.className = `io ${ioType}`;
 
-	return {
+	const io = {
 		type,
 		element,
 		parent,
 	};
+
+	switch (type) {
+		case IOType.INPUT:
+			element.addEventListener('mouseenter', () => overedIO = io);
+			element.addEventListener('mouseleave', () => overedIO = null);
+			break;
+		case IOType.OUTPUT:
+			makeLinkable(io);
+			break;
+	}
+
+	return io;
 }
 
 function createIOBar(type: IOType, parent: Block, nbOfIO: number): HTMLDivElement {
@@ -127,4 +141,77 @@ function makeDraggable(element: HTMLElement) {
 		document.addEventListener('mouseup', stopDrag);
 		document.addEventListener('mousemove', drag);
 	});
+}
+
+function makeLinkable(io: IO) {
+	io.element.addEventListener('mousedown', e => {
+		e.stopPropagation();
+
+		graph.classList.add('link-building');
+
+		removeEdge(io.edge);
+
+		const linesBox = lines.getClientRects()[0];
+		const line = createLine(io, e.clientX - linesBox.x, e.clientY - linesBox.y);
+
+		document.addEventListener('mousemove', dragLink);
+		document.addEventListener('mouseup', dropLink);
+
+		function dragLink(e: MouseEvent) {
+			setCoordinate(line, 'x2', e.clientX - linesBox.x);
+			setCoordinate(line, 'y2', e.clientY - linesBox.y);
+		}
+
+		function dropLink() {
+			document.removeEventListener('mousemove', dragLink);
+			document.removeEventListener('mouseup', dropLink);
+
+			graph.classList.remove('link-building');
+
+			if (overedIO === null) {
+				lines.removeChild(line);
+				return;
+			}
+
+			const ioBox = overedIO.element.getClientRects()[0];
+			setCoordinate(line, 'x2', ioBox.x + ioBox.width / 2 - linesBox.x);
+			setCoordinate(line, 'y2', ioBox.y + ioBox.height / 2 - linesBox.y);
+
+			removeEdge(overedIO.edge);
+
+			io.edge = overedIO.edge = {
+				from: io,
+				to: overedIO,
+				element: line,
+			};
+		}
+	});
+}
+
+function removeEdge(edge: Edge) {
+	if (!edge) return;
+
+	lines.removeChild(edge.element);
+	delete edge.from.edge;
+	delete edge.to.edge;
+}
+
+function createLine(from: IO, toX: number, toY: number): SVGLineElement {
+	const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+	line.style.stroke = 'var(--font-color)';
+	line.style.strokeWidth = '2px';
+
+	const ioBox = from.element.getClientRects()[0];
+	const linesBox = lines.getClientRects()[0];
+	setCoordinate(line, 'x1', ioBox.x + ioBox.width / 2 - linesBox.x);
+	setCoordinate(line, 'y1', ioBox.y + ioBox.height / 2 - linesBox.y);
+	setCoordinate(line, 'x2', toX);
+	setCoordinate(line, 'y2', toY);
+
+	lines.appendChild(line);
+	return line;
+}
+
+function setCoordinate(line: SVGLineElement, coordinate: 'x1' | 'y1' | 'x2' | 'y2', value: number) {
+	line[coordinate].baseVal.newValueSpecifiedUnits(line[coordinate].baseVal.SVG_LENGTHTYPE_PX, value);
 }
