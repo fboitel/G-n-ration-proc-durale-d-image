@@ -3,7 +3,7 @@ import { pavageCarreGen, pavageTriangleGen, pavageHexaGen } from './tiling';
 import {voronoi, radialDistance, signedDistance} from './distance';
 
 
-type Generator<T extends any[]> = (width: number, height: number, ...params: T) => Image;
+export type Generator<T extends any[]> = (width: number, height: number, ...params: T) => Image;
 
 export const generators:{ [key: string] : Generator<any>} = {
 

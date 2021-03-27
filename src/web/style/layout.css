@@ -1,0 +1,63 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-family: Arial, sans-serif;
+}
+
+header {
+	height: 3em;
+	padding: 0 .5em;
+	display: flex;
+	align-items: center;
+	border-bottom: 1px solid var(--separator-color);
+}
+
+header h1 {
+	margin: 0;
+	font-size: 2em;
+}
+
+main {
+	display: flex;
+	height: calc(100vh - 3em - 1px);
+}
+
+#workspace {
+	width: calc(50vw - 1px);
+	border-right: 1px solid var(--separator-color);
+}
+
+#toolbar {
+	height: 3em;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	border-bottom: 1px solid var(--separator-color);
+}
+
+#toolbar > * {
+	margin-left: .5em;
+}
+
+#graph {
+	height: calc(100vh - 6em - 2px);
+}
+
+#graph svg {
+	width: 50vw;
+	height: calc(100% - 4px);
+}
+
+#view {
+	width: 50vw;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: auto;
+}
+
+#img {
+	width: 500px;
+	height: 500px;
+	background-color: lightblue;
+}
