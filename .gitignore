@@ -9,3 +9,4 @@
 !/public/.keep
 
 *.log
+.DS_Store

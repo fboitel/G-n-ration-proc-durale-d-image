@@ -1,4 +1,4 @@
-import { Color, BLACK, BLUE, color, GREEN, RED, WHITE, mean, meanWeighted } from "../color";
+import { Color, BLACK, BLUE, consColor, GREEN, RED, WHITE, mean, meanWeighted } from "../color";
 import { Image } from "../image";
 
 const DELTA_DISPLAY = 0;
@@ -61,7 +61,7 @@ function generateRandomColor(n: number, p: number[][], w: number, h: number) {
         let g = 127 - 127 * p[i][0] / w;
         let b = 255 * p[i][1] / h;
 
-        colors[i] = color(r, g, b, 255);
+        colors[i] = consColor(r, g, b, 255);
     }
     return colors;
 }

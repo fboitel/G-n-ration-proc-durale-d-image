@@ -3,7 +3,7 @@ import { writeFileSync } from 'fs';
 import { toRaster } from '../common/image';
 import { generators } from '../common/generators/generator'
 import { pavageCarreGen, pavageHexaGen, pavageTriangleGen, pavageCarreAdouciGen, pavageGrandRhombitrihexagonalGen, translate, rotate } from '../common/generators/tiling';
-import { color } from '../common/color'
+import { consColor } from '../common/color'
 
 // TEST
 
@@ -13,7 +13,7 @@ const rep = 10;
 
 //const img = rotate(Math.PI/3, pavageCarreGen());
 //const img = rotate(Math.PI/4, pavageCarreGen());
-const img = rotate(Math.PI/6, translate(50, 50, pavageGrandRhombitrihexagonalGen()));
+const img = rotate(Math.PI/6, translate(50, 50, pavageGrandRhombitrihexagonalGen(500)));
 
 // OUTPUT
 
