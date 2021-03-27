@@ -97,7 +97,6 @@ export function createBlock(type: BlockType, nbOfInputs: number, nbOfOutputs: nu
 	element.style.top = parentBox.y + 'px';
 	element.style.zIndex = (zIndex++).toString();
 	graph.appendChild(element);
-	makeDraggable(element);
 
 	const block: Block = {
 		type,
@@ -106,6 +105,8 @@ export function createBlock(type: BlockType, nbOfInputs: number, nbOfOutputs: nu
 		outputs: [],
 	}
 	if (meta) block.meta = meta;
+
+	makeDraggable(block);
 
 	const inputs = createIOBar(IOType.INPUT, block, nbOfInputs);
 	const outputs = createIOBar(IOType.OUTPUT, block, nbOfOutputs);
@@ -117,7 +118,9 @@ export function createBlock(type: BlockType, nbOfInputs: number, nbOfOutputs: nu
 	return block;
 }
 
-function makeDraggable(element: HTMLElement) {
+function makeDraggable(block: Block) {
+	const { element } = block;
+
 	element.addEventListener('mousedown', (e: MouseEvent) => {
 		// move to the top
 		element.style.zIndex = (zIndex++).toString();
@@ -131,6 +134,8 @@ function makeDraggable(element: HTMLElement) {
 			const box = element.parentElement.getClientRects()[0];
 			element.style.left = Math.min(box.x + box.width - element.clientWidth - 2, Math.max(box.x, e.clientX + mouseElementOffset.x)) + 'px';
 			element.style.top = Math.min(box.y + box.height - element.clientHeight - 2, Math.max(box.y, e.clientY + mouseElementOffset.y)) + 'px';
+
+			[...block.inputs, ...block.outputs].forEach(io => updateEdgeCoordinates(io));
 		}
 
 		function stopDrag() {
@@ -173,10 +178,6 @@ function makeLinkable(io: IO) {
 				return;
 			}
 
-			const ioBox = overedIO.element.getClientRects()[0];
-			setCoordinate(line, 'x2', ioBox.x + ioBox.width / 2 - linesBox.x);
-			setCoordinate(line, 'y2', ioBox.y + ioBox.height / 2 - linesBox.y);
-
 			removeEdge(overedIO.edge);
 
 			io.edge = overedIO.edge = {
@@ -184,6 +185,8 @@ function makeLinkable(io: IO) {
 				to: overedIO,
 				element: line,
 			};
+
+			updateEdgeCoordinates(overedIO);
 		}
 	});
 }
@@ -201,10 +204,7 @@ function createLine(from: IO, toX: number, toY: number): SVGLineElement {
 	line.style.stroke = 'var(--font-color)';
 	line.style.strokeWidth = '2px';
 
-	const ioBox = from.element.getClientRects()[0];
-	const linesBox = lines.getClientRects()[0];
-	setCoordinate(line, 'x1', ioBox.x + ioBox.width / 2 - linesBox.x);
-	setCoordinate(line, 'y1', ioBox.y + ioBox.height / 2 - linesBox.y);
+	updateEdgeCoordinates(from, line);
 	setCoordinate(line, 'x2', toX);
 	setCoordinate(line, 'y2', toY);
 
@@ -214,4 +214,16 @@ function createLine(from: IO, toX: number, toY: number): SVGLineElement {
 
 function setCoordinate(line: SVGLineElement, coordinate: 'x1' | 'y1' | 'x2' | 'y2', value: number) {
 	line[coordinate].baseVal.newValueSpecifiedUnits(line[coordinate].baseVal.SVG_LENGTHTYPE_PX, value);
+}
+
+function updateEdgeCoordinates(io: IO, edgeElement?: SVGLineElement) {
+	if (!edgeElement) edgeElement = io.edge?.element;
+	if (!edgeElement) return;
+
+	const input = io.type === IOType.OUTPUT;
+	const ioBox = io.element.getClientRects()[0];
+	const linesBox = lines.getClientRects()[0];
+
+	setCoordinate(edgeElement, input ? 'x1' : 'x2', ioBox.x + ioBox.width / 2 - linesBox.x);
+	setCoordinate(edgeElement, input ? 'y1' : 'y2', ioBox.y + ioBox.height / 2 - linesBox.y);
 }
