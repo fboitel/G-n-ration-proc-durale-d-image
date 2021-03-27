@@ -1,4 +1,6 @@
 import { FilterMeta, GeneratorMeta } from '../../common/registry'
+import { Image } from '../../common/image'
+import { display } from './view'
 
 export enum BlockType {
 	GENERATOR,
@@ -34,6 +36,7 @@ export interface Edge {
 
 const graph = document.getElementById('graph');
 const lines = document.getElementById('lines');
+const output = createBlock(BlockType.OUTPUT,1, 0);
 let zIndex = 1;
 let overedIO: IO = null;
 
@@ -187,6 +190,7 @@ function makeLinkable(io: IO) {
 			};
 
 			updateEdgeCoordinates(overedIO);
+			evaluateGraph();
 		}
 	});
 }
@@ -226,4 +230,31 @@ function updateEdgeCoordinates(io: IO, edgeElement?: SVGLineElement) {
 
 	setCoordinate(edgeElement, input ? 'x1' : 'x2', ioBox.x + ioBox.width / 2 - linesBox.x);
 	setCoordinate(edgeElement, input ? 'y1' : 'y2', ioBox.y + ioBox.height / 2 - linesBox.y);
+}
+
+function evaluateGraph() {
+	const image = evaluateBlock(output);
+	if (image) display(image);
+
+	function evaluateBlock(block: Block): Image {
+		if (block.type === BlockType.GENERATOR) {
+			const meta = block.meta as GeneratorMeta;
+			return meta.generator.call(this);
+		}
+
+		const edge = block.inputs[0].edge;
+		if (!edge) return null;
+
+		const input = evaluateBlock(edge.from.parent);
+		if (!input) return null;
+
+		switch (block.type) {
+			case BlockType.FILTER:
+				const meta = block.meta as FilterMeta;
+				return meta.filter.call(this, input);
+
+			case BlockType.OUTPUT:
+				return input;
+		}
+	}
 }

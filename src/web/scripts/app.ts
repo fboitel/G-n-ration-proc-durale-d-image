@@ -20,8 +20,6 @@ const select = document.getElementById('generator-and-filters') as HTMLSelectEle
 select.appendChild(createOptionGroup('Générateurs', generators));
 select.appendChild(createOptionGroup('Filtres', filters));
 
-createBlock(BlockType.OUTPUT,1, 0);
-
 const button = document.getElementById('add-btn');
 button.addEventListener('click', () => {
 	const key = select.options[select.selectedIndex].value;
