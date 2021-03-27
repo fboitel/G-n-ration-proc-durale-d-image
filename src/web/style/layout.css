@@ -9,6 +9,7 @@ header {
 	padding: 0 .5em;
 	display: flex;
 	align-items: center;
+	border-bottom: 1px solid var(--separator-color);
 }
 
 header h1 {
@@ -18,11 +19,12 @@ header h1 {
 
 main {
 	display: flex;
-	height: calc(100vh - 3em);
+	height: calc(100vh - 3em - 1px);
 }
 
-#graph, #view {
-	width: 50vw;
+#workspace {
+	width: calc(50vw - 1px);
+	border-right: 1px solid var(--separator-color);
 }
 
 #toolbar {
@@ -30,6 +32,7 @@ main {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	border-bottom: 1px solid var(--separator-color);
 }
 
 #toolbar > * {
@@ -38,30 +41,18 @@ main {
 
 #graph {
 	height: calc(100vh - 6em - 2px);
-	border: 1px solid black;
-}
-
-.block {
-	position: absolute;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	border: 1px solid black;
-	width: 100px;
-	height: 50px;
-	cursor: move;
-	user-select: none;
-	-moz-user-select: none;
 }
 
 #view {
+	width: 50vw;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	overflow: auto;
 }
 
 #img {
 	width: 500px;
 	height: 500px;
-	background-color: red;
+	background-color: lightblue;
 }

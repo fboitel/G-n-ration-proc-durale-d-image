@@ -3,18 +3,20 @@ import { Generator} from './generators/generator'
 import { fractalNoise, perlinNoise } from './generators/noise'
 import { Image } from './image'
 
-interface GeneratorMeta {
+export interface GeneratorMeta {
 	name: string;
 	generator: Generator<any[]>;
 }
 
-interface FilterMeta {
+export interface FilterMeta {
 	name: string;
 	filter: Filter<any[]>;
 }
 
-export const generators: {[key: string]: GeneratorMeta} = {}
-export const filters: {[key: string]: FilterMeta} = {}
+export type Registry<T> = {[key: string]: T}
+
+export const generators: Registry<GeneratorMeta> = {}
+export const filters: Registry<FilterMeta> = {}
 
 function registerGenerator(name: string, generator: Generator<any>) {
 	generators[generator.name] = {name, generator};

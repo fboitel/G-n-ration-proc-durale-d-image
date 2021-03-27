@@ -1,0 +1,20 @@
+:root {
+    --background-color: #21252b;
+    --foregroud-color: #282c34;
+    --toolbar-color: #323844;
+    --separator-color: #46494d;
+    --font-color: #828d96;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--font-color);
+}
+
+#toolbar {
+    background-color: var(--toolbar-color);
+}
+
+#view {
+    background-color: var(--foregroud-color);
+}
