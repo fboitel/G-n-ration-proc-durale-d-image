@@ -43,6 +43,11 @@ main {
 	height: calc(100vh - 6em - 2px);
 }
 
+#graph svg {
+	width: 50vw;
+	height: calc(100% - 4px);
+}
+
 #view {
 	width: 50vw;
 	display: flex;

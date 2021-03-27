@@ -38,6 +38,9 @@
     border-radius: 10px;
     background-color: lightgray;
     background-image: radial-gradient(var(--font-color), var(--background-color));
+}
+
+.io.out {
     cursor: alias;
 }
 

@@ -28,15 +28,18 @@ button.addEventListener('click', () => {
 	const key = select.options[select.selectedIndex].value;
 	const isGenerator = key in generators;
 	const meta = isGenerator ? generators[key] : filters[key];
+	const box = graph.getClientRects()[0]
 
 	const element = document.createElement('div');
 	element.className = `block ${isGenerator ? 'generator' : 'filter'}`;
 	element.style.zIndex = (zIndex++).toString();
+	element.style.left = box.x + 'px';
+	element.style.top = box.y + 'px';
 
 	if (!isGenerator) {
 		element.innerHTML = `
 		<div class="io-bar">
-			<div class="io"></div>
+			<div class="io in"></div>
 		</div>
 	`;
 	}
@@ -46,7 +49,7 @@ button.addEventListener('click', () => {
 			<h2>${meta.name}</h2>
 		</div>
 		<div class="io-bar">
-			<div class="io"></div>
+			<div class="io out"></div>
 		</div>
 	`;
 
@@ -54,7 +57,7 @@ button.addEventListener('click', () => {
 	makeDraggable(element);
 });
 
-function makeDraggable(element: HTMLDivElement) {
+function makeDraggable(element: HTMLElement) {
 	element.addEventListener('mousedown', (e: MouseEvent) => {
 		// move to the top
 		element.style.zIndex = (zIndex++).toString();
@@ -79,3 +82,12 @@ function makeDraggable(element: HTMLDivElement) {
 		document.addEventListener('mousemove', drag);
 	});
 }
+
+// @ts-ignore
+const line = document.getElementById('line') as SVGLineElement;
+
+document.addEventListener('mousemove', e => {
+	const box = graph.getClientRects()[0];
+	line.x2.baseVal.newValueSpecifiedUnits(line.x2.baseVal.SVG_LENGTHTYPE_NUMBER, e.clientX - box.x);
+	line.y2.baseVal.newValueSpecifiedUnits(line.y2.baseVal.SVG_LENGTHTYPE_NUMBER, e.clientY - box.y);
+});
