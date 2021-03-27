@@ -47,38 +47,21 @@ button.addEventListener('click', () => {
 		</div>
 	`;
 
-	makeDraggable(element)
 	graph.appendChild(element);
+	makeDraggable(element);
 });
 
 function makeDraggable(element: HTMLDivElement) {
-	interface Position {
-		x: number;
-		y: number;
-	}
-
-	function getPos(e: MouseEvent): Position {
-		return {
-			x: e.clientX,
-			y: e.clientY,
-		};
-	}
-
 	element.addEventListener('mousedown', (e: MouseEvent) => {
-		let pos = getPos(e);
+		const mouseElementOffset = {
+			x: element.offsetLeft - e.clientX,
+			y: element.offsetTop - e.clientY,
+		};
 
 		function drag(e: MouseEvent) {
-			const newPos = getPos(e);
-
-			const offset = {
-				x: pos.x - newPos.x,
-				y: pos.y - newPos.y,
-			};
-
-			element.style.top = (element.offsetTop - offset.y) + 'px';
-			element.style.left = (element.offsetLeft - offset.x) + 'px';
-
-			pos = newPos;
+			const box = element.parentElement.getClientRects()[0];
+			element.style.left = Math.min(box.x + box.width - element.clientWidth - 2, Math.max(box.x, e.clientX + mouseElementOffset.x)) + 'px';
+			element.style.top = Math.min(box.y + box.height - element.clientHeight - 2, Math.max(box.y, e.clientY + mouseElementOffset.y)) + 'px';
 		}
 
 		function stopDrag() {
