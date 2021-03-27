@@ -20,8 +20,10 @@ select.appendChild(createOptionGroup('Générateurs', generators));
 select.appendChild(createOptionGroup('Filtres', filters));
 
 const graph = document.getElementById('graph') as HTMLDivElement;
-
 const button = document.getElementById('add-btn');
+
+let zIndex = 1;
+
 button.addEventListener('click', () => {
 	const key = select.options[select.selectedIndex].value;
 	const isGenerator = key in generators;
@@ -29,6 +31,7 @@ button.addEventListener('click', () => {
 
 	const element = document.createElement('div');
 	element.className = `block ${isGenerator ? 'generator' : 'filter'}`;
+	element.style.zIndex = (zIndex++).toString();
 
 	if (!isGenerator) {
 		element.innerHTML = `
@@ -53,6 +56,9 @@ button.addEventListener('click', () => {
 
 function makeDraggable(element: HTMLDivElement) {
 	element.addEventListener('mousedown', (e: MouseEvent) => {
+		// move to the top
+		element.style.zIndex = (zIndex++).toString();
+
 		const mouseElementOffset = {
 			x: element.offsetLeft - e.clientX,
 			y: element.offsetTop - e.clientY,
