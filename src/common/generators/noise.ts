@@ -1,12 +1,12 @@
 import { Image } from '../image';
 import { rand } from '../random';
-import { BLACK, Color, color, mean } from '../color';
+import { Color, consColor, mean } from '../color';
 
 function randomColor(): Color {
 	function randomChannel(): number {
 		return Math.floor(rand() * 255);
 	}
-	return color(randomChannel(), randomChannel(), randomChannel(), 255);
+	return consColor(randomChannel(), randomChannel(), randomChannel(), 255);
 }
 
 export function whiteNoise(width: number, height: number): Image {
@@ -95,7 +95,7 @@ export function perlinNoise(width: number, height: number, gridSize: number): Im
 
 		const greyLevel = (value + 1) * 255 / 2;
 
-		return color(greyLevel, greyLevel, greyLevel);
+		return consColor(greyLevel, greyLevel, greyLevel);
 	}
 
 	return {

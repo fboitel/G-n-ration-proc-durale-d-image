@@ -55,9 +55,3 @@ main {
 	align-items: center;
 	overflow: auto;
 }
-
-#img {
-	width: 500px;
-	height: 500px;
-	background-color: lightblue;
-}
