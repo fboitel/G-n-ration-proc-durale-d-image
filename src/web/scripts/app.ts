@@ -1,6 +1,6 @@
-import { FilterMeta, filters, GeneratorMeta, generators, Registry } from '../../common/registry'
-import { BlockType, createBlock } from './graph'
-import { clear } from './view'
+import { FilterMeta, filters, GeneratorMeta, generators, Registry } from './registry';
+import { BlockType, createBlock } from './graph';
+import { clear } from './view';
 
 function createOptionGroup(name: string, registry: Registry<GeneratorMeta> | Registry<FilterMeta>): HTMLOptGroupElement {
 	const group = document.createElement('optgroup');

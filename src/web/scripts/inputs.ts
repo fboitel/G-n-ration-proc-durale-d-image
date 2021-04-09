@@ -1,4 +1,4 @@
-import { evaluateGraph } from './graph'
+import { evaluateGraph } from './graph';
 
 export const getWidth  = checkInput('width', 500, 1);
 export const getHeight = checkInput('height', 500, 1);

@@ -1,9 +1,9 @@
-import { FilterMeta, GeneratorMeta } from '../../common/registry'
-import { Image } from '../../common/image'
-import { clear, display } from './view'
-import { srand } from '../../common/random'
-import { getHeight, getSeed, getWidth } from './inputs'
-import { Parameter} from '../../common/parameters'
+import { FilterMeta, GeneratorMeta } from './registry';
+import { Image } from '../../common/image';
+import { clear, display } from './view';
+import { srand } from '../../common/random';
+import { getHeight, getSeed, getWidth } from './inputs';
+import { Parameter} from './parameters';
 
 export enum BlockType {
 	GENERATOR,
