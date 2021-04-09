@@ -1,5 +1,5 @@
 import { createCanvas, createImageData } from 'canvas';
-import { writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { toRaster, Image } from '../common/image';
 import { generators } from '../common/generators/generator';
 import { filters } from '../common/filter';
@@ -72,7 +72,7 @@ function generateJSON(): string {
 									  "secondInput" : ` + generatorGreen + `,
 									  "params": {"size": 2 }
   									}`;
-	
+
 	// merge <-- merge + generator <-- generator + generator
 	const mergeGeneratorAndMergeGeneratorAndGenerator = `{"type": "merge",
 									  "name": "composePlus",
@@ -89,7 +89,7 @@ function generateJSON(): string {
 									  "params": {"size": 2 }
   									}`;
 
-	return mergeGeneratorAndMergeGeneratorAndGenerator2;
+	return mergeGeneratorAndMergeGeneratorAndGenerator;
 }
 
 function parseParams(params: any): Array<any> {
@@ -140,11 +140,31 @@ function readJSON(json: any): Image {
 }
 
 function mainJSON(): void {
-	const str = generateJSON();
 
-	const json = JSON.parse(str);
+	let jsonBuffer = "";
+	let fileName = "generatedImage"
+
+	// if a file is specified
+	if (process.argv.length > 2) {
+		let path = process.argv[2];
+
+		if (existsSync(path)) {
+			jsonBuffer = readFileSync(path, 'utf8');
+			fileName = path.split('\\').pop().split('/').pop().split('.').shift();
+			console.log("file open : " + path);
+		} else {
+			console.log("Unable to open file : " + path);
+			return process.exit(1)
+		}
+	} else {
+		jsonBuffer = generateJSON();
+	}
+
+	const json = JSON.parse(jsonBuffer);
 
 	let img = readJSON(json);
+
+	exportToPNG(img, fileName);
 }
 
 mainJSON();

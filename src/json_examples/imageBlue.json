@@ -1,0 +1,8 @@
+{
+	"type": "generator",
+	"name": "monochromaticBlue",
+	"params": {
+		"width": 1000,
+		"height": 1000
+	}
+}

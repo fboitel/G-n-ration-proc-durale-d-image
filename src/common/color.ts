@@ -57,6 +57,11 @@ export function blueify(c: Color): Color {
     return consColor(0, 0, getBlue(c), getAlpha(c));
 }
 
+export function gray(c: Color): Color {
+    const average = (getRed(c) + getGreen(c) + getBlue(c)) / 3;
+    return consColor(average, average, average, getAlpha(c));
+}
+
 // Get the negative of a color
 export function negate(c: Color): Color {
     return consColor(getRed(c) ^ 255, getGreen(c) ^ 255, getBlue(c) ^ 255, getAlpha(c));
@@ -87,7 +92,7 @@ export function minus(c1: Color, c2: Color): Color {
 
 // Multiply two colors
 export function multiply(c1: Color, c2: Color): Color {
-    return normalize(c1.map((c, i) => c * c2[i]));
+    return normalize(c1.map((c, i) => c * c2[i] / 255));
 }
 
 // Divide two colors
@@ -98,6 +103,14 @@ export function divide(c1: Color, c2: Color): Color {
 // Do the average of two colors
 export function mean(c1: Color, c2: Color): Color {
     return c1.map((c, i) => (c + c2[i]) / 2);
+}
+
+export function merge(c1: Color, c2: Color): Color {
+    return consColor(
+        Math.max(getRed(c1), getRed(c2)),
+        Math.max(getGreen(c1), getGreen(c2)),
+        Math.max(getBlue(c1), getBlue(c2))
+    );
 }
 
 // Do the weighted average of two colors
