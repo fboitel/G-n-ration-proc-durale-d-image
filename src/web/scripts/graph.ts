@@ -1,9 +1,9 @@
 import { FilterMeta, GeneratorMeta } from '../../common/registry'
 import { Image } from '../../common/image'
 import { clear, display } from './view'
-import { Generator } from '../../common/generators/generator'
 import { srand } from '../../common/random'
 import { getHeight, getSeed, getWidth } from './inputs'
+import { Parameter} from '../../common/parameters'
 
 export enum BlockType {
 	GENERATOR,
@@ -83,13 +83,18 @@ function createIOBar(type: IOType, parent: Block, nbOfIO: number): HTMLDivElemen
 	return bar;
 }
 
-function createBlockBody(title: string): HTMLDivElement {
+function createBlockBody(title: string, parameters: Parameter<any, any>[]): HTMLDivElement {
 	const titleElement = document.createElement('h2');
 	titleElement.textContent = title;
 
 	const body = document.createElement('div');
 	body.className = 'block-body';
 	body.appendChild(titleElement);
+
+	for (const parameter of parameters) {
+		body.appendChild(parameter.ui);
+		parameter.input.addEventListener('change', () => evaluateGraph());
+	}
 
 	return body;
 }
@@ -118,7 +123,7 @@ export function createBlock(type: BlockType, nbOfInputs: number, nbOfOutputs: nu
 	const outputs = createIOBar(IOType.OUTPUT, block, nbOfOutputs);
 
 	if (inputs) element.appendChild(inputs);
-	element.appendChild(createBlockBody(meta?.name ?? 'Afficher'));
+	element.appendChild(createBlockBody(meta?.name ?? 'Afficher', meta ? meta.parameters : []));
 	if (outputs) element.appendChild(outputs);
 
 	return block;
@@ -248,22 +253,22 @@ export function evaluateGraph() {
 	function evaluateBlock(block: Block): Image {
 		if (block.type === BlockType.GENERATOR) {
 			const meta = block.meta as GeneratorMeta;
-			return meta.generator.call(this, width, height, /* TODO args */);
+			return meta.generator.call(this, width, height, ...meta.parameters.map(p => p.getValue()));
 		}
 
-		const edge = block.inputs[0].edge;
-		if (!edge) return null;
+		const edges = block.inputs.map(i => i.edge);
+		if (edges.includes(undefined)) return null;
 
-		const input = evaluateBlock(edge.from.parent);
-		if (!input) return null;
+		const inputs = edges.map(edge => evaluateBlock(edge.from.parent));
+		if (inputs.includes(null)) return null;
 
 		switch (block.type) {
 			case BlockType.FILTER:
 				const meta = block.meta as FilterMeta;
-				return meta.filter.call(this, input);
+				return meta.filter.call(this, ...inputs, ...meta.parameters.map(p => p.getValue()));
 
 			case BlockType.OUTPUT:
-				return input;
+				return inputs[0];
 		}
 	}
 }

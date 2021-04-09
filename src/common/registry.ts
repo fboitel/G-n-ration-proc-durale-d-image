@@ -2,15 +2,19 @@ import { blue, Filter, green, red } from './filter'
 import { Generator} from './generators/generator'
 import { fractalNoise, perlinNoise } from './generators/noise'
 import { Image } from './image'
+import { NumberParam, Parameter } from './parameters'
 
 export interface GeneratorMeta {
 	name: string;
 	generator: Generator<any[]>;
+	parameters: Parameter<any, any>[];
 }
 
 export interface FilterMeta {
 	name: string;
 	filter: Filter<any[]>;
+	additionalInputs: number;
+	parameters: Parameter<any, any>[];
 }
 
 export type Registry<T> = {[key: string]: T}
@@ -18,26 +22,16 @@ export type Registry<T> = {[key: string]: T}
 export const generators: Registry<GeneratorMeta> = {}
 export const filters: Registry<FilterMeta> = {}
 
-function registerGenerator(name: string, generator: Generator<any>) {
-	generators[generator.name] = {name, generator};
+function registerGenerator(name: string, generator: Generator<any>, ...parameters: Parameter<any, any>[]) {
+	generators[generator.name] = {name, generator, parameters};
 }
 
-function registerFilter(name: string, filter: Filter<any>) {
-	filters[filter.name] = {name, filter};
+function registerFilter(name: string, filter: Filter<any>, additionalInputs = 0, ...parameters: Parameter<any, any>[]) {
+	filters[filter.name] = {name, filter, additionalInputs, parameters};
 }
 
-///// temporary
-function perlinNoiseImpl(width: number, height: number): Image {
-	return perlinNoise(width, height, 30);
-}
-
-function fractalNoiseImpl(width: number, height: number): Image {
-	return fractalNoise(width, height, 3);
-}
-/////
-
-registerGenerator("Bruit de Perlin", perlinNoiseImpl);
-registerGenerator("Bruit fractal", fractalNoiseImpl);
+registerGenerator("Bruit de Perlin", perlinNoise, new NumberParam('taille', 30));
+registerGenerator("Bruit fractal", fractalNoise, new NumberParam('couches', 3));
 
 registerFilter("Rougir", red);
 registerFilter("Bleuir", blue);

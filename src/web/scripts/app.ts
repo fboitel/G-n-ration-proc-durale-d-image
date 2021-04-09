@@ -27,7 +27,12 @@ button.addEventListener('click', () => {
 	const isGenerator = key in generators;
 	const meta = isGenerator ? generators[key] : filters[key];
 
-	createBlock(isGenerator ? BlockType.GENERATOR : BlockType.FILTER, isGenerator ? 0 : 1, 1, meta);
+	createBlock(
+		isGenerator ? BlockType.GENERATOR : BlockType.FILTER,
+		isGenerator ? 0 : 1 + (meta as FilterMeta).additionalInputs,
+		1,
+		meta
+	);
 });
 
 // clear canvas

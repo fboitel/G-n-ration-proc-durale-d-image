@@ -111,7 +111,7 @@ function readJSON(json: any): Image {
 
 	let parsedParams = parseParams(params);
 
-	// FIXME : check type of parameters
+	// FIXME : check type of parameters.ts
 	switch (type) {
 
 		case "generator":
