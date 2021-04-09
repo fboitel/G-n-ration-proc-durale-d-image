@@ -1,6 +1,9 @@
 import { FilterMeta, GeneratorMeta } from '../../common/registry'
 import { Image } from '../../common/image'
 import { clear, display } from './view'
+import { Generator } from '../../common/generators/generator'
+import { srand } from '../../common/random'
+import { getHeight, getSeed, getWidth } from './inputs'
 
 export enum BlockType {
 	GENERATOR,
@@ -233,7 +236,10 @@ function updateEdgeCoordinates(io: IO, edgeElement?: SVGLineElement) {
 	setCoordinate(edgeElement, input ? 'y1' : 'y2', ioBox.y + ioBox.height / 2 - linesBox.y);
 }
 
-function evaluateGraph() {
+export function evaluateGraph() {
+	srand(getSeed());
+	const width = getWidth();
+	const height = getHeight();
 	const image = evaluateBlock(output);
 
 	if (image) display(image);
@@ -242,7 +248,7 @@ function evaluateGraph() {
 	function evaluateBlock(block: Block): Image {
 		if (block.type === BlockType.GENERATOR) {
 			const meta = block.meta as GeneratorMeta;
-			return meta.generator.call(this);
+			return meta.generator.call(this, width, height, /* TODO args */);
 		}
 
 		const edge = block.inputs[0].edge;
