@@ -27,12 +27,12 @@ function registerFilter(name: string, filter: Filter<any>) {
 }
 
 ///// temporary
-function perlinNoiseImpl(): Image {
-	return perlinNoise(500, 500, 30);
+function perlinNoiseImpl(width: number, height: number): Image {
+	return perlinNoise(width, height, 30);
 }
 
-function fractalNoiseImpl(): Image {
-	return fractalNoise(500, 500, 3);
+function fractalNoiseImpl(width: number, height: number): Image {
+	return fractalNoise(width, height, 3);
 }
 /////
 

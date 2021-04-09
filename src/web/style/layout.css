@@ -33,10 +33,16 @@ main {
 	flex-direction: row;
 	align-items: center;
 	border-bottom: 1px solid var(--separator-color);
+	font-size: .9em;
 }
 
 #toolbar > * {
 	margin-left: .5em;
+	font-size: .9em;
+}
+
+#toolbar input {
+	width: 50px;
 }
 
 #graph {
