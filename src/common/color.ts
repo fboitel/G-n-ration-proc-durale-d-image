@@ -3,9 +3,17 @@ export type Color = number[];
 
 //// API
 
+// Normalize a color
+export function normalize(color: Color): Color {
+    return color.map(c =>
+        c < 0 ? 0 :
+            c > 255 ? 255 :
+                c)
+}
+
 // Create a color
 export function consColor(r: number, g: number, b: number, a: number = 255): Color {
-    return [r, g, b, a];
+    return normalize([r, g, b, a]);
 }
 
 // Get red component of a color
@@ -28,12 +36,8 @@ export function getAlpha(c: Color) {
     return c[3];
 }
 
-// Normalize a color
-export function normalize(color: Color): Color {
-    return color.map(c =>
-        c < 0 ? 0 :
-            c > 255 ? 255 :
-                c)
+export function getColor(c: Color): number[] {
+    return [getRed(c), getGreen(c), getBlue(c), getAlpha(c)];
 }
 
 //// Colorimetry
@@ -55,7 +59,7 @@ export function blueify(c: Color): Color {
 
 // Get the negative of a color
 export function negate(c: Color): Color {
-    return consColor(255 - getRed(c), 255 - getGreen(c), 255 - getRed(c), getAlpha(c));
+    return consColor(getRed(c) ^ 255, getGreen(c) ^ 255, getBlue(c) ^ 255, getAlpha(c));
 }
 
 export function opacite(c: Color): Color {
