@@ -1,8 +1,8 @@
-import { blue, Filter, green, red } from './filter'
-import { Generator} from './generators/generator'
+import { Filter } from './filters/filter'
+import { Generator } from './generators/generator'
 import { fractalNoise, perlinNoise } from './generators/noise'
-import { Image } from './image'
 import { NumberParam, Parameter } from './parameters'
+import { blue, green, red } from './filters/colorimetry'
 
 export interface GeneratorMeta {
 	name: string;
