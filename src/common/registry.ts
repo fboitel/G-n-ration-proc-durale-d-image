@@ -28,7 +28,7 @@ function registerFilter(name: string, filter: Filter<any>) {
 
 ///// temporary
 function perlinNoiseImpl(): Image {
-	return perlinNoise(500, 500, 10);
+	return perlinNoise(500, 500, 30);
 }
 
 function fractalNoiseImpl(): Image {

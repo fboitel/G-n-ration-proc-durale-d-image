@@ -1,6 +1,6 @@
 import { FilterMeta, GeneratorMeta } from '../../common/registry'
 import { Image } from '../../common/image'
-import { display } from './view'
+import { clear, display } from './view'
 
 export enum BlockType {
 	GENERATOR,
@@ -178,18 +178,19 @@ function makeLinkable(io: IO) {
 
 			if (overedIO === null) {
 				lines.removeChild(line);
-				return;
+
+			} else {
+				removeEdge(overedIO.edge);
+
+				io.edge = overedIO.edge = {
+					from: io,
+					to: overedIO,
+					element: line,
+				};
+
+				updateEdgeCoordinates(overedIO);
 			}
 
-			removeEdge(overedIO.edge);
-
-			io.edge = overedIO.edge = {
-				from: io,
-				to: overedIO,
-				element: line,
-			};
-
-			updateEdgeCoordinates(overedIO);
 			evaluateGraph();
 		}
 	});
@@ -234,7 +235,9 @@ function updateEdgeCoordinates(io: IO, edgeElement?: SVGLineElement) {
 
 function evaluateGraph() {
 	const image = evaluateBlock(output);
+
 	if (image) display(image);
+	else clear();
 
 	function evaluateBlock(block: Block): Image {
 		if (block.type === BlockType.GENERATOR) {
