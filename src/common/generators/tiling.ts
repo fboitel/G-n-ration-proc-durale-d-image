@@ -33,7 +33,83 @@ export function rotate(angle = Math.PI/2, image : Image) : Image {
     return consImage( image.width, image.height, rotInt)
 }
 
-//pavages réguliers
+//local function
+function isBetweenPoints(points : number[][], P : number[]) : boolean {
+    function isInsideTwoPoints(p1 : number[], p2 : number[], p3 : number[]) : boolean {
+        let sensX = p1[0] - p2[0];
+        let sensY = p1[1] - p2[1];
+        if (sensX == 0)//streight equation is x = constante;
+            if (sensY < 0) 
+                return p3[0] > p2[0];
+            else 
+                return p3[0] < p2[0];
+        if (sensY == 0)//streight equation is f(x) = constante;
+            if (sensX < 0)
+                return p3[1] < p2[1];
+            else 
+                return p3[1] > p2[1];
+        let a = (p2[1] - p1[1])/(p2[0] - p1[0]);//leading coefficient
+        let b = p1[1] - a*p1[0];//ordered at the origin
+        let bbis = p3[1] - a*p3[0];//ordered at the origin for the streight with the same leading coeficient but passing through point p3
+        if (sensX < 0 && sensY < 0)
+            return bbis < b;
+        if (sensX > 0 && sensY < 0)
+            return bbis > b;
+        if (sensX > 0 && sensY > 0)
+            return bbis > b;
+        if (sensX < 0 && sensY > 0)
+            return bbis < b;
+    }
+    function reducer(acc : boolean, point : number[], i : number, array : number[][]) : boolean {
+        if (acc == false)
+            return false;
+        if (i + 1 == array.length)
+            return isInsideTwoPoints(point, array[0], P);
+        else   
+            return isInsideTwoPoints(point, array[i+1], P);
+    }
+    let boo = points.reduce(reducer, true);
+    return boo;
+}
+
+function linkPoints(points : number[][], P : number[], eps : number) : boolean {
+    function streightTwoPoints(p1 : number[], p2 : number[], p3 : number[]) : boolean {
+        let sensX = p1[0] - p2[0];
+        let sensY = p1[1] - p2[1];
+        if (sensX == 0)//streight equation is x = constante;
+            if (sensY > 0)
+                return Math.abs(p3[0] - p2[0]) < eps && p3[1] < p1[1] + eps && p3[1] > p2[1] - eps;
+            else 
+                return Math.abs(p3[0] - p2[0]) < eps && p3[1] > p1[1] - eps && p3[1] < p2[1] + eps
+        if (sensY == 0)//streight equation is f(x) = constante;
+            if (sensX > 0)
+                return Math.abs(p3[1] - p2[1]) < eps && p3[0] < p1[0] + eps && p3[0] > p2[0] - eps;
+            else 
+                return Math.abs(p3[1] - p2[1]) < eps && p3[0] > p1[0] && p3[0] < p2[0];
+        let a = (p2[1] - p1[1])/(p2[0] - p1[0]);//leading coefficient
+        let b = p1[1] - a*p1[0];//ordered at the origin
+        let bbis = p3[1] - a*p3[0];//ordered at the origin for the streight with the same leading coeficient but passing through point p3
+        let margin = Math.abs((b-bbis)*Math.sin(Math.atan(1/a)));
+        if (sensX > 0)
+            return margin < eps && p3[0] < p1[0] && p3[0] > p2[0];
+        if (sensX < 0)
+            return margin < eps && p3[0] > p1[0] && p3[0] < p2[0];
+    }
+    function reducer(acc : boolean, point : number[], i : number, array : number[][]) : boolean {
+        if (acc == true)
+            return true;
+        if (i + 1 == array.length)
+            return streightTwoPoints(point, array[0], P);
+        else   
+            return streightTwoPoints(point, array[i+1], P);
+    }
+    let boo = points.reduce(reducer, false);
+    return boo;
+}
+
+
+
+//regular pavages
 export function pavageCarreGen(width = 1000, height = 1000, nbOfPatterns = 5, color1 = RED, color2 = BLUE): Image {
     function pavageInt(x: number, y: number): Color {
         let scale = width/nbOfPatterns;
@@ -140,7 +216,7 @@ export function pavageHexaGen(width = 1000, height = 1000, nbOfPatterns = 10, co
     return consImage(width, height, contour(pavageInt));
 }
 
-//pavages semi-réguliers
+//semi-regular pavages
 export function pavageCarreAdouciGen(width = 1000, height = 1000, nbOfPatterns = 10, color1 = RED, color2 = GREEN, color3 = BLUE) : Image {
     function pavageInt(x : number, y : number) : Color {
         let size = width/nbOfPatterns;
@@ -265,4 +341,17 @@ export function pavageGrandRhombitrihexagonalGen(width = 1000, height = 1000, nb
             return color3;
     }  
     return consImage(width, height, contour(pavageInt));
+}
+
+
+
+export function pavagePentagonalGen(points : number[][]) : Image {
+    function pavageInt(x : number, y : number) : Color {
+        if (linkPoints(points, [x, y], 2)) 
+            return BLACK;
+        if (isBetweenPoints(points, [x, y]))
+            return RED;
+        return GREEN;
+    }
+    return consImage(1000, 1000, pavageInt);
 }
