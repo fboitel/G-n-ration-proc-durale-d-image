@@ -1,4 +1,4 @@
-import { Image, toRaster } from '../../common/image'
+import { Image, toRaster } from '../../common/image';
 
 const canvas = document.getElementById('img') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d');

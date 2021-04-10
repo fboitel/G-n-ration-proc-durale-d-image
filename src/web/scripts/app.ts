@@ -1,6 +1,6 @@
-import { FilterMeta, filters, GeneratorMeta, generators, Registry } from '../../common/registry'
-import { BlockType, createBlock } from './graph'
-import { clear } from './view'
+import { FilterMeta, filters, GeneratorMeta, generators, Registry } from './registry';
+import { BlockType, createBlock } from './graph';
+import { clear } from './view';
 
 function createOptionGroup(name: string, registry: Registry<GeneratorMeta> | Registry<FilterMeta>): HTMLOptGroupElement {
 	const group = document.createElement('optgroup');
@@ -27,7 +27,12 @@ button.addEventListener('click', () => {
 	const isGenerator = key in generators;
 	const meta = isGenerator ? generators[key] : filters[key];
 
-	createBlock(isGenerator ? BlockType.GENERATOR : BlockType.FILTER, isGenerator ? 0 : 1, 1, meta);
+	createBlock(
+		isGenerator ? BlockType.GENERATOR : BlockType.FILTER,
+		isGenerator ? 0 : 1 + (meta as FilterMeta).additionalInputs,
+		1,
+		meta
+	);
 });
 
 // clear canvas

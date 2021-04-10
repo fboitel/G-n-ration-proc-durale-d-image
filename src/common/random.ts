@@ -1,16 +1,21 @@
 // Random implementation inspired from here:
 // https://stackoverflow.com/a/47593316/9515617
 
-// nothing-up-my-sleeve numbers
-// https://en.wikipedia.org/wiki/Nothing-up-my-sleeve_number
-let a = 0x9E3779B9;
-let b = 0x243F6A88;
-let c = 0xB7E15162;
+let a: number;
+let b: number;
+let c: number;
+let d: number;
 
 // default seed
-let d = (new Date()).getTime();
+srand((new Date()).getTime());
 
 export function srand(seed: number) {
+	// nothing-up-my-sleeve numbers
+	// https://en.wikipedia.org/wiki/Nothing-up-my-sleeve_number
+	a = 0x9E3779B9;
+	b = 0x243F6A88;
+	c = 0xB7E15162;
+
 	d = seed;
 }
 
