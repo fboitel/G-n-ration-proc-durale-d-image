@@ -30,8 +30,8 @@ function registerFilter(name: string, filter: Filter<any>, additionalInputs = 0,
 	filters[filter.name] = {name, filter, additionalInputs, parameters};
 }
 
-registerGenerator("Bruit de Perlin", perlinNoise, new NumberParam('taille', 30));
-registerGenerator("Bruit fractal", fractalNoise, new NumberParam('couches', 3));
+registerGenerator("Bruit de Perlin", perlinNoise, new NumberParam('Taille', 30));
+registerGenerator("Bruit fractal", fractalNoise, new NumberParam('Couches', 3));
 
 registerFilter("Rougir", red);
 registerFilter("Bleuir", blue);

@@ -28,10 +28,11 @@ export class NumberParam extends Parameter<HTMLInputElement, number> {
 		input.id = `param-${paramIndex++}`;
 
 		const label = document.createElement('label');
-		label.textContent = name;
+		label.textContent = name + ' :';
 		label.htmlFor = input.id;
 
 		const ui = document.createElement('div');
+		ui.className = 'input-row';
 		ui.append(label, input);
 
 		input.addEventListener('change', () => {
