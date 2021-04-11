@@ -1,6 +1,6 @@
 import { Color, BLACK, WHITE, RED, GREEN, BLUE, mean, redify, greenify, blueify, gray, negate, getRed } from '../color';
 import { Image, consImage } from '../image';
-import { applyFunction, composeFunction } from './utils'; 
+import { applyFunction } from './utils'; 
 
 // Apply a red filter
 export function red(image: Image): Image {
@@ -35,23 +35,4 @@ export function darken(image: Image): Image {
 // Return the negative of an image
 export function negative(image: Image): Image {
     return applyFunction(image, color => negate(color));
-}
-
-// Blur an image
-export function blur(image: Image): Image {
-    function blured(image: Image, x: number, y: number): Color {
-        const colors = [];
-        for (let i = x - 1; i < x + 2; i++) {
-            for (let j = y - 1; j < y + 2; j++) {
-                if (0 <= i && 0 <= j && i < image.width && j < image.height)
-                    colors.push(image.function(i, j));
-            }
-        }
-        return colors.filter(c => getRed(c) !== undefined).reduce((tot, c) => mean(tot, c), colors[0]);
-    }
-    return consImage(
-        image.width,
-        image.height,
-        (x, y) => blured(image, x, y)
-    );
 }

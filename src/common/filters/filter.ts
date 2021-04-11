@@ -1,6 +1,7 @@
 import { Image} from '../image';
-import { red, green, blue, grayscale, brighten, darken, negative, blur } from './colorimetry';
+import { red, green, blue, grayscale, brighten, darken, negative } from './colorimetry';
 import { composePlus, composeMinus, composeMultiply, composeDivide, composeMerge, composeBlend } from './composition'; 
+import { boxBlur, gaussianBlur, sharpen, edgeDetection } from './convolution';
 
 export type Filter<T extends any[]> = (image: Image, ...params: T) => Image;
 
@@ -12,7 +13,10 @@ export const filters: { [key: string]: Filter<any> } = {
     darken,
     grayscale,
     negative,
-    blur,
+    boxBlur,
+    gaussianBlur,
+    sharpen,
+    edgeDetection,
     composePlus,
     composeMinus,
     composeMultiply,
