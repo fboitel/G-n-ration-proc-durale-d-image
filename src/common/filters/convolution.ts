@@ -1,14 +1,15 @@
 import { Color, consColor, getRed, getGreen, getBlue } from '../color';
 import { Image, consImage } from '../image';
 
-export type Kernel = number[];
+type Kernel = number[];
 
+// Filter kernels
 const boxBlurKernel = Array(9).fill(1).map(el => el / 9);
 const gaussianBlurKernel = [1, 2, 1, 2, 4, 2, 1, 2, 1].map(el => el / 16);
 const edgeDetectionKernel = [-1, -1, -1, -1, 8, -1, -1, -1, -1];
 const sharpenKernel = [0, -1, 0, -1, 5, -1, 0, -1, 0];
 
-// Check if a pixel is in the image
+// Check if a pixel (x, y) is in the image
 function isValidPixel(image: Image, x: number, y: number): boolean {
     return x >= 0 && x < image.width && y >= 0 && y < image.height;
 }
@@ -39,6 +40,7 @@ function applyKernel(x: number, y: number, image: Image, kernel: Kernel): Color 
     );
 }
 
+// Do a convolution between an image and a kernel
 function convolution(image: Image, kernel: Kernel): Image {
     return consImage(image.width,
         image.height,
@@ -46,12 +48,12 @@ function convolution(image: Image, kernel: Kernel): Image {
     );
 }
 
-
-// Blur an image
+// Blur an image with box blur
 export function boxBlur(image: Image): Image {
     return convolution(image, boxBlurKernel);
 }
 
+// Blur an image with gaussian blur
 export function gaussianBlur(image: Image): Image {
     return convolution(image, gaussianBlurKernel);
 }
@@ -61,6 +63,7 @@ export function sharpen(image: Image): Image {
     return convolution(image, sharpenKernel);
 }
 
+// Perform edge detection on an image
 export function edgeDetection(image: Image): Image {
     return convolution(image, edgeDetectionKernel);
 }
