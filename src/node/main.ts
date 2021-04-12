@@ -2,7 +2,7 @@ import { createCanvas, createImageData } from 'canvas';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { toRaster, Image } from '../common/image';
 import { generators } from '../common/generators/generator';
-import { filters } from '../common/filter';
+import { filters } from '../common/filters/filter';
 
 const width = 1000;
 const height = 1000;

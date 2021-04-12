@@ -1,6 +1,6 @@
 import { Image } from '../image';
 import { rand } from '../random';
-import { Color, consColor, mean } from '../color';
+import { Color, consColor, meanColor } from '../color';
 
 function randomColor(): Color {
 	function randomChannel(): number {
@@ -117,7 +117,7 @@ export function fractalNoise(width: number, height: number, steps: number): Imag
 		function: (x, y) => {
 			return layers
 				.map(img => img.function(x, y))
-				.reduce(mean)
+				.reduce(meanColor)
 		}
 	}
 }

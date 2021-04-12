@@ -1,10 +1,10 @@
 import { createCanvas, createImageData } from 'canvas';
 import { writeFileSync } from 'fs';
-import { filters } from '../filter';
+import { filters } from '../filters/filter';
 import { toRaster } from '../image';
 import { voronoi } from './distance'
 import { generators } from './generator'
-import { BLACK, color, GREEN, WHITE} from '../color';
+import { BLACK, GREEN, WHITE} from '../color';
 
 // TEST
 
