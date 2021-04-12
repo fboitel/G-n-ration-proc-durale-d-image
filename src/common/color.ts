@@ -1,33 +1,29 @@
 export type Color = number[];
 
-
-//// API
-
-// Normalize a color
-export function normalize(color: Color): Color {
-    return color.map(c =>
-        c < 0 ? 0 :
-            c > 255 ? 255 :
-                c)
-}
-
 // Create a color
-export function consColor(r: number, g: number, b: number, a: number = 255): Color {
+export function consColor(r?: number, g?: number, b?: number, a: number = 255): Color {
+    // Normalize a color
+    function normalize(color: number[]): number[] {
+        return color.map(c =>
+            c < 0 ? 0 :
+                c > 255 ? 255 :
+                    c)
+    }
     return normalize([r, g, b, a]);
 }
 
 // Get red component of a color
-export function getRed(c: Color) {
+export function getRed(c: Color): number {
     return c[0];
 }
 
 // Get green component of a color
-export function getGreen(c: Color) {
+export function getGreen(c: Color): number {
     return c[1];
 }
 
 // Get blue component of a color
-export function getBlue(c: Color) {
+export function getBlue(c: Color): number {
     return c[2];
 }
 
@@ -36,8 +32,8 @@ export function getAlpha(c: Color) {
     return c[3];
 }
 
-export function getColor(c: Color): number[] {
-    return [getRed(c), getGreen(c), getBlue(c), getAlpha(c)];
+export function getRGB(c: Color): [number, number, number] {
+    return [getRed(c), getGreen(c), getBlue(c)];
 }
 
 //// Colorimetry
@@ -63,49 +59,48 @@ export function gray(c: Color): Color {
 }
 
 // Get the negative of a color
-export function negate(c: Color): Color {
+export function negateColor(c: Color): Color {
     return consColor(getRed(c) ^ 255, getGreen(c) ^ 255, getBlue(c) ^ 255, getAlpha(c));
 }
 
-export function opacite(c: Color): Color {
-    c[c.length - 1] = 255;
-    return c;
+// Change the brightness of a color by the given factor
+export function setBrightness(c: Color, brightnessFactor: number): Color {
+    return consColor(...getRGB(c).map(cmp => cmp * (1 + brightnessFactor)));
 }
 
-export function transparent(c: Color): Color {
-    c[-1] /= 2;
-    return c;
+// Change the opacity of a color by the given factor
+export function setOpacity(c: Color, opacityFactor: number): Color {
+    return consColor(...getRGB(c), getAlpha(c) * (1 + opacityFactor));
 }
-
 
 //// Operations
 
 // Add two colors
-export function plus(c1: Color, c2: Color): Color {
-    return normalize(c1.map((c, i) => c + c2[i]));
+export function addColor(c1: Color, c2: Color): Color {
+    return consColor(...getRGB(c1).map((c, i) => c + getRGB(c2)[i]));
 }
 
 // Substract two colors
-export function minus(c1: Color, c2: Color): Color {
-    return normalize(opacite(c1.map((c, i) => c - c2[i])));
+export function subColor(c1: Color, c2: Color): Color {
+    return consColor(...getRGB(c1).map((c, i) => c - getRGB(c2)[i]));
 }
 
 // Multiply two colors
-export function multiply(c1: Color, c2: Color): Color {
-    return normalize(c1.map((c, i) => c * c2[i] / 255));
+export function mulColor(c1: Color, c2: Color): Color {
+    return consColor(...getRGB(c1).map((c, i) => c * getRGB(c2)[i] / 255));
 }
 
 // Divide two colors
-export function divide(c1: Color, c2: Color): Color {
-    return normalize(c1.map((c, i) => c / c2[i]));
+export function divColor(c1: Color, c2: Color): Color {
+    return consColor(...getRGB(c1).map((c, i) => c / getRGB(c2)[i]));
 }
 
 // Do the average of two colors
-export function mean(c1: Color, c2: Color): Color {
-    return c1.map((c, i) => (c + c2[i]) / 2);
+export function meanColor(c1: Color, c2: Color): Color {
+    return consColor(...getRGB(c1).map((c, i) => (c + getRGB(c2)[i]) / 2));
 }
 
-export function merge(c1: Color, c2: Color): Color {
+export function mergeColor(c1: Color, c2: Color): Color {
     return consColor(
         Math.max(getRed(c1), getRed(c2)),
         Math.max(getGreen(c1), getGreen(c2)),
@@ -114,15 +109,8 @@ export function merge(c1: Color, c2: Color): Color {
 }
 
 // Do the weighted average of two colors
-export function meanWeighted(c1: Color, p1: number, c2: Color, p2: number) {
-
-    function callback(c: number, i: number) {
-        if (i < 3) {
-            return c * p1 + c2[i] * p2;
-        }
-        return c;
-    }
-    return c1.map(callback);
+export function meanColorWeighted(c1: Color, p1: number, c2: Color, p2: number): Color {
+    return consColor(...getRGB(c1).map((c, i) => i < 3 ? c * p1 + getRGB(c2)[i] * p2 : c));
 }
 
 
