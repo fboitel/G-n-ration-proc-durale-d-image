@@ -1,4 +1,4 @@
-import { Color } from '../../common/color';
+import { Color } from './color';
 
 export enum ParameterType {
 	NUMBER,

@@ -1,4 +1,4 @@
-import { FilterMeta, GeneratorMeta } from './registry';
+import { FilterMeta, GeneratorMeta } from '../../common/registry';
 import { Image } from '../../common/image';
 import { clear, display } from './view';
 import { srand } from '../../common/random';

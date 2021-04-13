@@ -1,4 +1,4 @@
-import { FilterMeta, filters, GeneratorMeta, generators, Registry } from './registry';
+import { FilterMeta, filters, GeneratorMeta, generators, Registry } from '../../common/registry';
 import { BlockType, createBlock } from './graph';
 import { clear } from './view';
 

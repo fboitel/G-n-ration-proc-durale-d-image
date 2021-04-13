@@ -1,4 +1,4 @@
-import { ColorParameter, NumberParameter, Parameter, ParameterType } from './parameters'
+import { ColorParameter, NumberParameter, Parameter, ParameterType } from '../../common/parameters'
 import { Color } from '../../common/color'
 
 export function createParameterUI(parameter: Parameter<any>): ParameterUI<any, any> {
