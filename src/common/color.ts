@@ -7,14 +7,7 @@ const A = 3;
 
 // Create a color
 export function consColor(r?: number, g?: number, b?: number, a: number = 255): Color {
-    // Normalize a color
-    function normalize(color: number[]): number[] {
-        return color.map(c =>
-            c < 0 ? 0 :
-                c > 255 ? 255 :
-                    c)
-    }
-    return normalize([r, g, b, a]);
+    return [r, g, b, a].map(c => Math.max(0, Math.min(255, c)));
 }
 
 export function getRGB(color: Color): number[] {
