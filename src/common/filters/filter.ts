@@ -2,6 +2,7 @@ import { Image } from '../image';
 import { red, green, blue, grayscale, brighten, darken, brightness, opacity, negative } from './colorimetry';
 import { plus, minus, multiply, divide, screen, merge, blend } from './composition';
 import { boxBlur, gaussianBlur, sharpen, edgeDetection } from './convolution';
+import {resize, resizeAlias} from '../generators/antialias'
 
 export type Filter<T extends any[]> = (image: Image, ...params: T) => Image;
 
@@ -54,5 +55,7 @@ export const filters: { [key: string]: Filter<any> } = {
         boxBlur,
         gaussianBlur,
         sharpen,
-        edgeDetection
+        edgeDetection,
+        resize,
+        resizeAlias
 };

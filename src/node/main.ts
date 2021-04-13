@@ -3,13 +3,11 @@ import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { toRaster, Image } from '../common/image';
 import { generators } from '../common/generators/generator';
 import { filters } from '../common/filters/filter';
-
-const width = 1000;
-const height = 1000;
+import { GREEN, RED } from '../common/color';
 
 
 function exportToPNG(img: Image, name: string): void {
-	const canvas = createCanvas(width, height);
+	const canvas = createCanvas(img.width, img.height);
 	const context = canvas.getContext('2d');
 	context.putImageData(toRaster(img, createImageData), 0, 0);
 	const buffer = canvas.toBuffer('image/png');
@@ -89,14 +87,27 @@ function generateJSON(): string {
 									  "params": {"size": 2 }
   									}`;
 
-	return mergeGeneratorAndMergeGeneratorAndGenerator;
+	return generator;
 }
 
 function parseParams(params: any): Array<any> {
 	let array = [];
 
 	for (let p in params) {
-		array.push(params[p]);
+		switch (params[p]) {
+
+			// FIXME : Params are strings, how parse a color ?
+			case "RED":
+				array.push(RED);
+			break;
+			
+			case "GREEN":
+				array.push(GREEN);
+			break;
+			
+			default:
+				array.push(params[p]);
+		}
 	}
 	return array;
 }
