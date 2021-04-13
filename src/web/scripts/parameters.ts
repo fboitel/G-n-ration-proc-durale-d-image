@@ -1,61 +1,22 @@
-let paramIndex = 0;
+import { Color } from '../../common/color';
 
-export abstract class Parameter<I extends HTMLElement, V> {
-	public readonly ui: HTMLElement;
-	public readonly input: I;
-
-	protected constructor(ui: HTMLElement, input: I) {
-		this.ui = ui;
-		this.input = input;
-	}
-
-	public abstract getValue(): V;
+export enum ParameterType {
+	NUMBER,
+	COLOR,
 }
 
-export class NumberParam extends Parameter<HTMLInputElement, number> {
-	private readonly defaultValue: number;
-	private readonly min: number;
-	private readonly max: number;
+export interface Parameter<T> {
+	type: ParameterType;
+	name: string;
+	default: T;
+}
 
-	public constructor(name: string, defaultValue: number, min = -Infinity, max = +Infinity) {
-		if (min > defaultValue || defaultValue > max) {
-			throw new Error('incorrect bounds');
-		}
+export interface NumberParameter extends Parameter<number> {
+	type: ParameterType.NUMBER;
+	min?: number;
+	max?: number;
+}
 
-		const input = document.createElement('input');
-		input.type = "number";
-		input.value = defaultValue.toString();
-		input.id = `param-${paramIndex++}`;
-
-		const label = document.createElement('label');
-		label.textContent = name + ' :';
-		label.htmlFor = input.id;
-
-		const ui = document.createElement('div');
-		ui.className = 'input-row';
-		ui.append(label, input);
-
-		input.addEventListener('change', () => {
-			input.value = this.getValue().toString();
-		});
-
-		super(ui, input);
-		this.defaultValue = defaultValue;
-		this.min = min;
-		this.max = max;
-	}
-
-	public getValue(): number {
-		let value = parseInt(this.input.value);
-
-		if (isNaN(value)) {
-			value = this.defaultValue;
-		} else if (value < this.min) {
-			value = this.min;
-		} else if (value > this.max) {
-			value = this.max;
-		}
-
-		return value;
-	}
+export interface ColorParameter extends Parameter<Color> {
+	type: ParameterType.COLOR;
 }
