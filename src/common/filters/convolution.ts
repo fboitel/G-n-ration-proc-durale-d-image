@@ -4,10 +4,10 @@ import { Image, consImage } from '../image';
 type Kernel = number[];
 
 // Filter kernels
-const boxBlurKernel = Array(9).fill(1).map(el => el / 9);
-const gaussianBlurKernel = [1, 2, 1, 2, 4, 2, 1, 2, 1].map(el => el / 16);
-const edgeDetectionKernel = [0, 1, 0, 1, -4, 1, 0, 1, 0];
-const sharpenKernel = [0, -1, 0, -1, 5, -1, 0, -1, 0];
+const boxBlurKernel: Kernel = Array(9).fill(1).map(el => el / 9);
+const gaussianBlurKernel: Kernel = [1, 2, 1, 2, 4, 2, 1, 2, 1].map(el => el / 16);
+const edgeDetectionKernel: Kernel = [0, 1, 0, 1, -4, 1, 0, 1, 0];
+const sharpenKernel: Kernel = [0, -1, 0, -1, 5, -1, 0, -1, 0];
 
 // Check if a pixel (x, y) is in the image
 function isValidPixel(image: Image, x: number, y: number): boolean {
