@@ -1,9 +1,9 @@
-import { FilterMeta, GeneratorMeta } from './registry';
+import { FilterMeta, GeneratorMeta } from '../../common/registry';
 import { Image } from '../../common/image';
 import { clear, display } from './view';
 import { srand } from '../../common/random';
 import { getHeight, getSeed, getWidth } from './inputs';
-import { Parameter} from './parameters';
+import { createParameterUI, ParameterUI } from './parameters-ui'
 
 export enum BlockType {
 	GENERATOR,
@@ -20,6 +20,7 @@ export interface Block {
 	type: BlockType;
 	element: HTMLDivElement;
 	meta?: GeneratorMeta | FilterMeta;
+	parametersUI: ParameterUI<any, any>[]
 	inputs: IO[];
 	outputs: IO[];
 }
@@ -83,7 +84,7 @@ function createIOBar(type: IOType, parent: Block, nbOfIO: number): HTMLDivElemen
 	return bar;
 }
 
-function createBlockBody(title: string, parameters: Parameter<any, any>[]): HTMLDivElement {
+function createBlockBody(title: string, parametersUI: ParameterUI<any, any>[]): HTMLDivElement {
 	const titleElement = document.createElement('h2');
 	titleElement.textContent = title;
 
@@ -91,9 +92,9 @@ function createBlockBody(title: string, parameters: Parameter<any, any>[]): HTML
 	body.className = 'block-body';
 	body.appendChild(titleElement);
 
-	for (const parameter of parameters) {
-		body.appendChild(parameter.ui);
-		parameter.input.addEventListener('change', () => evaluateGraph());
+	for (const parameterUI of parametersUI) {
+		body.appendChild(parameterUI.container);
+		parameterUI.input.addEventListener('change', () => evaluateGraph());
 	}
 
 	return body;
@@ -112,6 +113,7 @@ export function createBlock(type: BlockType, nbOfInputs: number, nbOfOutputs: nu
 	const block: Block = {
 		type,
 		element,
+		parametersUI: meta ? meta.parameters.map(createParameterUI) : [],
 		inputs: [],
 		outputs: [],
 	}
@@ -123,7 +125,7 @@ export function createBlock(type: BlockType, nbOfInputs: number, nbOfOutputs: nu
 	const outputs = createIOBar(IOType.OUTPUT, block, nbOfOutputs);
 
 	if (inputs) element.appendChild(inputs);
-	element.appendChild(createBlockBody(meta?.name ?? 'Afficher', meta ? meta.parameters : []));
+	element.appendChild(createBlockBody(meta?.name ?? 'Afficher', block.parametersUI));
 	if (outputs) element.appendChild(outputs);
 
 	return block;
@@ -253,7 +255,7 @@ export function evaluateGraph() {
 	function evaluateBlock(block: Block): Image {
 		if (block.type === BlockType.GENERATOR) {
 			const meta = block.meta as GeneratorMeta;
-			return meta.generator.call(this, width, height, ...meta.parameters.map(p => p.getValue()));
+			return meta.generator.call(this, width, height, ...block.parametersUI.map(p => p.getSanitizedValue()));
 		}
 
 		const edges = block.inputs.map(i => i.edge);
@@ -265,7 +267,7 @@ export function evaluateGraph() {
 		switch (block.type) {
 			case BlockType.FILTER:
 				const meta = block.meta as FilterMeta;
-				return meta.filter.call(this, ...inputs, ...meta.parameters.map(p => p.getValue()));
+				return meta.filter.call(this, ...inputs, ...block.parametersUI.map(p => p.getSanitizedValue()));
 
 			case BlockType.OUTPUT:
 				return inputs[0];

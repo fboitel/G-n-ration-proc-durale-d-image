@@ -1,13 +1,13 @@
-import { Color, consColor, getRed, getGreen, getBlue } from '../color';
+import { Color, consColor } from '../color';
 import { Image, consImage } from '../image';
 
 type Kernel = number[];
 
 // Filter kernels
-const boxBlurKernel = Array(9).fill(1).map(el => el / 9);
-const gaussianBlurKernel = [1, 2, 1, 2, 4, 2, 1, 2, 1].map(el => el / 16);
-const edgeDetectionKernel = [-1, -1, -1, -1, 8, -1, -1, -1, -1];
-const sharpenKernel = [0, -1, 0, -1, 5, -1, 0, -1, 0];
+const boxBlurKernel: Kernel = Array(9).fill(1).map(el => el / 9);
+const gaussianBlurKernel: Kernel = [1, 2, 1, 2, 4, 2, 1, 2, 1].map(el => el / 16);
+const edgeDetectionKernel: Kernel = [0, 1, 0, 1, -4, 1, 0, 1, 0];
+const sharpenKernel: Kernel = [0, -1, 0, -1, 5, -1, 0, -1, 0];
 
 // Check if a pixel (x, y) is in the image
 function isValidPixel(image: Image, x: number, y: number): boolean {
@@ -34,9 +34,9 @@ function getNeighborhood(image: Image, x: number, y: number): Color[] {
 function applyKernel(x: number, y: number, image: Image, kernel: Kernel): Color {
     const neighborhood = getNeighborhood(image, x, y);
     return consColor(
-        neighborhood.reduce((acc, c, i) => acc += getRed(c) * kernel[i], 0),
-        neighborhood.reduce((acc, c, i) => acc += getGreen(c) * kernel[i], 0),
-        neighborhood.reduce((acc, c, i) => acc += getBlue(c) * kernel[i], 0)
+        neighborhood.reduce((acc, c, i) => acc += c[0] * kernel[i], 0),
+        neighborhood.reduce((acc, c, i) => acc += c[1] * kernel[i], 0),
+        neighborhood.reduce((acc, c, i) => acc += c[2] * kernel[i], 0)
     );
 }
 
