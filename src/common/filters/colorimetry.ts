@@ -1,4 +1,4 @@
-import { R, G, B, A, grayLevel, consColor, getRGB } from '../color';
+import { R, G, B, A, grayLevel, consColor, getRGB, Color } from '../color';
 import { Image } from '../image';
 import { applyFunction } from './utils';
 
@@ -22,6 +22,13 @@ export function grayScale(image: Image): Image {
         const gray = grayLevel(color);
         return consColor(gray, gray, gray, color[A])
     });
+}
+
+export function colorize(image: Image, coloration: Color): Image {
+    return applyFunction(image, color => {
+        const gray = grayLevel(color);
+        return consColor(...getRGB(coloration).map(c => gray * c / 255), color[A]);
+    })
 }
 
 /** Adjust brightness by the given percentage */

@@ -1,5 +1,5 @@
 import { ColorParameter, NumberParameter, Parameter, ParameterType } from '../../common/parameters'
-import { Color } from '../../common/color'
+import { A, B, Color, consColor, G, getRGB, R } from '../../common/color'
 
 export function createParameterUI(parameter: Parameter<any>): ParameterUI<any, any> {
 	switch (parameter.type) {
@@ -25,6 +25,7 @@ export abstract class ParameterUI<T, P extends Parameter<T>> {
 		this.input.type = this.getHtmlInputType();
 		this.input.value = this.valueToString(parameter.default);
 		this.input.id = `param-${paramIndex++}`;
+		console.log(this.valueToString(parameter.default))
 
 		const label = document.createElement('label');
 		label.textContent = parameter.name + ' :';
@@ -85,17 +86,34 @@ class ColorParameterUI extends ParameterUI<Color, ColorParameter> {
 	}
 
 	protected parseValue(value: string): Color {
-		// TODO
-		return null;
+		if (value.length !== 7) {
+			return null;
+		}
+
+		value = value.substring(1);
+
+		const r = parseInt(value.substring(0, 2), 16);
+		const g = parseInt(value.substring(2, 4), 16);
+		const b = parseInt(value.substring(4, 6), 16);
+
+		if (isNaN(r) || isNaN(g) || isNaN(b)) {
+			return null;
+		}
+
+		return consColor(r, g, b);
 	}
 
 	protected sanitizeValue(value: Color): Color {
-		// TODO
-		return null;
+		return value ?? this.parameter.default;
 	}
 
 	protected valueToString(value: Color): string {
-		// TODO
-		return null;
+		return '#' + getRGB(value).map(c => {
+			let str = c.toString(16);
+			if (str.length === 1) {
+				str = '0' + str;
+			}
+			return str;
+		}).join('')
 	}
 }

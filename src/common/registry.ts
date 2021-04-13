@@ -2,7 +2,8 @@ import { Filter } from './filters/filter';
 import { Generator } from './generators/generator';
 import { fractalNoise, perlinNoise } from './generators/noise';
 import { Parameter, ParameterType } from './parameters';
-import { blue, green, red } from './filters/colorimetry';
+import { blue, colorize, green, red } from './filters/colorimetry';
+import { GREEN } from './color'
 
 export interface GeneratorMeta {
 	name: string;
@@ -36,3 +37,4 @@ registerGenerator('Bruit fractal', fractalNoise, {type: ParameterType.NUMBER, na
 registerFilter('Canal rouge', red);
 registerFilter('Canal bleu', blue);
 registerFilter('Canal vert', green);
+registerFilter('Colorer', colorize, 0, {type: ParameterType.COLOR, name: 'Couleur', default: GREEN});
