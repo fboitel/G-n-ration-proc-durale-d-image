@@ -1,4 +1,4 @@
-import { Color, consColor, getRed, getGreen, getBlue, getAlpha } from './color';
+import { Color, consColor } from './color';
 
 export interface Image {
     width: number;
@@ -24,10 +24,10 @@ export function toRaster(img: Image, imageDataConstructor: (width: number, heigh
     for (let y = 0; y < img.height; ++y) {
         for (let x = 0; x < img.width; ++x) {
             const color = img.function(x, y);
-            raster.data[n++] = getRed(color);
-            raster.data[n++] = getGreen(color);
-            raster.data[n++] = getBlue(color);
-            raster.data[n++] = getAlpha(color);
+            raster.data[n++] = color[0];
+            raster.data[n++] = color[1];
+            raster.data[n++] = color[2];
+            raster.data[n++] = color[3];
         }
     }
     return raster;

@@ -1,5 +1,10 @@
 export type Color = number[];
 
+const R = 0;
+const G = 1;
+const B = 2;
+const A = 3;
+
 // Create a color
 export function consColor(r?: number, g?: number, b?: number, a: number = 255): Color {
     // Normalize a color
@@ -12,105 +17,81 @@ export function consColor(r?: number, g?: number, b?: number, a: number = 255): 
     return normalize([r, g, b, a]);
 }
 
-// Get red component of a color
-export function getRed(c: Color): number {
-    return c[0];
-}
-
-// Get green component of a color
-export function getGreen(c: Color): number {
-    return c[1];
-}
-
-// Get blue component of a color
-export function getBlue(c: Color): number {
-    return c[2];
-}
-
-// Get alpha component of a color
-export function getAlpha(c: Color) {
-    return c[3];
-}
-
-export function getRGB(c: Color): [number, number, number] {
-    return [getRed(c), getGreen(c), getBlue(c)];
+export function getRGB(color: Color): number[] {
+    return color.slice(0, 3);
 }
 
 //// Colorimetry
 
 // Keep only the red component of a color
-export function redify(c: Color): Color {
-    return consColor(getRed(c), 0, 0, getAlpha(c));
+export function redify(color: Color): Color {
+    return consColor(color[R], 0, 0, color[A]);
 }
 
 // Keep only the green component of a color
-export function greenify(c: Color): Color {
-    return consColor(0, getGreen(c), 0, getAlpha(c));
+export function greenify(color: Color): Color {
+    return consColor(0, color[G], 0, color[A]);
 }
 
 // Keep only the blue component of a color
-export function blueify(c: Color): Color {
-    return consColor(0, 0, getBlue(c), getAlpha(c));
+export function blueify(color: Color): Color {
+    return consColor(0, 0, color[B], color[A]);
 }
 
-export function gray(c: Color): Color {
-    const average = (getRed(c) + getGreen(c) + getBlue(c)) / 3;
-    return consColor(average, average, average, getAlpha(c));
+export function gray(color: Color): Color {
+    const average = (color[R] + color[G] + color[B]) / 3;
+    return consColor(average, average, average, color[A]);
 }
 
 // Get the negative of a color
-export function negateColor(c: Color): Color {
-    return consColor(getRed(c) ^ 255, getGreen(c) ^ 255, getBlue(c) ^ 255, getAlpha(c));
+export function negateColor(color: Color): Color {
+    return consColor(...getRGB(color).map(c => c ^ 255));
 }
 
 // Change the brightness of a color by the given factor
-export function setBrightness(c: Color, brightnessFactor: number): Color {
-    return consColor(...getRGB(c).map(cmp => cmp * (1 + brightnessFactor)));
+export function setBrightness(color: Color, brightnessFactor: number): Color {
+    return consColor(...getRGB(color).map(c => c * (1 + brightnessFactor)));
 }
 
 // Change the opacity of a color by the given factor
-export function setOpacity(c: Color, opacityFactor: number): Color {
-    return consColor(...getRGB(c), getAlpha(c) * (1 + opacityFactor));
+export function setOpacity(color: Color, opacityFactor: number): Color {
+    return consColor(...getRGB(color), color[A] * (1 + opacityFactor));
 }
 
 //// Operations
 
 // Add two colors
-export function addColor(c1: Color, c2: Color): Color {
-    return consColor(...getRGB(c1).map((c, i) => c + getRGB(c2)[i]));
+export function addColor(color1: Color, color2: Color): Color {
+    return consColor(...getRGB(color1).map((c, i) => c + color2[i]));
 }
 
 // Substract two colors
-export function subColor(c1: Color, c2: Color): Color {
-    return consColor(...getRGB(c1).map((c, i) => c - getRGB(c2)[i]));
+export function subColor(color1: Color, color2: Color): Color {
+    return consColor(...getRGB(color1).map((c, i) => c - color2[i]));
 }
 
 // Multiply two colors
-export function mulColor(c1: Color, c2: Color): Color {
-    return consColor(...getRGB(c1).map((c, i) => c * getRGB(c2)[i] / 255));
+export function mulColor(color1: Color, color2: Color): Color {
+    return consColor(...getRGB(color1).map((c, i) => c * color2[i] / 255));
 }
 
 // Divide two colors
-export function divColor(c1: Color, c2: Color): Color {
-    return consColor(...getRGB(c1).map((c, i) => c / getRGB(c2)[i]));
+export function divColor(color1: Color, color2: Color): Color {
+    return consColor(...getRGB(color1).map((c, i) => c / color2[i]));
 }
 
 // Do the average of two colors
-export function meanColor(c1: Color, c2: Color): Color {
-    return consColor(...getRGB(c1).map((c, i) => (c + getRGB(c2)[i]) / 2));
+export function meanColor(color1: Color, color2: Color): Color {
+    return consColor(...getRGB(color1).map((c, i) => (c + color2[i]) / 2));
 }
 
-export function mergeColor(c1: Color, c2: Color): Color {
-    return consColor(
-        Math.max(getRed(c1), getRed(c2)),
-        Math.max(getGreen(c1), getGreen(c2)),
-        Math.max(getBlue(c1), getBlue(c2))
-    );
+export function mergeColor(color1: Color, color2: Color): Color {
+    return consColor(...getRGB(color1).map((c, i) => Math.max(c, color2[i])));
 }
 
 // Do the weighted average of two colors
-export function meanColorWeighted(c1: Color, p1: number, c2: Color, p2: number): Color {
-    return consColor(...getRGB(c1).map((c, i) => i < 3 ? c * p1 + getRGB(c2)[i] * p2 : c));
+export function meanColorWeighted(color1: Color, p1: number, color2: Color, p2: number): Color {
+    return consColor(...getRGB(color1).map((c, i) => c * p1 + color2[i] * p2));
 }
 
 
