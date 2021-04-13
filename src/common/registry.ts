@@ -30,9 +30,9 @@ function registerFilter(name: string, filter: Filter<any>, additionalInputs = 0,
 	filters[filter.name] = {name, filter, additionalInputs, parameters};
 }
 
-registerGenerator("Bruit de Perlin", perlinNoise, {type: ParameterType.NUMBER, name: 'Taille', default: 30});
-registerGenerator("Bruit fractal", fractalNoise, {type: ParameterType.NUMBER, name: 'Couches', default: 3});
+registerGenerator('Bruit de Perlin', perlinNoise, {type: ParameterType.NUMBER, name: 'Taille', default: 30});
+registerGenerator('Bruit fractal', fractalNoise, {type: ParameterType.NUMBER, name: 'Couches', default: 3});
 
-registerFilter("Rougir", red);
-registerFilter("Bleuir", blue);
-registerFilter("Verdir", green);
+registerFilter('Canal rouge', red);
+registerFilter('Canal bleu', blue);
+registerFilter('Canal vert', green);

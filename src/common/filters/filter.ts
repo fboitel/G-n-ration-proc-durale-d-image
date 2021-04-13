@@ -1,5 +1,5 @@
 import { Image } from '../image';
-import { red, green, blue, grayscale, brighten, darken, brightness, opacity, negative } from './colorimetry';
+import { red, green, blue, grayScale, brighten, darken, brightness, opacity, negative } from './colorimetry';
 import { plus, minus, multiply, divide, screen, merge, blend } from './composition';
 import { boxBlur, gaussianBlur, sharpen, edgeDetection } from './convolution';
 
@@ -14,7 +14,7 @@ export const filtersNew: { [category: string]: { [key: string]: Filter<any> } } 
         darken,
         brightness,
         opacity,
-        grayscale,
+        grayscale: grayScale,
         negative
     },
     composition: {
@@ -43,7 +43,7 @@ export const filters: { [key: string]: Filter<any> } = {
         darken,
         brightness,
         opacity,
-        grayscale,
+        grayscale: grayScale,
         negative,
         plus,
         minus,

@@ -1,9 +1,9 @@
 export type Color = number[];
 
-const R = 0;
-const G = 1;
-const B = 2;
-const A = 3;
+export const R = 0;
+export const G = 1;
+export const B = 2;
+export const A = 3;
 
 // Create a color
 export function consColor(r?: number, g?: number, b?: number, a: number = 255): Color {
@@ -14,48 +14,14 @@ export function getRGB(color: Color): number[] {
     return color.slice(0, 3);
 }
 
-//// Colorimetry
-
-// Keep only the red component of a color
-export function redify(color: Color): Color {
-    return consColor(color[R], 0, 0, color[A]);
-}
-
-// Keep only the green component of a color
-export function greenify(color: Color): Color {
-    return consColor(0, color[G], 0, color[A]);
-}
-
-// Keep only the blue component of a color
-export function blueify(color: Color): Color {
-    return consColor(0, 0, color[B], color[A]);
-}
-
-// Convert a color to grayscale
-export function gray(color: Color): Color {
-    const gray = .299 * color[R] + .587 * color[G] + .114 * color[B]; // Weigthed average
-    return consColor(gray, gray, gray, color[A]);
+export function grayLevel(color: Color): number {
+    // Weighted average
+    return .299 * color[R] + .587 * color[G] + .114 * color[B];
 }
 
 // Get the negative of a color
 export function negateColor(color: Color): Color {
     return consColor(...getRGB(color).map(c => c ^ 255));
-}
-
-// Change the brightness of a color by the given percentage
-export function setBrightness(color: Color, brightnessFactor: number): Color {
-    return consColor(...getRGB(color).map(c => c * (1 + brightnessFactor / 100)));
-}
-
-// Change the contrast of a color by the given percentage
-export function setContrast(color: Color, contrastFactor: number): Color {
-    const correctionFactor = 259 * (contrastFactor * 255 / 100 + 255) / (255 * (259 - contrastFactor * 255 / 100));
-    return consColor(...getRGB(color).map(c => correctionFactor * (c - 128) + 128));
-}
-
-// Change the opacity of a color by the given percentage
-export function setOpacity(color: Color, opacityFactor: number): Color {
-    return consColor(...getRGB(color), color[A] * (1 + opacityFactor / 100));
 }
 
 //// Operations

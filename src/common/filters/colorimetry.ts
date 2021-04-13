@@ -1,55 +1,52 @@
-import { Color, BLACK, WHITE, redify, greenify, blueify, gray, negateColor, meanColor, setBrightness, setContrast, setOpacity } from '../color';
+import { R, G, B, A, grayLevel, consColor, getRGB } from '../color';
 import { Image } from '../image';
 import { applyFunction } from './utils';
 
-// Apply a red filter
+/** Keep the red component only. */
 export function red(image: Image): Image {
-    return applyFunction(image, color => redify(color));
+    return applyFunction(image, color => consColor(color[R], 0, 0, color[A]));
 }
 
-// Apply a green filter
+/** Keep the green component only. */
 export function green(image: Image): Image {
-    return applyFunction(image, color => greenify(color));
+    return applyFunction(image, color => consColor(0, color[G], 0, color[A]));
 }
 
-// Apply a blue filter
+/** Keep the blue component only. */
 export function blue(image: Image): Image {
-    return applyFunction(image, color => blueify(color));
+    return applyFunction(image, color => consColor(0, 0, color[B], color[A]));
 }
 
-// Returns image in grayscale
-export function grayscale(image: Image): Image {
-    return applyFunction(image, color => gray(color));
+export function grayScale(image: Image): Image {
+    return applyFunction(image, color => {
+        const gray = grayLevel(color);
+        return consColor(gray, gray, gray, color[A])
+    });
 }
 
-// Increase brighteness
-export function brighten(image: Image): Image {
-    console.log(`${brighten.name} deprecated: use brightness(image, factor) instead`);
-    return applyFunction(image, color => meanColor(color, WHITE));
-}
-
-// Decrease brighteness by the given percentage
-export function darken(image: Image): Image {
-    console.log(`${darken.name} deprecated: use brightness(image, factor) instead`);
-    return applyFunction(image, color => meanColor(color, BLACK));
-}
-
-// Adjust brightness by the given percentage
+/** Adjust brightness by the given percentage */
 export function brightness(image: Image, brightnessFactor: number): Image {
-    return applyFunction(image, color => setBrightness(color, brightnessFactor));
+    return applyFunction(image, color => {
+        return consColor(...getRGB(color).map(c => c * (1 + brightnessFactor / 100)), color[A]);
+    });
 }
 
-// Adjust contrast by the given percentage
+/** Adjust contrast by the given percentage. */
 export function contrast(image: Image, contrastFactor: number): Image {
-    return applyFunction(image, color => setContrast(color, contrastFactor));
+    const correctionFactor = 259 * (contrastFactor * 255 / 100 + 255) / (255 * (259 - contrastFactor * 255 / 100));
+    return applyFunction(image, color => {
+        return consColor(...getRGB(color).map(c => correctionFactor * (c - 128) + 128), color[A]);
+    });
 }
 
-// Adjust opacity
+/** Adjust opacity by given percentage. */
 export function opacity(image: Image, opacityFactor: number): Image {
-    return applyFunction(image, color => setOpacity(color, opacityFactor));
+    return applyFunction(image, color => {
+        return consColor(...getRGB(color), color[A] * (1 + opacityFactor / 100));
+    });
 }
 
-// Return the negative of an image
+/** Get the negative of an image. */
 export function negative(image: Image): Image {
-    return applyFunction(image, color => negateColor(color));
+    return applyFunction(image, color =>  consColor(...getRGB(color).map(c => c ^ 255)));
 }
