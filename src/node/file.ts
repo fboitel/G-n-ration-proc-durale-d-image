@@ -1,4 +1,4 @@
-import { Image, fromRaster, toRaster } from './image';
+import { Image, fromRaster, toRaster } from '../common/image';
 import { writeFileSync } from 'fs';
 import { createCanvas, createImageData, loadImage } from 'canvas';
 
