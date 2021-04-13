@@ -1,4 +1,4 @@
-import { Color, BLACK, WHITE, redify, greenify, blueify, gray, negateColor, meanColor, setBrightness, setOpacity } from '../color';
+import { Color, BLACK, WHITE, redify, greenify, blueify, gray, negateColor, meanColor, setBrightness, setContrast, setOpacity } from '../color';
 import { Image } from '../image';
 import { applyFunction } from './utils';
 
@@ -28,18 +28,23 @@ export function brighten(image: Image): Image {
     return applyFunction(image, color => meanColor(color, WHITE));
 }
 
-// Decrease brighteness
+// Decrease brighteness by the given percentage
 export function darken(image: Image): Image {
     console.log(`${darken.name} deprecated: use brightness(image, factor) instead`);
     return applyFunction(image, color => meanColor(color, BLACK));
 }
 
-// Change brightness
+// Adjust brightness by the given percentage
 export function brightness(image: Image, brightnessFactor: number): Image {
     return applyFunction(image, color => setBrightness(color, brightnessFactor));
 }
 
-// Change opacity
+// Adjust contrast by the given percentage
+export function contrast(image: Image, contrastFactor: number): Image {
+    return applyFunction(image, color => setContrast(color, contrastFactor));
+}
+
+// Adjust opacity
 export function opacity(image: Image, opacityFactor: number): Image {
     return applyFunction(image, color => setOpacity(color, opacityFactor));
 }
