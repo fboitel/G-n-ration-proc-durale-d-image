@@ -1,0 +1,15 @@
+{
+	"type": "generator",
+	"name": "signedDistance",
+	"params": {
+		"width": 1000,
+		"height": 1000,
+        "colorStart": "RED",
+        "colorEnd": "GREEN",
+        "centerX": 500,
+        "centerY": 500,
+        "sizeX": 300,
+        "sizeY": 50,
+        "inscribed": "false"
+	}
+}

@@ -98,43 +98,40 @@ export function radialDistance(width: number, height: number, colorStart: Color,
     return { width, height, function: image };
 }
 
-export function signedDistance(width: number, height: number, colorStart: Color,  colorEnd: Color, center_x: number, center_y: number, inscribed: boolean) {
+export function signedDistance(width: number, height: number, colorStart: Color, colorEnd: Color, centerX: number, centerY: number, sizeX: number, sizeY: number, inscribed: boolean) {
 
-    // care about max_distance
-    let size_x = 200;
-    let size_y = 100;
-
+    // care about max_distance ???
     let max_distance = 0;
 
     if (inscribed) {
         // get maximum distance between all side
-        max_distance = Math.max(center_x, width - center_x);
-        max_distance = Math.max(max_distance, center_y);
-        max_distance = Math.max(max_distance, height - center_y);
+        max_distance = Math.max(centerX, width - centerX);
+        max_distance = Math.max(max_distance, centerY);
+        max_distance = Math.max(max_distance, height - centerY);
     } else {
         // get maximum distance between all corners
-        max_distance = Math.sqrt((0 - center_x) ** 2 + (0 - center_y) ** 2), Math.sqrt((0 - center_x) ** 2 + (height - center_y) ** 2);
-        max_distance = Math.max(max_distance, Math.sqrt((width - center_x) ** 2 + (0 - center_y) ** 2));
-        max_distance = Math.max(max_distance, Math.sqrt((width - center_x) ** 2 + (height - center_y) ** 2));
+        max_distance = Math.sqrt((0 - centerX) ** 2 + (0 - centerY) ** 2), Math.sqrt((0 - centerX) ** 2 + (height - centerY) ** 2);
+        max_distance = Math.max(max_distance, Math.sqrt((width - centerX) ** 2 + (0 - centerY) ** 2));
+        max_distance = Math.max(max_distance, Math.sqrt((width - centerX) ** 2 + (height - centerY) ** 2));
     }
 
     function image(x: number, y: number) {
 
         // symétrie par rapport au centre de la figure
-        if (x < center_x) {
-            x = center_x - x;
+        if (x < centerX) {
+            x = centerX - x;
         } else {
-            x = x - center_x;
+            x = x - centerX;
         }
-        
-        if (y < center_y) {
-            y = center_y - y;
+
+        if (y < centerY) {
+            y = centerY - y;
         } else {
-            y = y - center_y;
+            y = y - centerY;
         }
 
         // TODO : call special function depending on params (triangle, rectangle ...)
-        let distance = Math.sqrt(Math.max(x - size_x, 0) ** 2 + Math.max(y - size_y, 0) ** 2);
+        let distance = Math.sqrt(Math.max(x - sizeX, 0) ** 2 + Math.max(y - sizeY, 0) ** 2);
 
         if (distance <= 0) {
             return colorStart;
