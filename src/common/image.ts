@@ -6,6 +6,11 @@ export interface Image {
     function: (x: number, y: number) => Color;
 }
 
+export interface ImageDataCommon {
+    width: number;
+    height: number;
+    data: Uint8ClampedArray;
+}
 
 // Create an image
 export function consImage(width: number, height: number, func: (x: number, y: number) => Color): Image {
@@ -17,7 +22,7 @@ export function consImage(width: number, height: number, func: (x: number, y: nu
 }
 
 // Convert a functional image to ImageData
-export function toRaster(img: Image, imageDataConstructor: (width: number, height: number) => ImageData): ImageData {
+export function toRaster(img: Image, imageDataConstructor: (width: number, height: number) => ImageDataCommon): ImageDataCommon {
     const raster = imageDataConstructor(img.width, img.height);
     let n = 0; // Index inside the image array
 
@@ -34,7 +39,7 @@ export function toRaster(img: Image, imageDataConstructor: (width: number, heigh
 }
 
 // Convert ImageData to a functional image
-export function fromRaster(raster: ImageData): Image {
+export function fromRaster(raster: ImageDataCommon): Image {
     const { width, height, data } = raster;
 
     return consImage(width, height, (x: number, y: number) => {
