@@ -33,17 +33,18 @@ export function rotate(angle = Math.PI/2, image : Image) : Image {
     return consImage( image.width, image.height, rotInt)
 }
 
+
 //local function
 function isBetweenPoints(points : number[][], P : number[]) : boolean {
     function isInsideTwoPoints(p1 : number[], p2 : number[], p3 : number[]) : boolean {
         let sensX = p1[0] - p2[0];
         let sensY = p1[1] - p2[1];
-        if (sensX == 0)//streight equation is x = constante;
+        if (Math.abs(sensX) < 0.01)//streight equation is x = constante;
             if (sensY < 0) 
                 return p3[0] > p2[0];
             else 
                 return p3[0] < p2[0];
-        if (sensY == 0)//streight equation is f(x) = constante;
+        if (Math.abs(sensY) < 0.01)//streight equation is f(x) = constante;
             if (sensX < 0)
                 return p3[1] < p2[1];
             else 
@@ -72,28 +73,34 @@ function isBetweenPoints(points : number[][], P : number[]) : boolean {
     return boo;
 }
 
-function linkPoints(points : number[][], P : number[], eps : number) : boolean {
+function isLinkPoints(points : number[][], P : number[], eps : number) : boolean {
     function streightTwoPoints(p1 : number[], p2 : number[], p3 : number[]) : boolean {
         let sensX = p1[0] - p2[0];
         let sensY = p1[1] - p2[1];
-        if (sensX == 0)//streight equation is x = constante;
+        if (Math.abs(sensX) < 0.01)//streight equation is x = constante;
             if (sensY > 0)
                 return Math.abs(p3[0] - p2[0]) < eps && p3[1] < p1[1] + eps && p3[1] > p2[1] - eps;
             else 
                 return Math.abs(p3[0] - p2[0]) < eps && p3[1] > p1[1] - eps && p3[1] < p2[1] + eps
-        if (sensY == 0)//streight equation is f(x) = constante;
+        if (Math.abs(sensY) < 0.01)//streight equation is f(x) = constante;
             if (sensX > 0)
                 return Math.abs(p3[1] - p2[1]) < eps && p3[0] < p1[0] + eps && p3[0] > p2[0] - eps;
             else 
-                return Math.abs(p3[1] - p2[1]) < eps && p3[0] > p1[0] && p3[0] < p2[0];
+                return Math.abs(p3[1] - p2[1]) < eps && p3[0] > p1[0] - eps && p3[0] < p2[0] + eps;
         let a = (p2[1] - p1[1])/(p2[0] - p1[0]);//leading coefficient
         let b = p1[1] - a*p1[0];//ordered at the origin
         let bbis = p3[1] - a*p3[0];//ordered at the origin for the streight with the same leading coeficient but passing through point p3
         let margin = Math.abs((b-bbis)*Math.sin(Math.atan(1/a)));
         if (sensX > 0)
-            return margin < eps && p3[0] < p1[0] && p3[0] > p2[0];
+            if (sensY > 0)
+                return margin < eps && p3[0] < p1[0] && p3[0] > p2[0] && p3[1] < p1[1] + eps && p3[1] > p2[1] - eps;
+            else
+                return margin < eps && p3[0] < p1[0] && p3[0] > p2[0] && p3[1] > p1[1] - eps && p3[1] < p2[1] + eps;
         if (sensX < 0)
-            return margin < eps && p3[0] > p1[0] && p3[0] < p2[0];
+            if (sensY > 0)
+                return margin < eps && p3[0] > p1[0] && p3[0] < p2[0] && p3[1] < p1[1] + eps && p3[1] > p2[1] - eps;
+            else
+                return margin < eps && p3[0] > p1[0] && p3[0] < p2[0] && p3[1] > p1[1] - eps && p3[1] < p2[1] + eps;
     }
     function reducer(acc : boolean, point : number[], i : number, array : number[][]) : boolean {
         if (acc == true)
@@ -107,6 +114,35 @@ function linkPoints(points : number[][], P : number[], eps : number) : boolean {
     return boo;
 }
 
+//the first element of angleAndLength is the starting point
+function isTracePath( anglesAndLengths : number[][], P : number[], eps : number) : boolean {
+    function nextPoint(angleAndLength : number[], i : number, array : number[][]) : void {
+        if (i != 0) {
+            let p = array[i - 1];
+            let angle = angleAndLength[0];
+            let length = angleAndLength[1];
+            array[i] = [length*Math.cos(angle) + p[0], length*Math.sin(angle) + p[1]];
+        }
+    }
+    anglesAndLengths.forEach(nextPoint);
+    //console.log(anglesAndLengths);
+    return isLinkPoints(anglesAndLengths, P, eps);
+    //return isBetweenPoints(anglesAndLengths, P);
+}
+
+function isFillPath( anglesAndLengths : number[][], P : number[]) : boolean {
+    function nextPoint(angleAndLength : number[], i : number, array : number[][]) : void {
+        if (i != 0) {
+            let p = array[i - 1];
+            let angle = angleAndLength[0];
+            let length = angleAndLength[1];
+            array[i] = [length*Math.cos(angle) + p[0], length*Math.sin(angle) + p[1]];
+        }
+    }
+    anglesAndLengths.forEach(nextPoint);
+    //console.log(anglesAndLengths);
+    return isBetweenPoints(anglesAndLengths, P);
+}
 
 
 //regular pavages
@@ -287,7 +323,7 @@ export function pavageCarreAdouciGen(width = 1000, height = 1000, nbOfPatterns =
 
 export function pavageGrandRhombitrihexagonalGen(width = 1000, height = 1000, nbOfPatterns = 10, color1 = RED, color2 = GREEN, color3 = BLUE) : Image {
     function pavageInt(x : number, y : number) : Color {
-        let size = width/nbOfPatterns; //size is the scale
+        let size = width/(2*nbOfPatterns); //size is the scale
         x = Math.abs(x);
         y = Math.abs(y);
         y = y%(2*1.26*size); //Reducing x and y on a rectangle which is 1 repetition of the motif
@@ -345,13 +381,64 @@ export function pavageGrandRhombitrihexagonalGen(width = 1000, height = 1000, nb
 
 
 
+
+
+//pentagonal pavages
+//type1
+
+export function pavagePenType1Gen(width = 1000, height = 1000, nb0fPatterns = 10) : Image {
+    function generatePent(x : number, y : number) : Color {
+        let a = 290;
+        let b = 150;
+        let c = 190;
+        let d = 220;
+        if (isTracePath([[500, 500], [0, a], [-Math.PI/4, b], [-Math.PI*2/3, c], [-Math.PI, d]], [x, y], 4))
+            return BLACK;
+        if (isTracePath([[500, 300], [-Math.PI, a], [-Math.PI/4-Math.PI, b], [-Math.PI*2/3-Math.PI, c], [-Math.PI-Math.PI, d]], [x, y], 4))
+            return BLACK;
+        return GREEN;
+    }
+    return consImage(width, height, generatePent);
+}
+
+
+
+/*
 export function pavagePentagonalGen(points : number[][]) : Image {
     function pavageInt(x : number, y : number) : Color {
-        if (linkPoints(points, [x, y], 2)) 
+        //if (isTracePath([[300, 300], [0, 100], [-Math.PI/3, 100], [-2*Math.PI/3, 100], [-3*Math.PI/3, 100], [-4*Math.PI/3, 100], [-5*Math.PI/3, 100]], [x, y], 3))
+        //   return WHITE;
+        //if (isTracePath([[700, 700], [0, 100], [-Math.PI/3, 100], [-2*Math.PI/3, 100], [-3*Math.PI/3, 100], [-4*Math.PI/3, 100], [-5*Math.PI/3, 100]], [x, y], 3))
+        //    return WHITE;
+        //if (isTracePath([[300, 700], [0, 100], [-Math.PI/3, 100], [-2*Math.PI/3, 100], [-3*Math.PI/3, 100], [-4*Math.PI/3, 100], [-5*Math.PI/3, 100]], [x, y], 3))
+        //    return WHITE;
+        //if (isTracePath([[250, 300], [0, 100], [-Math.PI/3, 100], [-2*Math.PI/3, 100], [-3*Math.PI/3, 100], [-4*Math.PI/3, 100], [-5*Math.PI/3, 100]], [x, y], 3))
+        //    return WHITE;
+        if (isTracePath([[800, 740], [-Math.PI/12, 100], [-Math.PI/3-Math.PI/12, 100], [-2*Math.PI/3-Math.PI/12, 100], [-3*Math.PI/3-Math.PI/12, 100], [-4*Math.PI/3-Math.PI/12, 100], [-5*Math.PI/3-Math.PI/12, 100]], [x, y], 3))
+            return WHITE;
+        if (isFillPath([[800, 740], [-Math.PI/12, 100], [-Math.PI/3-Math.PI/12, 100], [-2*Math.PI/3-Math.PI/12, 100], [-3*Math.PI/3-Math.PI/12, 100], [-4*Math.PI/3-Math.PI/12, 100]], [x, y], 3))
+            return RED;        
+        if (isLinkPoints([
+            [ 250, 300 ],
+            [ 350, 300 ],
+            [ 400, 213.39745962155615 ],
+            [ 350, 126],
+            [ 250, 126],
+            [ 199.99999999999994, 213.3974596215561 ],
+          ]
+          , [x, y], 2  )) 
             return BLACK;
-        if (isBetweenPoints(points, [x, y]))
-            return RED;
+        if (isBetweenPoints([
+            [ 250, 300 ],
+            [ 350, 300 ],
+            [ 400, 213.39745962155615 ],
+            [ 350, 126.79491924311228 ],
+            [ 250, 126.79491924311226 ],
+            [ 199.99999999999994, 213.3974596215561 ],
+          ], [x, y]))
+            return BLUE;
         return GREEN;
     }
     return consImage(1000, 1000, pavageInt);
 }
+*/

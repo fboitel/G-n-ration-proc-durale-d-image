@@ -1,9 +1,10 @@
 import { Filter } from './filters/filter';
 import { Generator } from './generators/generator';
 import { fractalNoise, perlinNoise } from './generators/noise';
+import { pavageCarreAdouciGen, pavageGrandRhombitrihexagonalGen, pavageHexaGen, pavageTriangleGen } from './generators/tiling'
 import { Parameter, ParameterType } from './parameters';
 import { blue, colorize, green, red } from './filters/colorimetry';
-import { GREEN } from './color'
+import { BLUE, consColor, GREEN } from './color'
 
 export interface GeneratorMeta {
 	name: string;
@@ -33,6 +34,10 @@ function registerFilter(name: string, filter: Filter<any>, additionalInputs = 0,
 
 registerGenerator('Bruit de Perlin', perlinNoise, {type: ParameterType.NUMBER, name: 'Taille', default: 30});
 registerGenerator('Bruit fractal', fractalNoise, {type: ParameterType.NUMBER, name: 'Couches', default: 3});
+
+registerGenerator('Pavage triangle', pavageTriangleGen, {type: ParameterType.NUMBER, name: 'Nombre de motifs', default: 5},{type:ParameterType.COLOR, name:'Première couleur', default: consColor(122, 0, 255)}, {type:ParameterType.COLOR, name:'Seconde couleur', default: consColor(255, 122, 0)})
+registerGenerator('Pavage carré adouci', pavageCarreAdouciGen, {type: ParameterType.NUMBER, name: 'Nombre de motifs', default: 5},{type:ParameterType.COLOR, name:'Première couleur', default: consColor(122, 0, 255)}, {type:ParameterType.COLOR, name:'Seconde couleur', default: consColor(255, 122, 0)}, {type:ParameterType.COLOR, name:'Troisième couleur', default: consColor(0, 255, 122)})
+registerGenerator('Pavage grand rhombitrihexagonal', pavageGrandRhombitrihexagonalGen, {type: ParameterType.NUMBER, name: 'Nombre de motifs', default: 10},{type:ParameterType.COLOR, name:'Première couleur', default: consColor(122, 0, 255)}, {type:ParameterType.COLOR, name:'Seconde couleur', default: consColor(255, 122, 0)}, {type:ParameterType.COLOR, name:'Troisième couleur', default: consColor(0, 255, 122)})
 
 registerFilter('Canal rouge', red);
 registerFilter('Canal bleu', blue);
