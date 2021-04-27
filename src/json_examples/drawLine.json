@@ -5,16 +5,16 @@
         "type": "generator",
         "name": "drawLine",
         "params": {
-            "width": 100,
-            "height": 100,
+            "width": 1000,
+            "height": 1000,
             "xStart": 0,
             "yStart": 0,
-            "xEnd": 100,
-            "yEnd": 100
+            "xEnd": 1000,
+            "yEnd": 1000
         }
     },
     "params": {
-        "newW": 10,
-        "newH": 10
+        "newW": 500,
+        "newH": 500
     }
 }
