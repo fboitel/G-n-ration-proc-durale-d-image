@@ -115,7 +115,7 @@ export function createBlock(type: BlockType, nbOfInputs: number, nbOfOutputs: nu
 	const parentBox = graph.getClientRects()[0];
 	const element = document.createElement('div');
 	const blockType = ['generator', 'filter', 'output'][type];
-	element.className = `block ${blockType}`;
+	element.className = `block ${blockType} disconnected`;
 	element.style.left = parentBox.x + 'px';
 	element.style.top = parentBox.y + 'px';
 	element.style.zIndex = (zIndex++).toString();
@@ -210,6 +210,9 @@ function makeLinkable(io: IO) {
 				};
 
 				updateEdgeCoordinates(overedIO);
+
+				updateConnectionFlag(io.parent);
+				updateConnectionFlag(overedIO.parent);
 			}
 
 			evaluateGraph();
@@ -220,6 +223,9 @@ function makeLinkable(io: IO) {
 function removeEdge(edge: Edge) {
 	if (!edge) return;
 
+	edge.from.parent.element.classList.add('disconnected');
+	edge.to.parent.element.classList.add('disconnected');
+
 	lines.removeChild(edge.element);
 	delete edge.from.edge;
 	delete edge.to.edge;
@@ -228,6 +234,11 @@ function removeEdge(edge: Edge) {
 function removeBlock(block: Block) {
 	[...block.inputs, ...block.outputs].forEach(e => removeEdge(e.edge))
 	block.element.parentNode.removeChild(block.element);
+}
+
+function updateConnectionFlag(block: Block) {
+	const disconnected = [...block.inputs, ...block.outputs].find(io => io.edge === undefined);
+	block.element.classList[disconnected ? 'add' : 'remove']('disconnected');
 }
 
 function createLine(from: IO, toX: number, toY: number): SVGLineElement {
