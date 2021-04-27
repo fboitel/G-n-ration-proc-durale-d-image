@@ -84,13 +84,24 @@ function createIOBar(type: IOType, parent: Block, nbOfIO: number): HTMLDivElemen
 	return bar;
 }
 
-function createBlockBody(title: string, parametersUI: ParameterUI<any, any>[]): HTMLDivElement {
+function createBlockBody(block: Block, title: string, parametersUI: ParameterUI<any, any>[]): HTMLDivElement {
 	const titleElement = document.createElement('h2');
 	titleElement.textContent = title;
 
 	const body = document.createElement('div');
 	body.className = 'block-body';
 	body.appendChild(titleElement);
+
+	if (block.type !== BlockType.OUTPUT) {
+		const exitBtn = document.createElement('div');
+		exitBtn.className = 'exit-btn';
+		exitBtn.textContent = '×';
+		exitBtn.addEventListener('click', () => {
+			removeBlock(block);
+			evaluateGraph();
+		});
+		body.appendChild(exitBtn);
+	}
 
 	for (const parameterUI of parametersUI) {
 		body.appendChild(parameterUI.container);
@@ -125,7 +136,7 @@ export function createBlock(type: BlockType, nbOfInputs: number, nbOfOutputs: nu
 	const outputs = createIOBar(IOType.OUTPUT, block, nbOfOutputs);
 
 	if (inputs) element.appendChild(inputs);
-	element.appendChild(createBlockBody(meta?.name ?? 'Afficher', block.parametersUI));
+	element.appendChild(createBlockBody(block, meta?.name ?? 'Afficher', block.parametersUI));
 	if (outputs) element.appendChild(outputs);
 
 	return block;
@@ -212,6 +223,11 @@ function removeEdge(edge: Edge) {
 	lines.removeChild(edge.element);
 	delete edge.from.edge;
 	delete edge.to.edge;
+}
+
+function removeBlock(block: Block) {
+	[...block.inputs, ...block.outputs].forEach(e => removeEdge(e.edge))
+	block.element.parentNode.removeChild(block.element);
 }
 
 function createLine(from: IO, toX: number, toY: number): SVGLineElement {

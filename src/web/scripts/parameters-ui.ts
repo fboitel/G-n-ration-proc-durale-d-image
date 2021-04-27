@@ -25,7 +25,6 @@ export abstract class ParameterUI<T, P extends Parameter<T>> {
 		this.input.type = this.getHtmlInputType();
 		this.input.value = this.valueToString(parameter.default);
 		this.input.id = `param-${paramIndex++}`;
-		console.log(this.valueToString(parameter.default))
 
 		const label = document.createElement('label');
 		label.textContent = parameter.name + ' :';

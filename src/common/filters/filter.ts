@@ -1,5 +1,5 @@
 import { Image } from '../image';
-import { red, green, blue, grayScale, brighten, darken, brightness, opacity, negative } from './colorimetry';
+import { red, green, blue, grayScale, brightness, opacity, negative } from './colorimetry';
 import { plus, minus, multiply, divide, screen, merge, blend } from './composition';
 import { boxBlur, gaussianBlur, sharpen, edgeDetection } from './convolution';
 import {resize, resizeAlias} from '../generators/antialias'
@@ -11,8 +11,6 @@ export const filtersNew: { [category: string]: { [key: string]: Filter<any> } } 
         red,
         green,
         blue,
-        brighten,
-        darken,
         brightness,
         opacity,
         grayscale: grayScale,
@@ -40,8 +38,6 @@ export const filters: { [key: string]: Filter<any> } = {
         red,
         green,
         blue,
-        brighten,
-        darken,
         brightness,
         opacity,
         grayscale: grayScale,
