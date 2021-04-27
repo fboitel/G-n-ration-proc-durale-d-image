@@ -1,5 +1,5 @@
 import { BLACK, BLUE, WHITE } from '../common/color';
-import { loadFromFile, saveToPNG } from '../common/file';
+import { loadFromFile, saveToPNG } from '../node/file';
 import { filtersNew as filters } from '../common/filters/filter';
 import { consImage } from '../common/image';
 
