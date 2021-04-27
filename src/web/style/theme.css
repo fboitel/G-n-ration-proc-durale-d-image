@@ -15,8 +15,12 @@ body {
 	background-color: var(--toolbar-color);
 }
 
+#view.bg-0 {
+	background-color: white;
+}
+
 /* inspired from https://stackoverflow.com/a/51054396/9515617 */
-#view {
+#view.bg-1 {
 	--tint: rgba(128, 128, 128, 0.75);
 	background-image:
 		/* tint image */
@@ -27,4 +31,39 @@ body {
 
 	background-blend-mode: normal, difference, normal;
 	background-size: 40px 40px;
+}
+
+#view.bg-2 {
+	background-color: black;
+}
+
+#bg-select {
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: flex;
+}
+
+.color-option {
+	--option-size: 30px;
+	box-sizing: border-box;
+	width: var(--option-size);
+	height: var(--option-size);
+	border-radius: calc(var(--option-size) / 2);
+	background-color: red;
+	cursor: pointer;
+	margin: 5px 5px 0 0;
+	border: 2px solid var(--separator-color);
+}
+
+.color-option:nth-child(1) {
+	background-color: white;
+}
+
+.color-option:nth-child(2) {
+	background-color: grey;
+}
+
+.color-option:nth-child(3) {
+	background-color: black;
 }
