@@ -28,15 +28,21 @@ main {
 }
 
 #toolbar {
-	height: 3em;
+	height: 6em;
 	display: flex;
-	flex-direction: row;
-	align-items: center;
+	flex-direction: column;
+	justify-content: space-evenly;
 	border-bottom: 1px solid var(--separator-color);
 	font-size: .9em;
 }
 
-#toolbar > * {
+#toolbar > div {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+#toolbar > div > * {
 	margin-left: .5em;
 	font-size: .9em;
 }
@@ -46,7 +52,7 @@ main {
 }
 
 #graph {
-	height: calc(100vh - 6em - 2px);
+	height: calc(100vh - 9em - 2px);
 }
 
 #graph svg {
