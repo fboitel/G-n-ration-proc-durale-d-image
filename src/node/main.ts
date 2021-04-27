@@ -4,6 +4,7 @@ import { toRaster, Image } from '../common/image';
 import { generators } from '../common/generators/generator';
 import { filters } from '../common/filters/filter';
 import { GREEN, RED } from '../common/color';
+import { loadFromFile } from './file';
 
 
 function exportToPNG(img: Image, name: string): void {
@@ -152,6 +153,7 @@ function readJSON(json: any): Image {
 
 function mainJSON(): void {
 
+	
 	let jsonBuffer = "";
 	let fileName = "generatedImage"
 
@@ -162,7 +164,6 @@ function mainJSON(): void {
 		if (existsSync(path)) {
 			jsonBuffer = readFileSync(path, 'utf8');
 			fileName = path.split('\\').pop().split('/').pop().split('.').shift();
-			console.log("file open : " + path);
 		} else {
 			console.log("Unable to open file : " + path);
 			return process.exit(1)
@@ -175,7 +176,8 @@ function mainJSON(): void {
 
 	let img = readJSON(json);
 
-	exportToPNG(img, fileName);
+//loadFromFile("./public/fleur.png").then(img => exportToPNG(filters.resizeAlias(img,500,500), 'newfleur'));
+//	exportToPNG(img, fileName);
 }
 
 mainJSON();

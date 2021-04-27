@@ -49,7 +49,7 @@ export function contrast(image: Image, contrastFactor: number): Image {
 /** Adjust opacity by given percentage. */
 export function opacity(image: Image, opacityFactor: number): Image {
     return applyFunction(image, color => {
-        return consColor(...getRGB(color), color[A] * (1 + opacityFactor / 100));
+        return consColor(...getRGB(color), color[A] * (opacityFactor / 100));
     });
 }
 

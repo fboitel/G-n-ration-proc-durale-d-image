@@ -1,1 +1,0 @@
-{"mappings":"0CAAiBA,KAAKC,MAAM","sources":["./src/json_examples/test.json"],"sourcesContent":["{\n\t\"type\": \"generator\",\n\t\"name\": \"signedDistance\",\n\t\"params\": {\n\t\t\"width\": 1000,\n\t\t\"height\": 1000\n\t}\n}"],"names":["JSON","parse"],"version":3,"file":"test.js.map"}

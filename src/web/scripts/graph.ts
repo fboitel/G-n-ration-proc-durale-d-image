@@ -84,13 +84,24 @@ function createIOBar(type: IOType, parent: Block, nbOfIO: number): HTMLDivElemen
 	return bar;
 }
 
-function createBlockBody(title: string, parametersUI: ParameterUI<any, any>[]): HTMLDivElement {
+function createBlockBody(block: Block, title: string, parametersUI: ParameterUI<any, any>[]): HTMLDivElement {
 	const titleElement = document.createElement('h2');
 	titleElement.textContent = title;
 
 	const body = document.createElement('div');
 	body.className = 'block-body';
 	body.appendChild(titleElement);
+
+	if (block.type !== BlockType.OUTPUT) {
+		const exitBtn = document.createElement('div');
+		exitBtn.className = 'exit-btn';
+		exitBtn.textContent = '×';
+		exitBtn.addEventListener('click', () => {
+			removeBlock(block);
+			evaluateGraph();
+		});
+		body.appendChild(exitBtn);
+	}
 
 	for (const parameterUI of parametersUI) {
 		body.appendChild(parameterUI.container);
@@ -104,7 +115,7 @@ export function createBlock(type: BlockType, nbOfInputs: number, nbOfOutputs: nu
 	const parentBox = graph.getClientRects()[0];
 	const element = document.createElement('div');
 	const blockType = ['generator', 'filter', 'output'][type];
-	element.className = `block ${blockType}`;
+	element.className = `block ${blockType} disconnected`;
 	element.style.left = parentBox.x + 'px';
 	element.style.top = parentBox.y + 'px';
 	element.style.zIndex = (zIndex++).toString();
@@ -125,7 +136,7 @@ export function createBlock(type: BlockType, nbOfInputs: number, nbOfOutputs: nu
 	const outputs = createIOBar(IOType.OUTPUT, block, nbOfOutputs);
 
 	if (inputs) element.appendChild(inputs);
-	element.appendChild(createBlockBody(meta?.name ?? 'Afficher', block.parametersUI));
+	element.appendChild(createBlockBody(block, meta?.name ?? 'Afficher', block.parametersUI));
 	if (outputs) element.appendChild(outputs);
 
 	return block;
@@ -199,6 +210,9 @@ function makeLinkable(io: IO) {
 				};
 
 				updateEdgeCoordinates(overedIO);
+
+				updateConnectionFlag(io.parent);
+				updateConnectionFlag(overedIO.parent);
 			}
 
 			evaluateGraph();
@@ -209,9 +223,22 @@ function makeLinkable(io: IO) {
 function removeEdge(edge: Edge) {
 	if (!edge) return;
 
+	edge.from.parent.element.classList.add('disconnected');
+	edge.to.parent.element.classList.add('disconnected');
+
 	lines.removeChild(edge.element);
 	delete edge.from.edge;
 	delete edge.to.edge;
+}
+
+function removeBlock(block: Block) {
+	[...block.inputs, ...block.outputs].forEach(e => removeEdge(e.edge))
+	block.element.parentNode.removeChild(block.element);
+}
+
+function updateConnectionFlag(block: Block) {
+	const disconnected = [...block.inputs, ...block.outputs].find(io => io.edge === undefined);
+	block.element.classList[disconnected ? 'add' : 'remove']('disconnected');
 }
 
 function createLine(from: IO, toX: number, toY: number): SVGLineElement {
