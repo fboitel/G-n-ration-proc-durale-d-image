@@ -14,7 +14,7 @@ const rep = 10;
 //const img = rotate(Math.PI/3, pavageCarreGen());
 //const img = rotate(Math.PI/4, pavageCarreGen());
 //const img = rotate(Math.PI/3, translate(50, 50, pavageGrandRhombitrihexagonalGen(1000, 1000, 20)));
-const img = pavagePenType1Gen();
+const img = pavagePenType1Gen(width, height, 150, 130, 100, 60, Math.PI/2, Math.PI*(3/4), 2);
 // OUTPUT
 
 const canvas = createCanvas(width, height);
