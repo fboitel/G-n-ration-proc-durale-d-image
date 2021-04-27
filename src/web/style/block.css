@@ -6,7 +6,7 @@
 	cursor: grab;
 }
 
-#graph:not(.link-building) {
+#graph:not(.link-building) .block {
 	cursor: move;
 }
 
@@ -102,7 +102,7 @@
 }
 
 .block .exit-btn {
-	background-color: red;
+	background-color: #F46067;
 	color: white;
 	border-radius: 5px;
 	display: flex;
