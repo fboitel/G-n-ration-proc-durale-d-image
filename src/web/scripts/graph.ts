@@ -1,6 +1,4 @@
 import { FilterMeta, GeneratorMeta } from '../../common/registry';
-import { Image } from '../../common/image';
-import { clear, display } from './view';
 import { srand } from '../../common/random';
 import { getHeight, getSeed, getWidth } from './inputs';
 import { createParameterUI, ParameterUI } from './parameters-ui'
@@ -274,30 +272,56 @@ export function evaluateGraph() {
 	srand(getSeed());
 	const width = getWidth();
 	const height = getHeight();
-	const image = evaluateBlock(output);
+	const json = evaluateBlock(output);
 
-	if (image) display(image);
+	// TODO implement
+	/*
+	if (json) display(imageFromJson(json));
 	else clear();
+	*/
 
-	function evaluateBlock(block: Block): Image {
-		if (block.type === BlockType.GENERATOR) {
-			const meta = block.meta as GeneratorMeta;
-			return meta.generator.call(this, width, height, ...block.parametersUI.map(p => p.getSanitizedValue()));
-		}
+	function evaluateBlock(block: Block): any {
+		let json: any;
 
-		const edges = block.inputs.map(i => i.edge);
-		if (edges.includes(undefined)) return null;
+		switch(block.type) {
+			case BlockType.GENERATOR:
+				json = {
+					type: 'generator',
+					params: {
+						width,
+						height,
+					},
+				};
+				break;
 
-		const inputs = edges.map(edge => evaluateBlock(edge.from.parent));
-		if (inputs.includes(null)) return null;
-
-		switch (block.type) {
 			case BlockType.FILTER:
-				const meta = block.meta as FilterMeta;
-				return meta.filter.call(this, ...inputs, ...block.parametersUI.map(p => p.getSanitizedValue()));
+				json = {
+					type: 'filter',
+				};
+				break;
 
 			case BlockType.OUTPUT:
-				return inputs[0];
+				const parent = output.inputs[0].edge?.from?.parent;
+				return parent ? evaluateBlock(parent) : null;
 		}
+
+		if (block.meta && block.meta.parameters.length > 0) {
+			if (!json.params) json.params = {};
+			for (let i = 0; i < block.meta.parameters.length; ++i) {
+				json.params[block.meta.parameters[i].name] = block.parametersUI[i].getSanitizedValue();
+			}
+		}
+
+		if (block.type === BlockType.FILTER) {
+			json.inputs = [];
+			for (const input of block.inputs) {
+				if (!input.edge) return null;
+				const jsonInput = evaluateBlock(input.edge.from.parent)
+				if (!jsonInput) return null;
+				json.inputs.push(jsonInput);
+			}
+		}
+
+		return json;
 	}
 }
