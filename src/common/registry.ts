@@ -9,6 +9,7 @@ import { boxBlur, edgeDetection, gaussianBlur, sharpen } from './filters/convolu
 import { plus, minus, multiply, divide, screen, merge } from './filters/composition';
 import { bilinearResize, resize } from './filters/resize';
 import { drawLine } from './generators/shapes';
+import { firedForest } from './generators/numericalSimulation';
 
 export interface GeneratorMeta {
     name: string;
@@ -54,6 +55,8 @@ registerGenerator('Distance signée', signedDistance, { type: ParameterType.COLO
 // Shapes
 registerGenerator('Ligne', drawLine, { type: ParameterType.NUMBER, name: 'Debut X', default: 0 }, { type: ParameterType.NUMBER, name: 'Debut Y', default: 0 }, { type: ParameterType.NUMBER, name: 'Fin X', default: 100 }, { type: ParameterType.NUMBER, name: 'Fin Y', default: 100 });
 
+// Numerical simulation
+registerGenerator('Forest-Fire', firedForest, { type : ParameterType.NUMBER, name: 'Probability that a tree grow in an ampty space in %', default: 1}, { type : ParameterType.NUMBER, name: 'Probability that a single tree ignites in %', default: 1 }, { type: ParameterType.NUMBER, name: 't', default: 0 })
 
 // Colorimetry
 registerFilter('Canal rouge', red);
