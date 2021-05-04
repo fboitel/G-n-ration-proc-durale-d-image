@@ -12,6 +12,10 @@ export interface ImageDataCommon {
     data: Uint8ClampedArray;
 }
 
+export type Generator<T extends any[]> = (width: number, height: number, ...params: T) => Image;
+
+export type Filter<T extends any[]> = (image: Image, ...params: T) => Image;
+
 // Create an image
 export function consImage(width: number, height: number, func: (x: number, y: number) => Color): Image {
     return {

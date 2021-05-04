@@ -1,20 +1,20 @@
 {
     "type": "filter",
-    "name": "resizeAlias",
+    "name": "bilinearResize",
     "input": {
         "type": "generator",
         "name": "drawLine",
         "params": {
-            "width": 1000,
-            "height": 1000,
+            "width": 16,
+            "height": 16,
             "xStart": 0,
             "yStart": 0,
-            "xEnd": 1000,
-            "yEnd": 1000
+            "xEnd": 5,
+            "yEnd": 5
         }
     },
     "params": {
-        "newW": 500,
-        "newH": 500
+        "newW": 1000,
+        "newH": 1000
     }
 }

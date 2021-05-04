@@ -1,8 +1,7 @@
 import { createCanvas, createImageData } from 'canvas';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { toRaster, Image } from '../common/image';
-import { generators } from '../common/generators/generator';
-import { filters } from '../common/filters/filter';
+import { generators, filters } from '../common/registry';
 import { GREEN, RED } from '../common/color';
 import { loadFromFile } from './file';
 
@@ -127,13 +126,13 @@ function readJSON(json: any): Image {
 	switch (type) {
 
 		case "generator":
-			img = generators[name].apply(this, parsedParams);
+			img = generators[name].generator.apply(this, parsedParams);
 			break;
 
 		case "filter":
 			let input = readJSON(json["input"]);
 			parsedParams.unshift(input);
-			img = filters[name].apply(this, parsedParams);
+			img = filters[name].filter.apply(this, parsedParams);
 			break;
 
 		case "merge":
@@ -141,7 +140,7 @@ function readJSON(json: any): Image {
 			let secondInput = readJSON(json["secondInput"]);
 			parsedParams.unshift(secondInput);
 			parsedParams.unshift(firstInput);
-			img = filters[name].apply(this, parsedParams);
+			img = filters[name].filter.apply(this, parsedParams);
 			break;
 	}
 
@@ -174,9 +173,10 @@ function mainJSON(): void {
 
 	const json = JSON.parse(jsonBuffer);
 
+	// TODO : check the order of the args
 	let img = readJSON(json);
 
-//loadFromFile("./public/fleur.png").then(img => exportToPNG(filters.resizeAlias(img,500,500), 'newfleur'));
+loadFromFile("./public/fleur.png").then(img => exportToPNG(filters.bilinearResize.filter(img,500,500), 'newfleur'));
 //	exportToPNG(img, fileName);
 }
 

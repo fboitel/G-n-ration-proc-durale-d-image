@@ -1,9 +1,7 @@
 import { createCanvas, createImageData } from 'canvas';
 import { writeFileSync } from 'fs';
 import { toRaster } from '../common/image';
-import { generators } from '../common/generators/generator'
 import { pavageCarreGen, pavageHexaGen, pavageTriangleGen, pavageCarreAdouciGen, pavageGrandRhombitrihexagonalGen, translate, rotate, pavagePenType1Gen } from '../common/generators/tiling';
-import { consColor } from '../common/color'
 
 // TEST
 

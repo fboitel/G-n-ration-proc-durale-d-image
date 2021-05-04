@@ -429,7 +429,7 @@ export function pavagePenType1Gen(width = 500, height = 500, a1 : number, b1 : n
             //if (X3 + ind*g < 0 - a) return false;
             if (isInTracedPath([[X3+ind*g, Y3+ind*h], [0, -a], [-(Math.PI-A), -b], [-Math.PI, -c], [-(2*Math.PI-B), -d]], [x, y], 2))
                 return true;
-          //  if (X4 + ind*g > width + a) return false;
+            //if (X4 + ind*g > width + a) return false;
             if (isInTracedPath([[X4+ind*g, Y4+ind*h], [0, a], [-(Math.PI-A), b], [-Math.PI, c], [-(2*Math.PI-B), d]], [x, y], 2))
                 return true;
             //if (X5 + ind*g < 0 - a) return false;
@@ -453,43 +453,3 @@ export function pavagePenType1Gen(width = 500, height = 500, a1 : number, b1 : n
 }
 
 
-
-/*
-export function pavagePentagonalGen(points : number[][]) : Image {
-    function pavageInt(x : number, y : number) : Color {
-        //if (isTracePath([[300, 300], [0, 100], [-Math.PI/3, 100], [-2*Math.PI/3, 100], [-3*Math.PI/3, 100], [-4*Math.PI/3, 100], [-5*Math.PI/3, 100]], [x, y], 3))
-        //   return WHITE;
-        //if (isTracePath([[700, 700], [0, 100], [-Math.PI/3, 100], [-2*Math.PI/3, 100], [-3*Math.PI/3, 100], [-4*Math.PI/3, 100], [-5*Math.PI/3, 100]], [x, y], 3))
-        //    return WHITE;
-        //if (isTracePath([[300, 700], [0, 100], [-Math.PI/3, 100], [-2*Math.PI/3, 100], [-3*Math.PI/3, 100], [-4*Math.PI/3, 100], [-5*Math.PI/3, 100]], [x, y], 3))
-        //    return WHITE;
-        //if (isTracePath([[250, 300], [0, 100], [-Math.PI/3, 100], [-2*Math.PI/3, 100], [-3*Math.PI/3, 100], [-4*Math.PI/3, 100], [-5*Math.PI/3, 100]], [x, y], 3))
-        //    return WHITE;
-        if (isTracePath([[800, 740], [-Math.PI/12, 100], [-Math.PI/3-Math.PI/12, 100], [-2*Math.PI/3-Math.PI/12, 100], [-3*Math.PI/3-Math.PI/12, 100], [-4*Math.PI/3-Math.PI/12, 100], [-5*Math.PI/3-Math.PI/12, 100]], [x, y], 3))
-            return WHITE;
-        if (isFillPath([[800, 740], [-Math.PI/12, 100], [-Math.PI/3-Math.PI/12, 100], [-2*Math.PI/3-Math.PI/12, 100], [-3*Math.PI/3-Math.PI/12, 100], [-4*Math.PI/3-Math.PI/12, 100]], [x, y], 3))
-            return RED;        
-        if (isLinkPoints([
-            [ 250, 300 ],
-            [ 350, 300 ],
-            [ 400, 213.39745962155615 ],
-            [ 350, 126],
-            [ 250, 126],
-            [ 199.99999999999994, 213.3974596215561 ],
-          ]
-          , [x, y], 2  )) 
-            return BLACK;
-        if (isBetweenPoints([
-            [ 250, 300 ],
-            [ 350, 300 ],
-            [ 400, 213.39745962155615 ],
-            [ 350, 126.79491924311228 ],
-            [ 250, 126.79491924311226 ],
-            [ 199.99999999999994, 213.3974596215561 ],
-          ], [x, y]))
-            return BLUE;
-        return GREEN;
-    }
-    return consImage(1000, 1000, pavageInt);
-}
-*/
