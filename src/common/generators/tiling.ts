@@ -1,6 +1,7 @@
 import { Image, consImage } from '../image';
 import { WHITE, BLACK, RED, GREEN, BLUE, Color } from '../color';
-import { ESTALE } from 'node:constants';
+import { ESTALE, SSL_OP_MSIE_SSLV2_RSA_PADDING } from 'node:constants';
+import { signedDistance } from './distance';
 
 
 export function contour(image : (x : number, y : number) => Color) : (x : number, y : number) => Color {
@@ -115,7 +116,7 @@ function isLinkPoints(points : number[][], P : number[], eps : number) : boolean
 }
 
 //the first element of angleAndLength is the starting point
-function isTracePath( anglesAndLengths : number[][], P : number[], eps : number) : boolean {
+function isInTracedPath( anglesAndLengths : number[][], P : number[], eps : number) : boolean {
     function nextPoint(angleAndLength : number[], i : number, array : number[][]) : void {
         if (i != 0) {
             let p = array[i - 1];
@@ -386,17 +387,67 @@ export function pavageGrandRhombitrihexagonalGen(width = 1000, height = 1000, nb
 //pentagonal pavages
 //type1
 
-export function pavagePenType1Gen(width = 1000, height = 1000, nb0fPatterns = 10) : Image {
+export function pavagePenType1Gen(width = 500, height = 500, a1 : number, b1 : number, c1 : number, d1 : number, A1 : number, B1 : number, scale1 : number) : Image {
     function generatePent(x : number, y : number) : Color {
-        let a = 290;
-        let b = 150;
-        let c = 190;
-        let d = 220;
-        if (isTracePath([[500, 500], [0, a], [-Math.PI/4, b], [-Math.PI*2/3, c], [-Math.PI, d]], [x, y], 4))
-            return BLACK;
-        if (isTracePath([[500, 300], [-Math.PI, a], [-Math.PI/4-Math.PI, b], [-Math.PI*2/3-Math.PI, c], [-Math.PI-Math.PI, d]], [x, y], 4))
-            return BLACK;
-        return GREEN;
+        let scale = scale1/100;
+        let a = a1*scale;
+        let b = b1*scale;
+        let c = c1*scale;
+        let d = d1*scale;
+        let A = A1*(Math.PI/180);
+        let B = B1*(Math.PI/180);
+        let h = b*Math.sin(A);
+        let g = c - a +b*Math.cos(A);
+        let hr = h - d*Math.sin(Math.PI-B);
+        let gr = g + d*Math.cos(Math.PI-B);
+        let X1 = width/2;
+        let Y1 = h/2;
+        let X2 = X1 + (2*a -b*Math.cos(A));
+        let Y2 = Y1 - h;
+        let X3 = X1 - gr;
+        let Y3 = Y1 - hr;
+        let X4 = X1 + (X2 - X3);
+        let Y4 = Y1 + (Y2 - Y3);
+        let X5 = X1 - (X2 - X3);
+        let Y5 = Y1 - (Y2 - Y3);
+        let X6 = X2 + (X2 - X3);
+        let Y6 = Y2 + (Y2 - Y3);
+        let X7 = X3 - (X2 - X3);
+        let Y7 = Y3 - (Y2 - Y3);
+        let X8 = X4 + (X2 - X3);
+        let Y8 = Y4 + (Y2 - Y3);
+        let tab = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        function reducer(acc : boolean, ind : number){
+            if (acc === true)
+                return true;
+            if (ind - 1> height/h)
+                return false;
+            if (isInTracedPath([[X1+ind*g, Y1+ind*h], [0, a], [-(Math.PI-A), b], [-Math.PI, c], [-(2*Math.PI-B), d]], [x, y], 2))
+                return true;
+            if (isInTracedPath([[X2+ind*g, Y2+ind*h], [0, -a], [-(Math.PI-A), -b], [-Math.PI, -c], [-(2*Math.PI-B), -d]], [x, y], 2))
+                return true;
+            //if (X3 + ind*g < 0 - a) return false;
+            if (isInTracedPath([[X3+ind*g, Y3+ind*h], [0, -a], [-(Math.PI-A), -b], [-Math.PI, -c], [-(2*Math.PI-B), -d]], [x, y], 2))
+                return true;
+          //  if (X4 + ind*g > width + a) return false;
+            if (isInTracedPath([[X4+ind*g, Y4+ind*h], [0, a], [-(Math.PI-A), b], [-Math.PI, c], [-(2*Math.PI-B), d]], [x, y], 2))
+                return true;
+            //if (X5 + ind*g < 0 - a) return false;
+            if (isInTracedPath([[X5+ind*g, Y5+ind*h], [0, a], [-(Math.PI-A), b], [-Math.PI, c], [-(2*Math.PI-B), d]], [x, y], 2))
+                return true;
+            //if (X6 + ind*g > width + a) return false;
+            if (isInTracedPath([[X6+ind*g, Y6+ind*h], [0, -a], [-(Math.PI-A), -b], [-Math.PI, -c], [-(2*Math.PI-B), -d]], [x, y], 2))
+                return true;
+            //if (X7 + ind*g < 0 - a) return false;
+            if (isInTracedPath([[X7+ind*g, Y7+ind*h], [0, -a], [-(Math.PI-A), -b], [-Math.PI, -c], [-(2*Math.PI-B), -d]], [x, y], 2))
+                return true;
+            //if (X8 + ind*g > width + a) return false;
+            if (isInTracedPath([[X8+ind*g, Y8+ind*h], [0, a], [-(Math.PI-A), b], [-Math.PI, c], [-(2*Math.PI-B), d]], [x, y], 2))
+                return true;
+            return false;
+            
+        }
+        return tab.reduce(reducer, false) == true ? BLACK : GREEN;
     }
     return consImage(width, height, generatePent);
 }
