@@ -7,7 +7,8 @@ import { BLACK, BLUE, consColor, GREEN, WHITE } from './color';
 import { red, green, blue, colorize, grayScale, brightness, contrast, opacity, negative } from './filters/colorimetry';
 import { boxBlur, edgeDetection, gaussianBlur, sharpen } from './filters/convolution';
 import { plus, minus, multiply, divide, screen, merge } from './filters/composition';
-import { bilinearResize, resize } from './generators/resize';
+import { bilinearResize, resize } from './filters/resize';
+import { drawLine } from './generators/shapes';
 
 export interface GeneratorMeta {
     name: string;
@@ -49,6 +50,9 @@ registerGenerator('Pavage pentagonal de type 1', pavagePenType1Gen, { type: Para
 registerGenerator('Diagrammes de Voronoi', voronoi, { type: ParameterType.NUMBER, name: 'Nombre de points', default: 10 });
 registerGenerator('Distance radiale', radialDistance, { type: ParameterType.COLOR, name: 'Couleur de départ', default: BLACK }, { type: ParameterType.COLOR, name: 'Couleur de fin', default: WHITE }, { type: ParameterType.NUMBER, name: 'Centre X', default: 0 }, { type: ParameterType.NUMBER, name: 'Centre Y', default: 0 }, { type: ParameterType.BOOLEAN, name: 'Inscrit', default: false } );
 registerGenerator('Distance signée', signedDistance, { type: ParameterType.COLOR, name: 'Couleur de départ', default: BLACK }, { type: ParameterType.COLOR, name: 'Couleur de fin', default: WHITE }, { type: ParameterType.NUMBER, name: 'Centre X', default: 0 }, { type: ParameterType.NUMBER, name: 'Centre Y', default: 0 }, { type: ParameterType.NUMBER, name: 'Largeur', default: 100 }, { type: ParameterType.NUMBER, name: 'Hauteur', default: 100 }, { type: ParameterType.BOOLEAN, name: 'Inscrit', default: false } );
+
+// Shapes
+registerGenerator('Ligne', drawLine, { type: ParameterType.NUMBER, name: 'Debut X', default: 0 }, { type: ParameterType.NUMBER, name: 'Debut Y', default: 0 }, { type: ParameterType.NUMBER, name: 'Fin X', default: 100 }, { type: ParameterType.NUMBER, name: 'Fin Y', default: 100 });
 
 
 // Colorimetry

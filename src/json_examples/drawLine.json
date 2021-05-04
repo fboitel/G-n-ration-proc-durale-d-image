@@ -1,6 +1,6 @@
 {
     "type": "filter",
-    "name": "resizeAlias",
+    "name": "bilinearResize",
     "input": {
         "type": "generator",
         "name": "drawLine",
