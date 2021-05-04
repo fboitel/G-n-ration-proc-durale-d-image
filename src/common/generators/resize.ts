@@ -2,24 +2,8 @@ import { addColor, BLACK, BLUE, Color, meanColorWeighted, mergeColor, RED, subCo
 import { Image } from "../image";
 
 
-export function drawLine(width: number, height: number, xStart: number, yStart: number, xEnd: number, yEnd: number): Image {
-
-    // find the equation ax + b
-    let a = (yEnd - yStart) / (xEnd - xStart);
-    let b = yStart - a * xStart;
-
-    // another method would be start from (xStart, yStart) and reach (xEnd, yEnd)
-    function image(x: number, y: number): Color {
-        if (xStart <= x && x <= xEnd && y == Math.round(a * x + b)) {
-            return BLACK;
-        }
-        return WHITE;
-    }
-
-    return { width, height, function: image };
-}
-
 export function resize(oldImage: Image, newWidth: number, newHeight: number): Image {
+    // Rezise oldImage without interpolation
 
     let widthCoef = 1;
     let heightCoef = 1;
@@ -42,7 +26,7 @@ export function resize(oldImage: Image, newWidth: number, newHeight: number): Im
     return { width: newWidth, height: newHeight, function: image };
 }
 
-export function resizeAlias(oldImage: Image, newWidth: number, newHeight: number): Image {
+export function bilinearResize(oldImage: Image, newWidth: number, newHeight: number): Image {
 
     let widthCoef = oldImage.width / newWidth;
     let heightCoef = oldImage.height / newHeight;

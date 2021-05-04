@@ -1,8 +1,7 @@
 import { createCanvas, createImageData } from 'canvas';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { toRaster, Image } from '../common/image';
-import { generators } from '../common/registry';
-import { filters } from '../common/filters/filter';
+import { generators, filters } from '../common/registry';
 import { GREEN, RED } from '../common/color';
 import { loadFromFile } from './file';
 
@@ -133,7 +132,7 @@ function readJSON(json: any): Image {
 		case "filter":
 			let input = readJSON(json["input"]);
 			parsedParams.unshift(input);
-			img = filters[name].apply(this, parsedParams);
+			img = filters[name].filter.apply(this, parsedParams);
 			break;
 
 		case "merge":
@@ -141,7 +140,7 @@ function readJSON(json: any): Image {
 			let secondInput = readJSON(json["secondInput"]);
 			parsedParams.unshift(secondInput);
 			parsedParams.unshift(firstInput);
-			img = filters[name].apply(this, parsedParams);
+			img = filters[name].filter.apply(this, parsedParams);
 			break;
 	}
 
