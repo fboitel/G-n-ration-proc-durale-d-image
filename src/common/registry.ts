@@ -7,6 +7,7 @@ import { BLUE, consColor, GREEN } from './color';
 import { red, green, blue, colorize, grayScale, brightness, contrast, opacity, negative } from './filters/colorimetry';
 import { boxBlur, edgeDetection, gaussianBlur, sharpen } from './filters/convolution';
 import { plus, minus, multiply, divide, screen, merge } from './filters/composition';
+import { firedForest } from './generators/numericalSimulation';
 
 export interface GeneratorMeta {
     name: string;
@@ -36,11 +37,15 @@ function registerFilter(name: string, filter: Filter<any>, additionalInputs = 0,
 
 registerGenerator('Bruit de Perlin', perlinNoise, { type: ParameterType.NUMBER, name: 'Taille', default: 30 });
 registerGenerator('Bruit fractal', fractalNoise, { type: ParameterType.NUMBER, name: 'Couches', default: 3 });
-
+// Pavage
 registerGenerator('Pavage triangle', pavageTriangleGen, { type: ParameterType.NUMBER, name: 'Nombre de motifs', default: 5 }, { type: ParameterType.COLOR, name: 'Première couleur', default: consColor(122, 0, 255) }, { type: ParameterType.COLOR, name: 'Seconde couleur', default: consColor(255, 122, 0) })
 registerGenerator('Pavage carré adouci', pavageCarreAdouciGen, { type: ParameterType.NUMBER, name: 'Nombre de motifs', default: 5 }, { type: ParameterType.COLOR, name: 'Première couleur', default: consColor(122, 0, 255) }, { type: ParameterType.COLOR, name: 'Seconde couleur', default: consColor(255, 122, 0) }, { type: ParameterType.COLOR, name: 'Troisième couleur', default: consColor(0, 255, 122) })
 registerGenerator('Pavage grand rhombitrihexagonal', pavageGrandRhombitrihexagonalGen, { type: ParameterType.NUMBER, name: 'Nombre de motifs', default: 10 }, { type: ParameterType.COLOR, name: 'Première couleur', default: consColor(122, 0, 255) }, { type: ParameterType.COLOR, name: 'Seconde couleur', default: consColor(255, 122, 0) }, { type: ParameterType.COLOR, name: 'Troisième couleur', default: consColor(0, 255, 122) })
 registerGenerator('Pavage pentagonal de type 1', pavagePenType1Gen, { type: ParameterType.NUMBER, name: 'Longueur 1', default: 200 }, { type: ParameterType.NUMBER, name: 'Longueur 2', default:120}, { type: ParameterType.NUMBER, name: 'Longueur 3', default: 150}, { type: ParameterType.NUMBER, name: 'Longueur 4', default: 70 }, { type: ParameterType.NUMBER, name: 'Angle 1', default:50}, { type: ParameterType.NUMBER, name: 'Angle 2', default:150}, { type: ParameterType.NUMBER, name: 'Scale', default: 100})
+
+// Numerical simulation
+registerGenerator('Forest-Fire', firedForest, { type : ParameterType.NUMBER, name: 'Probability that a tree grow in an ampty space in %', default: 1}, { type : ParameterType.NUMBER, name: 'Probability that a single tree ignites in %', default: 1 }, { type: ParameterType.NUMBER, name: 't', default: 0 })
+
 // Colorimetry
 registerFilter('Canal rouge', red);
 registerFilter('Canal bleu', blue);
