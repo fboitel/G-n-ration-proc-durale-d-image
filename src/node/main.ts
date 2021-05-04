@@ -1,7 +1,7 @@
 import { createCanvas, createImageData } from 'canvas';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { toRaster, Image } from '../common/image';
-import { generators } from '../common/generators/generator';
+import { generators } from '../common/registry';
 import { filters } from '../common/filters/filter';
 import { GREEN, RED } from '../common/color';
 import { loadFromFile } from './file';
@@ -127,7 +127,7 @@ function readJSON(json: any): Image {
 	switch (type) {
 
 		case "generator":
-			img = generators[name].apply(this, parsedParams);
+			img = generators[name].generator.apply(this, parsedParams);
 			break;
 
 		case "filter":
@@ -174,9 +174,10 @@ function mainJSON(): void {
 
 	const json = JSON.parse(jsonBuffer);
 
+	// TODO : check the order of the args
 	let img = readJSON(json);
 
-//loadFromFile("./public/fleur.png").then(img => exportToPNG(filters.resizeAlias(img,500,500), 'newfleur'));
+loadFromFile("./public/fleur.png").then(img => exportToPNG(filters.resizeAlias(img,500,500), 'newfleur'));
 //	exportToPNG(img, fileName);
 }
 
