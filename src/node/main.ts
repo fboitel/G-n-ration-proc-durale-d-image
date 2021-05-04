@@ -176,7 +176,7 @@ function mainJSON(): void {
 	// TODO : check the order of the args
 	let img = readJSON(json);
 
-loadFromFile("./public/fleur.png").then(img => exportToPNG(filters.resizeAlias(img,500,500), 'newfleur'));
+//loadFromFile("./public/fleur.png").then(img => exportToPNG(filters.bilinearResize(img,500,500), 'newfleur'));
 //	exportToPNG(img, fileName);
 }
 
