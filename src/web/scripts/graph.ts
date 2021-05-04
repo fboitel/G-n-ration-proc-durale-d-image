@@ -2,6 +2,8 @@ import { FilterMeta, GeneratorMeta } from '../../common/registry';
 import { srand } from '../../common/random';
 import { getHeight, getSeed, getWidth } from './inputs';
 import { createParameterUI, ParameterUI } from './parameters-ui'
+import { clear, display } from './view'
+import { readJSON } from '../../common/imageFactory'
 
 export enum BlockType {
 	GENERATOR,
@@ -274,11 +276,10 @@ export function evaluateGraph() {
 	const height = getHeight();
 	const json = evaluateBlock(output);
 
-	// TODO implement
-	/*
-	if (json) display(imageFromJson(json));
+	console.log(json);
+
+	if (json) display(readJSON(json));
 	else clear();
-	*/
 
 	function evaluateBlock(block: Block): any {
 		let json: any;
@@ -287,6 +288,7 @@ export function evaluateGraph() {
 			case BlockType.GENERATOR:
 				json = {
 					type: 'generator',
+					name: (block.meta as GeneratorMeta).generator.name,
 					params: {
 						width,
 						height,
@@ -297,6 +299,7 @@ export function evaluateGraph() {
 			case BlockType.FILTER:
 				json = {
 					type: 'filter',
+					name: (block.meta as FilterMeta).filter.name,
 				};
 				break;
 
