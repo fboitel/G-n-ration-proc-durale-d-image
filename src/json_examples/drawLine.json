@@ -1,7 +1,7 @@
 {
     "type": "filter",
     "name": "bilinearResize",
-    "input": {
+    "inputs": [{
         "type": "generator",
         "name": "drawLine",
         "params": {
@@ -12,7 +12,7 @@
             "xEnd": 5,
             "yEnd": 5
         }
-    },
+    }],
     "params": {
         "newW": 1000,
         "newH": 1000
