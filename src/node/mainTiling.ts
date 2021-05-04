@@ -1,9 +1,7 @@
 import { createCanvas, createImageData } from 'canvas';
 import { writeFileSync } from 'fs';
 import { toRaster } from '../common/image';
-import { generators } from '../common/generators/generator'
 import { pavageCarreGen, pavageHexaGen, pavageTriangleGen, pavageCarreAdouciGen, pavageGrandRhombitrihexagonalGen, translate, rotate, pavagePenType1Gen } from '../common/generators/tiling';
-import { consColor } from '../common/color'
 
 // TEST
 
@@ -14,7 +12,7 @@ const rep = 10;
 //const img = rotate(Math.PI/3, pavageCarreGen());
 //const img = rotate(Math.PI/4, pavageCarreGen());
 //const img = rotate(Math.PI/3, translate(50, 50, pavageGrandRhombitrihexagonalGen(1000, 1000, 20)));
-const img = pavagePenType1Gen();
+const img = pavagePenType1Gen(width, height, 150, 130, 100, 60, Math.PI/2, Math.PI*(3/4), 2);
 // OUTPUT
 
 const canvas = createCanvas(width, height);
