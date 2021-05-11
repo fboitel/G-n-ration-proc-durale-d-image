@@ -1,0 +1,199 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}  
+\usepackage[french]{babel}
+\usepackage[pdftex]{graphicx} % Figures
+\usepackage{amsmath} % Accolades
+\usepackage{amssymb} % pour N
+\graphicspath{{images/}}
+\usepackage{float} % Placement des images
+\usepackage{geometry} %Marges
+\geometry{
+    hmargin=2.5cm,
+    vmargin=2.5cm
+}
+\usepackage[onehalfspacing]{setspace} % Interlignes
+\usepackage{calc}
+\usepackage{caption} % Légende
+\usepackage{hyperref} % Hyperliens
+\usepackage{fancyhdr} % En-têtes
+\setlength{\headheight}{13pt}
+\usepackage{listings} % Insertion de code
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\pagestyle{fancy}
+\lhead{}
+\rhead{}
+
+\title{Génération procédurale}
+\author{}
+\date{}
+
+\begin{document}
+
+
+\begin{titlepage}
+    \begin{center}
+         %Logo
+	    \includegraphics[scale=0.5]{logo.jpg}
+
+        \textsc{\LARGE\\[0.5cm]ENSEIRB-MATMECA}
+        \\[0.5cm]
+        \textsc{\LARGE Filière informatique}
+        \\[2cm]
+
+        % Titre
+        \textbf{\LARGE \textsc{--Projet de programmation fonctionnelle--}}
+        \textbf{\LARGE \textsc{--Semestre 6--}}
+        	
+        \HRule
+        { \huge \textbf{Rapport de projet\\Génération Procédurale}}
+        \\[0.25cm]
+        \HRule
+        \\[1.5cm]
+    
+        % Auteur
+    	\textsc{\Large Théo GOMICHON\qquad}
+    	\textsc{\Large Clément SACCOCCIO}\\[0.5cm]
+    	\textsc{\Large Hugo LANGLAIS\qquad}
+    	\textsc{\Large Faustin BOITEL}\\[0.5cm]
+    	\textsc{\large Encadré par Mr. Morandat Floréal}
+        \vfill
+       
+    	% Pied de page
+        {\large \textsc{2020 — 2021}}
+    \end{center}
+\end{titlepage}
+
+\section*{Introduction}
+\paragraph{}
+Ce rapport est le document explicatif du projet de programmation fonctionnelle de semestre 6 réalisé par l'équipe composée de Théo Gomichon, Clément Saccoccio, Hugo Langlais et Faustin Boitel. \\
+Il porte sur le développement d'une bibliothèque de génération et traitement d'images en \textsf{Javascript}.
+
+\paragraph{}
+Ce rapport est structuré dans une logique d'approfondissement progressif. Nous commencerons ainsi par expliquer brièvement les tenants et aboutissants du sujet.
+Nous analyserons ensuite l'architecture de notre projet en réalisant une observation des différentes structures et interfaces mises en oeuvre.
+Puis nous plongerons au coeur des détails techniques en présentant certains exemples d'implémentations.
+Enfin nous conclurons par une prise de recul globale sur le projet, en présentant ses limites ainsi que les différents enseignements que nous avons pu tirer de ce travail. 
+
+\newpage
+\tableofcontents
+\fancyhead[L]{\slshape \leftmark}
+\newpage
+TRANSPARENCE REFERENTIELLE + fond vert
+
+\section{Description du projet et son organisation}
+\subsection{Génération procédurale}
+
+La création d'objets manuellement peut être fastidieuse, c'est pourquoi la génération procédurale, est utilisée afin de créer des objets automatiquement. Cette méthode utilise des outils algorithmiques, il est donc très facile de produire des objets variés  et en grand nombre sans passer des heures sur un outil de création numérique. La génération procédurale est beaucoup utilisé pour la génération de textures afin de colorier des grandes zones 3D comme des forêts ou des routes.
+Dans ce projet, nous allons développer une bibliothèque de génération procédurale d'image.
+
+\subsection{Choix de l'équipe}
+
+\paragraph{}
+Nous avons décidés de réaliser notre projet en TypeScript, qui est pour nous un bon compromis entre la flexibilité du JavaScript et la lisibilité d'un langage typé.
+
+\paragraph{}
+Pour l'organisation, nous avions décidés de tenir un cahier de bord, dans lequel nous notions notre avancée à chaque fin de séance. L'objectif était d'avoir une trace de notre avancée afin de simplifier la rédaction du rapport. Après quelques semaines, le cahier de bord n'était plus mis à jour, ce qui avec le recul était une erreur.
+
+\paragraph{}
+Au niveau du développement, nous avons défini les éléments de base tous ensembles (image, couleur, générateur et filtre) afin que chaque membre ai bien compris le fondement de la bibliothèque. Nous nous sommes ensuite réparti les taches entre l'implémentation des différents filtres et générateurs et le développement des interfaces Node et web.
+
+\section{Structure des éléments}
+
+\paragraph{}
+Le travail en équipe conjugué à l'utilisation d'un langage à typage fort tel que TypeScript nous a obligé à définir rapidement et de façon claire les différents éléments constituants le projet. Il a ainsi fallu caractériser les briques de base que sont les images et les couleurs qui les composent, puis les générateurs et les filtres composants notre bibliothèque, mais également les différentes interfaces nous permettant d' utiliser ces derniers correctement.
+
+\subsection{C'est quoi une couleur ?}
+
+Nous définissons une couleur suivant la notation RGBA. C'est un tableau de 4 valeurs entières allant de 0 à 255. Une couleur représentera un pixel de l'image.
+
+\begin{equation*}
+    Couleur = \left\{\begin{matrix}
+            rouge \in \mathopen{[} 0~;~255 \mathclose{]}  \\
+            vert \in \mathopen{[} 0~;~255 \mathclose{]}  \\
+            bleu \in \mathopen{[} 0~;~255 \mathclose{]}  \\
+            alpha \in \mathopen{[} 0~;~255 \mathclose{]}  \\
+\end{matrix}\right.
+\end{equation*}
+
+Nous implémentons des fonctions de manipulations de couleur au fur et à mesure des besoins rencontrés lors du développement de la bibliothèque.
+
+\subsection{C'est quoi une image ?}
+\label{sec:image}
+
+Il existe de nombreuses manière de représenter une image numériquement. Nous avions décidés de retenir deux implémentations : - représenter l'image par un tableau 2D - représenter l'image par une fonction \\
+Après réflexion, c'est finalement la dernière implémentation qui à été retenue. Elle semblait pour nous plus pratique à manipuler, bien que moins intuitive. Nous avions besoins de stocker des informations sur l'image comme ses dimensions. Notre image est donc un objet ayant comme attribut sa largeur, sa hauteur et une fonction qui étant donné des coordonnées retourne une couleur.
+\begin{equation*}
+    Image = \left\{\begin{matrix}
+            width \in \mathbb{N} \\
+            height \in \mathbb{N} \\ 
+            f : \mathbb{N} \times \mathbb{N} \rightarrow Couleur \\ 
+            (x,y) \mapsto c
+\end{matrix}\right.
+\end{equation*}
+ 
+\subsection{C'est quoi un générateur ?}
+
+Un générateur est un constructeur d'image. Étant donné une largeur et une hauteur, il retourne une image. D'autres arguments propres au générateur peuvent être fournis, par exemple des couleurs.
+
+\begin{equation*}
+    Generateur = \left\{\begin{matrix}
+                f : \mathbb{N} \times \mathbb{N} \times \dots \rightarrow Image \\ 
+                (x,y, \dots) \mapsto img
+\end{matrix}\right.
+\end{equation*}
+
+\subsection{C'est quoi un filtre ?}
+\paragraph{}
+On peut définir simplement un filtre comme une boîte noire prenant en entrée une image et renvoyant en sortie une autre image. Cette dernière est issue de l'image originale à laquelle on aura appliqué divers transformations, pouvant jouer sur ses couleurs et également sa taille.
+
+\begin{equation*}
+    Filtre = \left\{\begin{matrix}
+                f : Image \times \mathbb{N} \times \mathbb{N} \times \dots \rightarrow Image \\ 
+                (img, x,y, \dots) \mapsto img
+\end{matrix}\right.
+\end{equation*}
+
+\paragraph{}
+Différents questionnement se sont posés sur la nature de ces transformations. Tout d'abord, étant dans une logique fonctionnelle, l'image renvoyée devait être une entité différente de l'image d'entrée afin de limiter les effets de bord. L'implémentation d'une image sous forme fonctionnelle vu en section \ref{sec:image} a permis de réaliser cela facilement. En effet, l'image étant caractérisé par la fonction renvoyant  
+
+--> insister sur la différence et ptn communs
+
+\subsection{Interfaces node et web}
+Nous avons implémenté les interfaces node et web. Même si Les deux interfaces sont très différentes, elle ont tout de même des bases communes, comme par exemple la définition d'une image. Nous avons voulu limiter au maximum la duplication de code. Une image peut être décrite par un fichier JSON, qui contient la suite de filtres et générateurs à appliquer afin d'avoir l'image finale.
+
+Afin de simplifier le développement, nous avons mit en place des script de ...
+
+L'interface node fonctionne à partir de la ligne de commande. 
+Nous pouvons passer en argument le fichier JSON qui décrit l'image à créer. Le résultat est ensuite sauvegardé en PNG dans le dossier public.
+
+La version web sert principalement aux tests, afin d'avoir un visuel
+
+--> diff + ptn communs centralisation 
+--> création à partir d'un json
+--> mise en place des règles npm, parcel
+
+
+\section{Analyse technique}
+--> Exemples d'implémentations
+
+\subsection{Générateurs}
+--> donner 4 exemples de géné
+
+\subsection{Filtres}
+--> donner 4 exemples de filtres
+
+\subsection{Comment combiner efficacement tout ça ?}
+-> accent sur la combinaison fonctionnelle
+
+annexe : exemples d'images
+
+\subsection{Difficultés / limites du projet}
+
+\section*{Conclusion}
+Goodbye world
+
+
+\end{document}
