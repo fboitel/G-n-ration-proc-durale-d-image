@@ -29,18 +29,18 @@ export function parseParams(isGenerator: boolean, params: any): Array<any> {
 
 
 function getGeneratorMethod(s: string): string | null {
-    for( let generator in generators) {
-        if (generators[generator].name == s ) {
-            return generators[generator].name;
+    for (const generatorId in generators) {
+        if (generators[generatorId].name === s ) {
+            return generatorId;
         }
     }
     return null;
 }
 
 function getFilterMethod(s: string): string | null {
-    for( let filter in filters) {
-        if (filters[filter].name == s ) {
-            return filters[filter].name;
+    for (const filterId in filters) {
+        if (filters[filterId].name === s) {
+            return filterId;
         }
     }
     return null;

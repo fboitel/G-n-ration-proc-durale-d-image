@@ -1,0 +1,9 @@
+{
+	"type": "generator",
+	"name": "Bruit de Perlin",
+	"params": {
+		"width": 500,
+		"height": 500,
+		"Taille": 30
+	}
+}

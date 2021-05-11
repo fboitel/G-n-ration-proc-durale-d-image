@@ -302,7 +302,7 @@ export function evaluateGraph(): any {
 			case BlockType.GENERATOR:
 				json = {
 					type: 'generator',
-					name: (block.meta as GeneratorMeta).generator.name,
+					name: block.meta?.name,
 					params: {
 						width,
 						height,
@@ -313,7 +313,7 @@ export function evaluateGraph(): any {
 			case BlockType.FILTER:
 				json = {
 					type: 'filter',
-					name: (block.meta as FilterMeta).filter.name,
+					name: block.meta?.name,
 				};
 				break;
 

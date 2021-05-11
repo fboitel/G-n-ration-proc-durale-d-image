@@ -4,9 +4,7 @@
 		"dev-node": "parcel watch --no-hmr src/node",
 		"build-web": "if [ -d build/web ]; then rm -rf build/web; fi && parcel build src/web",
 		"build-node": "if [ -d build/node ]; then rm -rf build/node; fi && parcel build src/node",
-		"run-node": "node --enable-source-maps build/node/main.js",
-		"run-tiling": "node --enable-source-maps build/node/mainTiling.js",
-		"run-load": "node --enable-source-maps build/node/mainLoad.js"
+		"run-node": "node --enable-source-maps build/node/main.js json_examples/perlin.json"
 	},
 	"dependencies": {
 		"canvas": "^2.7.0"

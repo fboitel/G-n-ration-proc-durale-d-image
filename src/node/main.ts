@@ -29,7 +29,7 @@ function main(): void {
 
 	let img = readJSON(json);
 
-	if (img != null) {
+	if (img) {
 		exportToPNG(img, fileName);
 	}
 }
