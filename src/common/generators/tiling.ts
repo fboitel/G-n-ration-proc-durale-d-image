@@ -2,7 +2,13 @@ import { Image, consImage } from '../image';
 import { BLACK, Color } from '../color';
 
 
-
+/**
+ * This function is use to translate tilings
+ * @param image - a tiling
+ * @param abs - x component of translation vector
+ * @param ord - y component of translation vector
+ * @returns Image translated by the (abs, ord) vector
+ */
 
 export function translate(image : Image, abs : number, ord : number) : Image {
     function trInt(x : number, y : number) : Color {

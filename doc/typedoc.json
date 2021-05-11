@@ -1,0 +1,7 @@
+{
+  "entryPoints": ["src"],
+  "out": "doc/html",
+  "exclude": "",
+  "theme": "default",
+  "name": "Projet de programmation fonctionnelle"
+  }
