@@ -1,4 +1,4 @@
-import { getElementById } from './dom-utils'
+import { getElementById } from './dom-utils';
 
 const view = getElementById('view');
 
