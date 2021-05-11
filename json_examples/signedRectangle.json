@@ -1,15 +1,15 @@
 {
 	"type": "generator",
-	"name": "signedDistance",
+	"name": "Distance signée",
 	"params": {
 		"width": 1000,
 		"height": 1000,
-        "colorStart": "RED",
-        "colorEnd": "GREEN",
-        "centerX": 500,
-        "centerY": 500,
-        "sizeX": 300,
-        "sizeY": 50,
-        "inscribed": "false"
+		"Couleur de départ": "#ff0000",
+		"Couleur de fin": "#00ff00",
+		"Centre X": 500,
+		"Centre Y": 500,
+		"Largeur": 300,
+		"Hauteur": 50,
+		"Inscrit": false
 	}
 }

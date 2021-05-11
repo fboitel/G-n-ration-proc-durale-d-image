@@ -1,15 +1,14 @@
 import { Generator, Filter } from './image';
 import { fractalNoise, perlinNoise } from './generators/noise';
-import { hexaTilingGen, pentagonalTilingType1Gen, rotate, snubSquareTilingGen, squareTilingGen, translate, triangleTilingGen, truncatedTrihexagonalTilingGen } from './generators/tiling'
+import { hexaTilingGen, pentagonalTilingType1Gen, rotate, snubSquareTilingGen, squareTilingGen, translate, triangleTilingGen, truncatedTrihexagonalTilingGen } from './generators/tiling';
 import { radialDistance, signedDistance, voronoi } from './generators/distance';
 import { Parameter, ParameterType } from './parameters';
-import { BLACK, BLUE, consColor, GREEN, WHITE } from './color';
+import { BLACK, consColor, GREEN, WHITE } from './color';
 import { red, green, blue, colorize, grayScale, brightness, contrast, opacity, negative } from './filters/colorimetry';
 import { boxBlur, edgeDetection, gaussianBlur, sharpen } from './filters/convolution';
-import { plus, minus, multiply, divide, screen, merge } from './filters/composition';
+import { plus, minus, multiply, divide, merge } from './filters/composition';
 import { bilinearResize, resize } from './filters/resize';
 import { drawLine } from './generators/shapes';
-import { firedForestApp } from './generators/numericalSimulation';
 
 export interface GeneratorMeta {
     name: string;
@@ -24,17 +23,17 @@ export interface FilterMeta {
     parameters: Parameter<any>[];
 }
 
-export type Registry<T> = { [key: string]: T }
+export type Registry<T> = { [key: string]: T };
 
-export const generators: Registry<GeneratorMeta> = {}
-export const filters: Registry<FilterMeta> = {}
+export const generators: Registry<GeneratorMeta> = {};
+export const filters: Registry<FilterMeta> = {};
 
 function registerGenerator(name: string, generator: Generator<any>, ...parameters: Parameter<any>[]) {
-    generators[generator.name] = { name, generator, parameters };
+	generators[generator.name] = { name, generator, parameters };
 }
 
 function registerFilter(name: string, filter: Filter<any>, additionalInputs = 0, ...parameters: Parameter<any>[]) {
-    filters[filter.name] = { name, filter, additionalInputs, parameters };
+	filters[filter.name] = { name, filter, additionalInputs, parameters };
 }
 
 // Noises
@@ -58,7 +57,7 @@ registerGenerator('Distance signée', signedDistance, { type: ParameterType.COLO
 registerGenerator('Ligne', drawLine, { type: ParameterType.NUMBER, name: 'Debut X', default: 0 }, { type: ParameterType.NUMBER, name: 'Debut Y', default: 0 }, { type: ParameterType.NUMBER, name: 'Fin X', default: 100 }, { type: ParameterType.NUMBER, name: 'Fin Y', default: 100 });
 
 // Numerical simulation
-//registerGenerator('Forest-Fire', firedForestApp, { type : ParameterType.NUMBER, name: 'Probability that a tree grow in an ampty space in %', default: 1}, { type : ParameterType.NUMBER, name: 'Probability that a single tree ignites in %', default: 1 });//, { type: ParameterType.NUMBER, name: 't', default: 0 })
+//registerGenerator('Forest-Fire', firedForestApp, { type : ParameterType.NUMBER, name: 'Probability that a tree grow in an empty space in %', default: 1}, { type : ParameterType.NUMBER, name: 'Probability that a single tree ignites in %', default: 1 });//, { type: ParameterType.NUMBER, name: 't', default: 0 })
 
 // Colorimetry
 registerFilter('Canal rouge', red);
@@ -84,8 +83,8 @@ registerFilter('Multiplier', multiply, 1);
 registerFilter('Diviser', divide, 1);
 registerFilter('Fusionner', merge, 1);
 
-// Redimentions
+// Resizing
 registerFilter('Redimensionner', resize, 0, { type: ParameterType.NUMBER, name: 'Largeur', default: 500 },  { type: ParameterType.NUMBER, name: 'Hauteur', default: 500 });
 registerFilter('Redimensionner bilinéairement', bilinearResize, 0, { type: ParameterType.NUMBER, name: 'Largeur', default: 500 },  { type: ParameterType.NUMBER, name: 'Hauteur', default: 500 });
-registerFilter('Rotation sur pavage ', rotate, 0,{ type: ParameterType.NUMBER, name: 'angle (DEG)', default: 50 })
-registerFilter('Translation sur pavage', translate, 0, { type: ParameterType.NUMBER, name: 'abscisse', default: 50 }, { type: ParameterType.NUMBER, name: 'ordonnée', default: 50 } )
+registerFilter('Rotation sur pavage ', rotate, 0,{ type: ParameterType.NUMBER, name: 'angle (DEG)', default: 50 });
+registerFilter('Translation sur pavage', translate, 0, { type: ParameterType.NUMBER, name: 'abscisse', default: 50 }, { type: ParameterType.NUMBER, name: 'ordonnée', default: 50 });
