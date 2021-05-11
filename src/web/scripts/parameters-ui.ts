@@ -1,5 +1,5 @@
-import { ColorParameter, NumberParameter, Parameter, ParameterType } from '../../common/parameters'
-import { Color, consColor, getRGB } from '../../common/color'
+import { ColorParameter, NumberParameter, Parameter, ParameterType } from '../../common/parameters';
+import { Color, consColor, getRGB } from '../../common/color';
 
 export function createParameterUI(parameter: Parameter<any>): ParameterUI<any, any> {
 	switch (parameter.type) {
@@ -65,7 +65,7 @@ class NumberParameterUI extends ParameterUI<number, NumberParameter> {
 	}
 
 	protected sanitizeValue(value: number | null): number {
-		if (value == null || isNaN(value)) {
+		if (value === null || isNaN(value)) {
 			return this.parameter.default;
 		}
 
@@ -119,6 +119,6 @@ class ColorParameterUI extends ParameterUI<Color, ColorParameter> {
 				str = '0' + str;
 			}
 			return str;
-		}).join('')
+		}).join('');
 	}
 }

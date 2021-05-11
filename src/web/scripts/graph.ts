@@ -333,7 +333,7 @@ export function evaluateGraph(): any {
 			json.inputs = [];
 			for (const input of block.inputs) {
 				if (!input.edge) return null;
-				const jsonInput = evaluateBlock(input.edge.from.parent)
+				const jsonInput = evaluateBlock(input.edge.from.parent);
 				if (!jsonInput) return null;
 				json.inputs.push(jsonInput);
 			}
