@@ -24,7 +24,7 @@ function main(): void {
 	}
 
 	const jsonBuffer = readFileSync(path, 'utf8');
-	const fileName = basename(path);
+	const fileName = basename(path).replace(/\.[^.]+$/, '');
 	const json = JSON.parse(jsonBuffer);
 
 	let img = readJSON(json);
