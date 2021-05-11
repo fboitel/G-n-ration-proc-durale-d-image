@@ -21,7 +21,7 @@ module.exports = {
 		"consistent-return": 2,
 		"eqeqeq": 2,
 		"no-eval": 2,
-		"no-unused-vars": 2,
+		"@typescript-eslint/no-unused-vars": 2,
 		"no-var": 2,
 		"semi": 2,
 	},
