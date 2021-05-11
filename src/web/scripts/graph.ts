@@ -21,7 +21,7 @@ export interface Block {
 	type: BlockType;
 	element: HTMLDivElement;
 	meta?: GeneratorMeta | FilterMeta;
-	parametersUI: ParameterUI<any, any>[]
+	parametersUI: ParameterUI<any, any, any>[]
 	inputs: IO[];
 	outputs: IO[];
 }
@@ -88,7 +88,7 @@ function createIOBar(type: IOType, parent: Block, nbOfIO: number): HTMLDivElemen
 	return bar;
 }
 
-function createBlockBody(block: Block, title: string, parametersUI: ParameterUI<any, any>[]): HTMLDivElement {
+function createBlockBody(block: Block, title: string, parametersUI: ParameterUI<any, any, any>[]): HTMLDivElement {
 	const titleElement = document.createElement('h2');
 	titleElement.textContent = title;
 
