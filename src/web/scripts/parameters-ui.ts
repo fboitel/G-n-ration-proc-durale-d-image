@@ -1,5 +1,5 @@
 import { ColorParameter, NumberParameter, Parameter, ParameterType } from '../../common/parameters'
-import { A, B, Color, consColor, G, getRGB, R } from '../../common/color'
+import { Color, consColor, getRGB } from '../../common/color'
 
 export function createParameterUI(parameter: Parameter<any>): ParameterUI<any, any> {
 	switch (parameter.type) {
@@ -8,6 +8,12 @@ export function createParameterUI(parameter: Parameter<any>): ParameterUI<any, a
 
 		case ParameterType.COLOR:
 			return new ColorParameterUI(parameter as ColorParameter);
+
+		case ParameterType.BOOLEAN:
+			// TODO
+
+		default:
+			throw new Error('Unexpected parameter type.');
 	}
 }
 
@@ -45,8 +51,8 @@ export abstract class ParameterUI<T, P extends Parameter<T>> {
 
 	protected abstract getHtmlInputType(): string
 	protected abstract valueToString(value: T): string
-	protected abstract parseValue(value: string): T
-	protected abstract sanitizeValue(value: T): T
+	protected abstract parseValue(value: string): T | null
+	protected abstract sanitizeValue(value: T | null): T
 }
 
 class NumberParameterUI extends ParameterUI<number, NumberParameter> {
@@ -58,16 +64,16 @@ class NumberParameterUI extends ParameterUI<number, NumberParameter> {
 		return parseInt(value, 10);
 	}
 
-	protected sanitizeValue(value: number): number {
-		if (isNaN(value)) {
+	protected sanitizeValue(value: number | null): number {
+		if (value == null || isNaN(value)) {
 			return this.parameter.default;
 		}
 
-		if (value < this.parameter.min) {
+		if (this.parameter.min !== undefined && value < this.parameter.min) {
 			return this.parameter.min;
 		}
 
-		if (value > this.parameter.max) {
+		if (this.parameter.max !== undefined && value > this.parameter.max) {
 			return this.parameter.max;
 		}
 
@@ -84,7 +90,7 @@ class ColorParameterUI extends ParameterUI<Color, ColorParameter> {
 		return 'color';
 	}
 
-	protected parseValue(value: string): Color {
+	protected parseValue(value: string): Color | null {
 		if (value.length !== 7) {
 			return null;
 		}
@@ -102,7 +108,7 @@ class ColorParameterUI extends ParameterUI<Color, ColorParameter> {
 		return consColor(r, g, b);
 	}
 
-	protected sanitizeValue(value: Color): Color {
+	protected sanitizeValue(value: Color | null): Color {
 		return value ?? this.parameter.default;
 	}
 

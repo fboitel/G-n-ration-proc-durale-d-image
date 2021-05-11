@@ -1,10 +1,27 @@
 import { Image, consImage } from '../image';
-import { WHITE, BLACK, RED, GREEN, BLUE, Color } from '../color';
-import { ESTALE, SSL_OP_MSIE_SSLV2_RSA_PADDING } from 'node:constants';
-import { signedDistance } from './distance';
+import { BLACK, Color } from '../color';
 
 
-export function contour(image : (x : number, y : number) => Color) : (x : number, y : number) => Color {
+
+
+export function translate(image : Image, abs : number, ord : number) : Image {
+    function trInt(x : number, y : number) : Color {
+        return image.function(x + abs, y + ord);
+    }
+    return consImage( image.width, image.height, trInt)
+}   
+
+export function rotate(image : Image, angle : number) : Image {
+    function rotInt(x : number, y : number) : Color {
+        return image.function(Math.cos(angle*(Math.PI/180))*x - Math.sin(angle*(Math.PI/180))*y, Math.sin(angle*(Math.PI/180))*x + Math.cos(angle*(Math.PI/180))*y)
+    }
+    return consImage( image.width, image.height, rotInt)
+}
+
+
+//local function
+
+function contourTiling(image : (x : number, y : number) => Color) : (x : number, y : number) => Color {
     function contourAux(x : number, y : number) : Color {
     if (image(x - 1, y) != image(x, y) && image(x - 1, y) != BLACK)
         return BLACK;
@@ -19,37 +36,22 @@ export function contour(image : (x : number, y : number) => Color) : (x : number
     return contourAux;
 }
 
-
-export function translate(abs = 50, ord = 50, image : Image) : Image {
-    function trInt(x : number, y : number) : Color {
-        return image.function(x + abs, y + abs);
-    }
-    return consImage( image.width, image.height, trInt)
-}   
-
-export function rotate(angle = Math.PI/2, image : Image) : Image {
-    function rotInt(x : number, y : number) : Color {
-        return image.function(Math.cos(angle)*x - Math.sin(angle)*y, Math.sin(angle)*x + Math.cos(angle)*y)
-    }
-    return consImage( image.width, image.height, rotInt)
-}
-
-
-//local function
 function isBetweenPoints(points : number[][], P : number[]) : boolean {
     function isInsideTwoPoints(p1 : number[], p2 : number[], p3 : number[]) : boolean {
         let sensX = p1[0] - p2[0];
         let sensY = p1[1] - p2[1];
-        if (Math.abs(sensX) < 0.01)//streight equation is x = constante;
+        if (Math.abs(sensX) < 0.01){//streight equation is x = constante;
             if (sensY < 0) 
                 return p3[0] > p2[0];
             else 
                 return p3[0] < p2[0];
-        if (Math.abs(sensY) < 0.01)//streight equation is f(x) = constante;
+        }
+        if (Math.abs(sensY) < 0.01){//streight equation is f(x) = constante;
             if (sensX < 0)
                 return p3[1] < p2[1];
             else 
                 return p3[1] > p2[1];
+        }
         let a = (p2[1] - p1[1])/(p2[0] - p1[0]);//leading coefficient
         let b = p1[1] - a*p1[0];//ordered at the origin
         let bbis = p3[1] - a*p3[0];//ordered at the origin for the streight with the same leading coeficient but passing through point p3
@@ -61,6 +63,7 @@ function isBetweenPoints(points : number[][], P : number[]) : boolean {
             return bbis > b;
         if (sensX < 0 && sensY > 0)
             return bbis < b;
+        return false;
     }
     function reducer(acc : boolean, point : number[], i : number, array : number[][]) : boolean {
         if (acc == false)
@@ -78,30 +81,35 @@ function isLinkPoints(points : number[][], P : number[], eps : number) : boolean
     function streightTwoPoints(p1 : number[], p2 : number[], p3 : number[]) : boolean {
         let sensX = p1[0] - p2[0];
         let sensY = p1[1] - p2[1];
-        if (Math.abs(sensX) < 0.01)//streight equation is x = constante;
+        if (Math.abs(sensX) < 0.01){//streight equation is x = constante;
             if (sensY > 0)
                 return Math.abs(p3[0] - p2[0]) < eps && p3[1] < p1[1] + eps && p3[1] > p2[1] - eps;
             else 
-                return Math.abs(p3[0] - p2[0]) < eps && p3[1] > p1[1] - eps && p3[1] < p2[1] + eps
-        if (Math.abs(sensY) < 0.01)//streight equation is f(x) = constante;
+                return Math.abs(p3[0] - p2[0]) < eps && p3[1] > p1[1] - eps && p3[1] < p2[1] + eps;
+        }
+        if (Math.abs(sensY) < 0.01){//streight equation is f(x) = constante;
             if (sensX > 0)
                 return Math.abs(p3[1] - p2[1]) < eps && p3[0] < p1[0] + eps && p3[0] > p2[0] - eps;
             else 
                 return Math.abs(p3[1] - p2[1]) < eps && p3[0] > p1[0] - eps && p3[0] < p2[0] + eps;
+        }
         let a = (p2[1] - p1[1])/(p2[0] - p1[0]);//leading coefficient
         let b = p1[1] - a*p1[0];//ordered at the origin
         let bbis = p3[1] - a*p3[0];//ordered at the origin for the streight with the same leading coeficient but passing through point p3
         let margin = Math.abs((b-bbis)*Math.sin(Math.atan(1/a)));
-        if (sensX > 0)
+        if (sensX > 0){
             if (sensY > 0)
                 return margin < eps && p3[0] < p1[0] && p3[0] > p2[0] && p3[1] < p1[1] + eps && p3[1] > p2[1] - eps;
             else
                 return margin < eps && p3[0] < p1[0] && p3[0] > p2[0] && p3[1] > p1[1] - eps && p3[1] < p2[1] + eps;
-        if (sensX < 0)
+        }
+        if (sensX < 0){
             if (sensY > 0)
                 return margin < eps && p3[0] > p1[0] && p3[0] < p2[0] && p3[1] < p1[1] + eps && p3[1] > p2[1] - eps;
             else
                 return margin < eps && p3[0] > p1[0] && p3[0] < p2[0] && p3[1] > p1[1] - eps && p3[1] < p2[1] + eps;
+            }
+        return false;
     }
     function reducer(acc : boolean, point : number[], i : number, array : number[][]) : boolean {
         if (acc == true)
@@ -147,8 +155,8 @@ function isFillPath( anglesAndLengths : number[][], P : number[]) : boolean {
 
 
 //regular pavages
-export function pavageCarreGen(width = 1000, height = 1000, nbOfPatterns = 5, color1 = RED, color2 = BLUE): Image {
-    function pavageInt(x: number, y: number): Color {
+export function squareTilingGen(width : number, height : number, nbOfPatterns : number, color1 : Color, color2 : Color): Image {
+    function tilingInt(x: number, y: number): Color {
         let scale = width/nbOfPatterns;
         x = x%scale;
         y = y%scale;
@@ -164,15 +172,15 @@ export function pavageCarreGen(width = 1000, height = 1000, nbOfPatterns = 5, co
             return color2;
         return color1;
     }
-    return consImage(width, height, contour(pavageInt));
+    return consImage(width, height, contourTiling(tilingInt));
 }
 
-export function pavageTriangleGen(width = 1000, height = 1000, nbOfPatterns = 10, color1 = RED, color2 = BLUE): Image {
-    function pavageInt(x: number, y: number): Color {
+export function triangleTilingGen(width : number, height : number, nbOfPatterns : number, color1 : Color, color2 : Color): Image {
+    function tilingInt(x: number, y: number): Color {
         let scale = width/nbOfPatterns;
         x = Math.abs(x);
         y = Math.abs(y);
-        x = x % scale; //we use the symmetries of the pavage : x and y are transposed in a (scale x scale*sin(pi/3)) rectangle
+        x = x % scale; //we use the symmetries of the tiling : x and y are transposed in a (scale x scale*sin(pi/3)) rectangle
         if (x > scale / 2)
             x = scale - x;
         y = y % (2 * scale * Math.sin((Math.PI) / 3));
@@ -192,11 +200,11 @@ export function pavageTriangleGen(width = 1000, height = 1000, nbOfPatterns = 10
         else
             return color2;
     }
-    return consImage(width, height, contour(pavageInt));
+    return consImage(width, height, contourTiling(tilingInt));
 }
 
-export function pavageHexaGen(width = 1000, height = 1000, nbOfPatterns = 10, color1 = RED, color2 = GREEN, color3 = BLUE): Image {
-    function pavageInt(x: number, y: number): Color {
+export function hexaTilingGen(width : number, height : number, nbOfPatterns : number, color1 : Color, color2 : Color, color3 : Color): Image {
+    function tilingInt(x: number, y: number): Color {
         let scale = width/(2*nbOfPatterns); 
         let sinPis3 = Math.sin(Math.PI / 3);
         x = Math.abs(x);
@@ -250,12 +258,12 @@ export function pavageHexaGen(width = 1000, height = 1000, nbOfPatterns = 10, co
             }
         }
     }
-    return consImage(width, height, contour(pavageInt));
+    return consImage(width, height, contourTiling(tilingInt));
 }
 
 //semi-regular pavages
-export function pavageCarreAdouciGen(width = 1000, height = 1000, nbOfPatterns = 10, color1 = RED, color2 = GREEN, color3 = BLUE) : Image {
-    function pavageInt(x : number, y : number) : Color {
+export function snubSquareTilingGen(width : number, height : number, nbOfPatterns : number, color1 : Color, color2 : Color, color3 : Color) : Image {
+    function tilingInt(x : number, y : number) : Color {
         let size = width/nbOfPatterns;
         let sinPis3 = Math.sin(Math.PI/3);
         let cosPis3 = Math.cos(Math.PI/3);
@@ -318,12 +326,12 @@ export function pavageCarreAdouciGen(width = 1000, height = 1000, nbOfPatterns =
             }            
         }
     }
-    return consImage(width, height, contour(pavageInt));
+    return consImage(width, height, contourTiling(tilingInt));
 }
 
 
-export function pavageGrandRhombitrihexagonalGen(width = 1000, height = 1000, nbOfPatterns = 10, color1 = RED, color2 = GREEN, color3 = BLUE) : Image {
-    function pavageInt(x : number, y : number) : Color {
+export function truncatedTrihexagonalTilingGen(width : number, height : number, nbOfPatterns : number, color1 : Color, color2 : Color, color3 : Color) : Image {
+    function tilingInt(x : number, y : number) : Color {
         let size = width/(2*nbOfPatterns); //size is the scale
         x = Math.abs(x);
         y = Math.abs(y);
@@ -333,16 +341,18 @@ export function pavageGrandRhombitrihexagonalGen(width = 1000, height = 1000, nb
             y = 2*1.26*size - y;
         if (x > 2.12*size)
             x = 2*2.12*size - x;
-        if (x < 0.26*size)
+        if (x < 0.26*size){
             if (y > 1*size)
                 return color1;
             else
                 return color3;
-        if (x < 0.71*size)
+        }
+        if (x < 0.71*size){
             if (0.26*x + 0.45*y > 0.52*size )
                 return color2;
             else 
                 return color3;
+        }
         if (x < 0.97*size){
             if (-0.26*x+0.45*y > 0.15*size)
                 return color2;
@@ -367,17 +377,18 @@ export function pavageGrandRhombitrihexagonalGen(width = 1000, height = 1000, nb
             else 
                 return color2;
         }
-        if (x < 1.86*size)
+        if (x < 1.86*size){
             if (-0.26*x - 0.45*y < -0.61*size)
                 return color3;
             else 
                 return color2;
+        }
         if (y < 0.29*size)
             return color1;
         else 
             return color3;
     }  
-    return consImage(width, height, contour(pavageInt));
+    return consImage(width, height, contourTiling(tilingInt));
 }
 
 
@@ -387,15 +398,15 @@ export function pavageGrandRhombitrihexagonalGen(width = 1000, height = 1000, nb
 //pentagonal pavages
 //type1
 
-export function pavagePenType1Gen(width = 500, height = 500, a1 : number, b1 : number, c1 : number, d1 : number, A1 : number, B1 : number, scale1 : number) : Image {
+export function pentagonalTilingType1Gen(width : number, height : number, longueur1 : number, longueur2 : number, longueur3 : number, longueur4 : number, angle1 : number, angle2 : number, scale1 : number, color1 : Color, color2 : Color) : Image {
     function generatePent(x : number, y : number) : Color {
         let scale = scale1/100;
-        let a = a1*scale;
-        let b = b1*scale;
-        let c = c1*scale;
-        let d = d1*scale;
-        let A = A1*(Math.PI/180);
-        let B = B1*(Math.PI/180);
+        let a = longueur1*scale;
+        let b = longueur2*scale;
+        let c = longueur3*scale;
+        let d = longueur4*scale;
+        let A = angle1*(Math.PI/180);
+        let B = angle2*(Math.PI/180);
         let h = b*Math.sin(A);
         let g = c - a +b*Math.cos(A);
         let hr = h - d*Math.sin(Math.PI-B);
@@ -447,7 +458,7 @@ export function pavagePenType1Gen(width = 500, height = 500, a1 : number, b1 : n
             return false;
             
         }
-        return tab.reduce(reducer, false) == true ? BLACK : GREEN;
+        return tab.reduce(reducer, false) == true ? color1 : color2;
     }
     return consImage(width, height, generatePent);
 }

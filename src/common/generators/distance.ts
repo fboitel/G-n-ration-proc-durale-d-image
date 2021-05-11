@@ -1,7 +1,6 @@
-import { Color, BLACK, BLUE, consColor, GREEN, RED, WHITE, meanColor, meanColorWeighted } from "../color";
+import { Color, BLACK, consColor, meanColorWeighted } from "../color";
 import { Image } from "../image";
-
-const DELTA_DISPLAY = 0;
+import { rand } from '../random'
 
 export function voronoi(width: number, height: number, nbPoints: number): Image {
 
@@ -46,8 +45,8 @@ function isOnAPoint(x: number, y: number, p: number[][]): boolean {
 function generateRandomPoints(w: number, h: number, n: number): number[][] {
     return (new Array(n)).fill(undefined)
         .map(() => {
-            return [Math.round((Math.random() * w)),
-            Math.round(Math.random() * h)]
+            return [Math.round((rand() * w)),
+            Math.round(rand() * h)]
         }, 0);
 }
 

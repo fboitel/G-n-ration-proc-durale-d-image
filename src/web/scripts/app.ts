@@ -1,7 +1,8 @@
 import { FilterMeta, filters, GeneratorMeta, generators, Registry } from '../../common/registry';
-import { BlockType, createBlock } from './graph';
+import { BlockType, createBlock, evaluateGraph } from './graph';
 import { clear } from './view';
 import './background';
+import { getElementById } from './dom-utils'
 
 function createOptionGroup(name: string, registry: Registry<GeneratorMeta> | Registry<FilterMeta>): HTMLOptGroupElement {
 	const group = document.createElement('optgroup');
@@ -18,11 +19,11 @@ function createOptionGroup(name: string, registry: Registry<GeneratorMeta> | Reg
 	return group;
 }
 
-const select = document.getElementById('generator-and-filters') as HTMLSelectElement;
+const select = getElementById('generator-and-filters') as HTMLSelectElement;
 select.appendChild(createOptionGroup('Générateurs', generators));
 select.appendChild(createOptionGroup('Filtres', filters));
 
-const button = document.getElementById('add-btn');
+const button = getElementById('add-btn');
 button.addEventListener('click', () => {
 	const key = select.options[select.selectedIndex].value;
 	const isGenerator = key in generators;
@@ -34,6 +35,14 @@ button.addEventListener('click', () => {
 		1,
 		meta
 	);
+});
+
+
+const exportBtn = getElementById('export') as HTMLButtonElement;
+exportBtn.disabled = true;
+
+exportBtn.addEventListener('click', () => {
+	alert(JSON.stringify(evaluateGraph()));
 });
 
 // clear canvas
