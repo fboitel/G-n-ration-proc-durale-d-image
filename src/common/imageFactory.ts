@@ -27,9 +27,8 @@ export function parseParams(isGenerator: boolean, params: any): Array<any> {
     return array;
 }
 
-<<<<<<< HEAD
 
-function getGeneratorMethod(s: string): string {
+function getGeneratorMethod(s: string): string | null {
     for( let generator in generators) {
         if (generators[generator].name == s ) {
             return generators[generator].name;
@@ -38,7 +37,7 @@ function getGeneratorMethod(s: string): string {
     return null;
 }
 
-function getFilterMethod(s: string): string {
+function getFilterMethod(s: string): string | null {
     for( let filter in filters) {
         if (filters[filter].name == s ) {
             return filters[filter].name;
@@ -47,17 +46,12 @@ function getFilterMethod(s: string): string {
     return null;
 }
 
-export function readJSON(json: any): Image {
-
-    let img: Image;
-=======
 export function readJSON(json: any): Image | null {
     let img: Image | null = null;
->>>>>>> 95fb7feb742a832f3538f7b5bcf47afe60a8c870
 
     let type = json["type"];
     let name = json["name"];
-    let methodName = "";
+    let methodName: string | null ;
     let params = json["params"];
     let parsedParams = null;
 
@@ -66,15 +60,11 @@ export function readJSON(json: any): Image | null {
 
         case "generator":
             parsedParams = parseParams(true, params);
-<<<<<<< HEAD
             methodName = getGeneratorMethod(name);
             if (methodName == null) {
                 return null;
             }
-            img = generators[methodName].generator.apply(this, parsedParams);
-=======
-            img = generators[name].generator.apply(null, parsedParams);
->>>>>>> 95fb7feb742a832f3538f7b5bcf47afe60a8c870
+            img = generators[methodName].generator.apply(null, parsedParams);
             break;
 
         case "filter":
