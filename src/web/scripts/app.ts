@@ -2,7 +2,7 @@ import { FilterMeta, filters, GeneratorMeta, generators, Registry } from '../../
 import { BlockType, createBlock, evaluateGraph } from './graph';
 import { clear } from './view';
 import './background';
-import { getElementById } from './dom-utils'
+import { getElementById } from './dom-utils';
 
 function createOptionGroup(name: string, registry: Registry<GeneratorMeta> | Registry<FilterMeta>): HTMLOptGroupElement {
 	const group = document.createElement('optgroup');

@@ -1,10 +1,10 @@
 import { FilterMeta, GeneratorMeta } from '../../common/registry';
 import { srand } from '../../common/random';
 import { getHeight, getSeed, getWidth } from './inputs';
-import { createParameterUI, ParameterUI } from './parameters-ui'
-import { clear, display } from './view'
-import { readJSON } from '../../common/imageFactory'
-import { getElementById, removeNode } from './dom-utils'
+import { createParameterUI, ParameterUI } from './parameters-ui';
+import { clear, display } from './view';
+import { readJSON } from '../../common/imageFactory';
+import { getElementById, removeNode } from './dom-utils';
 
 export enum BlockType {
 	GENERATOR,
@@ -131,7 +131,7 @@ export function createBlock(type: BlockType, nbOfInputs: number, nbOfOutputs: nu
 		parametersUI: meta ? meta.parameters.map(createParameterUI) : [],
 		inputs: [],
 		outputs: [],
-	}
+	};
 	if (meta) block.meta = meta;
 
 	makeDraggable(block);
@@ -274,7 +274,7 @@ function updateEdgeCoordinates(io: IO, edgeElement?: SVGLineElement) {
 	setCoordinate(edgeElement, input ? 'y1' : 'y2', ioBox.y + ioBox.height / 2 - linesBox.y);
 }
 
-export function updateView() {
+export function updateView(): void {
 	srand(getSeed());
 	const json = evaluateGraph();
 	exportBtn.disabled = !json;
