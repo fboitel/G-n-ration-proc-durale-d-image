@@ -61,16 +61,16 @@ export function readJSON(json: any): Image | null {
         case "generator":
             parsedParams = parseParams(true, params);
             methodName = getGeneratorMethod(name);
-            if (methodName == null) {
+            if (methodName === null) {
                 return null;
             }
             img = generators[methodName].generator.apply(null, parsedParams);
             break;
 
         case "filter":
-
             methodName = getFilterMethod(name);
-            if (methodName == null) {
+
+            if (methodName === null) {
                 return null;
             }
 
@@ -78,22 +78,21 @@ export function readJSON(json: any): Image | null {
 
             let inputs = json["inputs"];
 
-            if (inputs.length == filters[methodName].additionalInputs + 1) {
-                for (let i = 0; i < inputs.length; ++i) {
-
-                    let inp = readJSON(inputs[i]);
-                    
-                    if( inp == null) {
-                        return null;
-                    }
-
-                    parsedParams.unshift(inp);
-                }
-            } else {
+            if (inputs.length !== filters[methodName].additionalInputs + 1) {
                 return null;
             }
 
-            img = filters[name].filter.apply(null, parsedParams);
+            for (let i = 0; i < inputs.length; ++i) {
+                let inp = readJSON(inputs[i]);
+
+                if (inp == null) {
+                    return null;
+                }
+
+                parsedParams.unshift(inp);
+            }
+
+            img = filters[methodName].filter.apply(null, parsedParams);
             break;
     }
 
