@@ -1,100 +1,137 @@
 import { Image } from './image';
-import { generators, filters } from './registry';
-import { GREEN, RED } from './color';
+import { FilterMeta, filters, GeneratorMeta, generators, Registry } from './registry';
+import { hexToColor } from './color';
+import { Parameter, ParameterType } from './parameters'
 
 
-export function parseParams(isGenerator: boolean, params: any): Array<any> {
-    	// TODO : check the order of the args + if keys are valid
+function parseParam<T>(rawParam: any, paramMeta: Parameter<any>, expectedType: string, parser?: (rawParam: any) => T | null): T {
+	if (typeof rawParam !== expectedType) {
+		throw new Error(`Parse error: Expected ${expectedType} type for ${paramMeta.name} parameter, got ${typeof rawParam} type instead.`);
+	}
 
-    let array = [];
+	const param = parser ? parser(rawParam) : rawParam as T;
 
-    for (const p in params) {
-        switch (params[p]) {
-            // FIXME : Params are strings, how parse a color ?
-            case "RED":
-                array.push(RED);
-                break;
+	if (param === null) {
+		throw new Error(`Parse error: Invalid value for ${paramMeta.name} parameter.`);
+	}
 
-            case "GREEN":
-                array.push(GREEN);
-                break;
-
-            default:
-                array.push(params[p]);
-        }
-    }
-
-    return array;
+	return param;
 }
 
+function parseParams(rawParams: any, paramsMeta: Parameter<any>[]): Array<any> {
+	if (typeof rawParams !== 'object') {
+		throw new Error(`Parse error: Expected object as parameters, got ${typeof rawParams} instead.`);
+	}
 
-function getGeneratorMethod(s: string): string | null {
-    for (const generatorId in generators) {
-        if (generators[generatorId].name === s ) {
-            return generatorId;
-        }
-    }
-    return null;
+	const params: any[] = [];
+
+	for (const paramMeta of paramsMeta) {
+		if (!(paramMeta.name in rawParams)) {
+			throw new Error(`Parse error: ${paramMeta.name} not found in parameters.`);
+		}
+
+		const rawParam: any = rawParams[paramMeta.name];
+
+		switch (paramMeta.type) {
+			case ParameterType.NUMBER:
+				params.push(parseParam(rawParam, paramMeta, 'number'));
+				break;
+
+			case ParameterType.COLOR:
+				params.push(parseParam(rawParam, paramMeta, 'string', hexToColor));
+				break;
+
+			case ParameterType.BOOLEAN:
+				params.push(parseParam(rawParam, paramMeta, 'boolean'));
+				break;
+		}
+	}
+
+	return params;
 }
 
-function getFilterMethod(s: string): string | null {
-    for (const filterId in filters) {
-        if (filters[filterId].name === s) {
-            return filterId;
-        }
-    }
-    return null;
+function parseGeneratorParams(rawParams: any, meta: GeneratorMeta): Array<any> {
+	const paramsMeta: Parameter<any>[] = [
+		{
+			type: ParameterType.NUMBER,
+			name: 'width',
+			default: null,
+		},
+		{
+			type: ParameterType.NUMBER,
+			name: 'height',
+			default: null,
+		},
+		...meta.parameters,
+	];
+
+	return parseParams(rawParams, paramsMeta);
+}
+
+function parseFilterParams(rawParams: any, meta: FilterMeta): Array<any> {
+	if (rawParams === undefined) {
+		rawParams = {};
+	}
+
+	return parseParams(rawParams, meta.parameters);
+}
+
+function getFuncKey(registry: Registry<any>, funcName: string): string | null {
+	for (const generatorId in registry) {
+		if (registry[generatorId].name === funcName) {
+			return generatorId;
+		}
+	}
+	return null;
 }
 
 export function readJSON(json: any): Image | null {
-    let img: Image | null = null;
+	let img: Image | null = null;
 
-    let type = json["type"];
-    let name = json["name"];
-    let methodName: string | null ;
-    let params = json["params"];
-    let parsedParams = null;
+	const type = json.type;
+	const funcName = json.name;
+	const params = json.params;
+	let funcKey: string | null;
+	let parsedParams: any[] | null;
 
-    // FIXME : check type of parameters.ts
-    switch (type) {
+	switch (type) {
+		case 'generator':
+			funcKey = getFuncKey(generators, funcName);
+			if (funcKey === null) {
+				return null;
+			}
 
-        case "generator":
-            parsedParams = parseParams(true, params);
-            methodName = getGeneratorMethod(name);
-            if (methodName === null) {
-                return null;
-            }
-            img = generators[methodName].generator.apply(null, parsedParams);
-            break;
+			parsedParams = parseGeneratorParams(params, generators[funcKey]);
+			img = generators[funcKey].generator.apply(null, parsedParams);
+			break;
 
-        case "filter":
-            methodName = getFilterMethod(name);
+		case 'filter':
+			funcKey = getFuncKey(filters, funcName);
+			if (funcKey === null) {
+				return null;
+			}
 
-            if (methodName === null) {
-                return null;
-            }
+			parsedParams = parseFilterParams(params, filters[funcKey]);
 
-            parsedParams = parseParams(false, params);
+			let inputs = json.inputs;
 
-            let inputs = json["inputs"];
+			if (inputs.length !== filters[funcKey].additionalInputs + 1) {
+				return null;
+			}
 
-            if (inputs.length !== filters[methodName].additionalInputs + 1) {
-                return null;
-            }
+			for (let i = 0; i < inputs.length; ++i) {
+				let inp = readJSON(inputs[i]);
 
-            for (let i = 0; i < inputs.length; ++i) {
-                let inp = readJSON(inputs[i]);
+				if (inp == null) {
+					return null;
+				}
 
-                if (inp == null) {
-                    return null;
-                }
+				parsedParams.unshift(inp);
+			}
 
-                parsedParams.unshift(inp);
-            }
+			img = filters[funcKey].filter.apply(null, parsedParams);
+			break;
+	}
 
-            img = filters[methodName].filter.apply(null, parsedParams);
-            break;
-    }
-
-    return img;
+	return img;
 }

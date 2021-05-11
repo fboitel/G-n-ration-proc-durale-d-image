@@ -1,6 +1,6 @@
 import { R, G, B, A, grayLevel, consColor, Color, mapColor } from '../color';
 import { Image } from '../image';
-import { applyFunction } from './utils';
+import { applyFunction } from './filter-utils';
 
 /** Keep the red component only. */
 export function red(image: Image): Image {

@@ -2,12 +2,7 @@
 	"type": "filter",
 	"name": "Colorer",
 	"params": {
-		"Couleur": [
-			0,
-			255,
-			0,
-			255
-		]
+		"Couleur": "#00FF00"
 	},
 	"inputs": [
 		{

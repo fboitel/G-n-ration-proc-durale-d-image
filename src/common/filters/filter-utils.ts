@@ -9,7 +9,7 @@ export function applyFunction(image: Image, func: (color: Color) => Color): Imag
     );
 }
 
-export function composeFunction(image1: Image, image2: Image, func: (c1: Color, c2: Color) => Color): Image {
+export function applyComposeFunction(image1: Image, image2: Image, func: (c1: Color, c2: Color) => Color): Image {
     return consImage(
         Math.min(image1.width, image2.width),
         Math.min(image1.height, image2.height),

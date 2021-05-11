@@ -10,8 +10,33 @@ export function consColor(r: number, g: number, b: number, a: number = 255): Col
     return [r, g, b, a].map(c => Math.max(0, Math.min(255, c)));
 }
 
+export function colorToHex(color: Color): string {
+    return '#' + (color[A] === 255 ? getRGB(color) : color).map(c => {
+        let str = c.toString(16);
+        if (str.length === 1) {
+            str = '0' + str;
+        }
+        return str;
+    }).join('');
+}
+
+export function hexToColor(hex: string): Color | null {
+    const match = hex.match(/^#?([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})((?:[0-9A-F]{2})?)$/i);
+
+    if (!match) {
+        return null;
+    }
+
+    const r = parseInt(match[1], 16);
+    const g = parseInt(match[2], 16);
+    const b = parseInt(match[3], 16);
+    const a = match[4] ? parseInt(match[4], 16) : 255;
+
+    return consColor(r, g, b, a);
+}
+
 export function mapColor(color: Color, mapper: (channel: number, index: number) => number): Color {
-    return consColor(mapper(R, color[R]), mapper(G, color[G]), mapper(B, color[B]), color[A]);
+    return consColor(mapper(color[R], R), mapper(color[G], G), mapper(color[B], B), color[A]);
 }
 
 export function getRGB(color: Color): number[] {
