@@ -24,13 +24,12 @@ function main(): void {
 	}
 
 	const jsonBuffer = readFileSync(path, 'utf8');
-	const fileName = basename(path);
+	const fileName = basename(path).replace(/\.[^.]+$/, '');
 	const json = JSON.parse(jsonBuffer);
 
-	// TODO : check the order of the args
 	let img = readJSON(json);
 
-	if (img != null) {
+	if (img) {
 		exportToPNG(img, fileName);
 	}
 }

@@ -1,10 +1,10 @@
 import { FilterMeta, GeneratorMeta } from '../../common/registry';
 import { srand } from '../../common/random';
 import { getHeight, getSeed, getWidth } from './inputs';
-import { createParameterUI, ParameterUI } from './parameters-ui'
-import { clear, display } from './view'
-import { readJSON } from '../../common/imageFactory'
-import { getElementById, removeNode } from './dom-utils'
+import { createParameterUI, ParameterUI } from './parameters-ui';
+import { clear, display } from './view';
+import { readJSON } from '../../common/imageFactory';
+import { getElementById, removeNode } from './dom-utils';
 
 export enum BlockType {
 	GENERATOR,
@@ -21,7 +21,7 @@ export interface Block {
 	type: BlockType;
 	element: HTMLDivElement;
 	meta?: GeneratorMeta | FilterMeta;
-	parametersUI: ParameterUI<any, any>[]
+	parametersUI: ParameterUI<any, any, any>[]
 	inputs: IO[];
 	outputs: IO[];
 }
@@ -88,7 +88,7 @@ function createIOBar(type: IOType, parent: Block, nbOfIO: number): HTMLDivElemen
 	return bar;
 }
 
-function createBlockBody(block: Block, title: string, parametersUI: ParameterUI<any, any>[]): HTMLDivElement {
+function createBlockBody(block: Block, title: string, parametersUI: ParameterUI<any, any, any>[]): HTMLDivElement {
 	const titleElement = document.createElement('h2');
 	titleElement.textContent = title;
 
@@ -131,7 +131,7 @@ export function createBlock(type: BlockType, nbOfInputs: number, nbOfOutputs: nu
 		parametersUI: meta ? meta.parameters.map(createParameterUI) : [],
 		inputs: [],
 		outputs: [],
-	}
+	};
 	if (meta) block.meta = meta;
 
 	makeDraggable(block);
@@ -274,7 +274,7 @@ function updateEdgeCoordinates(io: IO, edgeElement?: SVGLineElement) {
 	setCoordinate(edgeElement, input ? 'y1' : 'y2', ioBox.y + ioBox.height / 2 - linesBox.y);
 }
 
-export function updateView() {
+export function updateView(): void {
 	srand(getSeed());
 	const json = evaluateGraph();
 	exportBtn.disabled = !json;
@@ -302,7 +302,7 @@ export function evaluateGraph(): any {
 			case BlockType.GENERATOR:
 				json = {
 					type: 'generator',
-					name: (block.meta as GeneratorMeta).generator.name,
+					name: block.meta?.name,
 					params: {
 						width,
 						height,
@@ -313,7 +313,7 @@ export function evaluateGraph(): any {
 			case BlockType.FILTER:
 				json = {
 					type: 'filter',
-					name: (block.meta as FilterMeta).filter.name,
+					name: block.meta?.name,
 				};
 				break;
 
@@ -333,7 +333,7 @@ export function evaluateGraph(): any {
 			json.inputs = [];
 			for (const input of block.inputs) {
 				if (!input.edge) return null;
-				const jsonInput = evaluateBlock(input.edge.from.parent)
+				const jsonInput = evaluateBlock(input.edge.from.parent);
 				if (!jsonInput) return null;
 				json.inputs.push(jsonInput);
 			}

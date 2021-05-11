@@ -8,7 +8,7 @@ export function getElementById(id: string): HTMLElement {
 	return element;
 }
 
-export function removeNode(node: Node) {
+export function removeNode(node: Node): void {
 	const parent = node.parentNode;
 
 	if (!parent) {

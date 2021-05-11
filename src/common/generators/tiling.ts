@@ -3,13 +3,12 @@ import { BLACK, Color } from '../color';
 
 
 /**
- * This function is use to translate tilings
- * @param image - a tiling
- * @param abs - x component of translation vector
+ * This function is used to translate tilings
+ * @param image - A tiling image
+ * @param abs - x component of translation vector 
  * @param ord - y component of translation vector
  * @returns Image translated by the (abs, ord) vector
  */
-
 export function translate(image : Image, abs : number, ord : number) : Image {
     function trInt(x : number, y : number) : Color {
         return image.function(x + abs, y + ord);
@@ -17,6 +16,12 @@ export function translate(image : Image, abs : number, ord : number) : Image {
     return consImage( image.width, image.height, trInt)
 }   
 
+/**
+ * This function is used to rotate tilings
+ * @param image - A tiling image
+ * @param angle - The angle of the rotation in degrees
+ * @returns - An image rotated around the origin of the coordinate system (left right)
+ */
 export function rotate(image : Image, angle : number) : Image {
     function rotInt(x : number, y : number) : Color {
         return image.function(Math.cos(angle*(Math.PI/180))*x - Math.sin(angle*(Math.PI/180))*y, Math.sin(angle*(Math.PI/180))*x + Math.cos(angle*(Math.PI/180))*y)
@@ -27,21 +32,32 @@ export function rotate(image : Image, angle : number) : Image {
 
 //local function
 
-function contourTiling(image : (x : number, y : number) => Color) : (x : number, y : number) => Color {
+/**
+ * This function is used to delimit the shapes in a tiling 
+ * @param func - Function inside an image
+ * @returns - The function given in parameter but this function returns BLACK if (x, y) are in a delimiation area
+ */
+function contourTiling(func : (x : number, y : number) => Color) : (x : number, y : number) => Color {
     function contourAux(x : number, y : number) : Color {
-    if (image(x - 1, y) != image(x, y) && image(x - 1, y) != BLACK)
+    if (func(x - 1, y) != func(x, y) && func(x - 1, y) != BLACK)
         return BLACK;
-    if (image(x + 1, y) != image(x, y) && image(x + 1, y) != BLACK)
+    if (func(x + 1, y) != func(x, y) && func(x + 1, y) != BLACK)
         return BLACK;
-    if (image(x, y + 1) != image(x, y) && image(x, y + 1) != BLACK)
+    if (func(x, y + 1) != func(x, y) && func(x, y + 1) != BLACK)
         return BLACK;
-    if (image(x, y - 1) != image(x, y) && image(x, y - 1) != BLACK)
+    if (func(x, y - 1) != func(x, y) && func(x, y - 1) != BLACK)
         return BLACK;
-    return image(x, y)
+    return func(x, y)
     }
     return contourAux;
 }
 
+/**
+ * A function used to know if a point is inside a polygon
+ * @param points -  The coordinates of the vertices of the polygon, given in counterclockwise order
+ * @param P - The coordinates of the point that we want to know if it is in the polygon
+ * @returns 
+ */
 function isBetweenPoints(points : number[][], P : number[]) : boolean {
     function isInsideTwoPoints(p1 : number[], p2 : number[], p3 : number[]) : boolean {
         let sensX = p1[0] - p2[0];
@@ -83,6 +99,13 @@ function isBetweenPoints(points : number[][], P : number[]) : boolean {
     return boo;
 }
 
+/**
+ * A function used to know if a point is close to the border of a polygon to an epsilon near
+ * @param points - The coordinates of the vertices of the polygon, given in counterclockwise order
+ * @param P - The coordinates of the point that we want to know if it is close to the border of the polygon
+ * @param eps - The width of the zone of truth
+ * @returns  
+ */
 function isLinkPoints(points : number[][], P : number[], eps : number) : boolean {
     function streightTwoPoints(p1 : number[], p2 : number[], p3 : number[]) : boolean {
         let sensX = p1[0] - p2[0];
@@ -129,7 +152,13 @@ function isLinkPoints(points : number[][], P : number[], eps : number) : boolean
     return boo;
 }
 
-//the first element of angleAndLength is the starting point
+/**
+ * This function does the same that isLinkPoints, but instead of giving the coordinates of the vertices of the polygon, we give the coordinates of a starting point, and after the direction and the distance to be covered to reach the next vertex
+ * @param anglesAndLengths - An array whose first element is the coordinate of a point, and the others, size 2 tables that contain angles and distances
+ * @param P - The coordinates of the point that we want to test
+ * @param eps -  The width of the zone of truth
+ * @returns 
+ */
 function isInTracedPath( anglesAndLengths : number[][], P : number[], eps : number) : boolean {
     function nextPoint(angleAndLength : number[], i : number, array : number[][]) : void {
         if (i != 0) {
@@ -145,6 +174,13 @@ function isInTracedPath( anglesAndLengths : number[][], P : number[], eps : numb
     //return isBetweenPoints(anglesAndLengths, P);
 }
 
+
+/**
+ * This function does the same that isInTracedPath, but returns also true if the point is inside the polygon
+ * @param anglesAndLengths - An array whose first element is the coordinate of a point, and the others, size 2 tables that contain angles and distances
+ * @param P - The coordinates of the point that we want to test
+ * @returns 
+ */
 function isFillPath( anglesAndLengths : number[][], P : number[]) : boolean {
     function nextPoint(angleAndLength : number[], i : number, array : number[][]) : void {
         if (i != 0) {
@@ -160,7 +196,15 @@ function isFillPath( anglesAndLengths : number[][], P : number[]) : boolean {
 }
 
 
-//regular pavages
+/**
+ * Generates a square tiling 
+ * @param width - The width of the image returned
+ * @param height - The hight of the image returned
+ * @param nbOfPatterns - An approximation of the number of pattern that we want to display, so it determines the size of the tiling
+ * @param color1 -sid The first color of the tiling
+ * @param color2 - The second color of the tiling
+ * @returns - An image of a quare tiling 
+ */
 export function squareTilingGen(width : number, height : number, nbOfPatterns : number, color1 : Color, color2 : Color): Image {
     function tilingInt(x: number, y: number): Color {
         let scale = width/nbOfPatterns;
@@ -181,6 +225,15 @@ export function squareTilingGen(width : number, height : number, nbOfPatterns : 
     return consImage(width, height, contourTiling(tilingInt));
 }
 
+/**
+ * Generates a triangle tiling 
+ * @param width - The width of the image returned
+ * @param height - The hight of the image returned
+ * @param nbOfPatterns - An approximation of the number of pattern that we want to display, so it determines the size of the tiling
+ * @param color1 - The first color of the tiling
+ * @param color2 - The second color of the tiling
+ * @returns - An image of a triangle tiling 
+ */
 export function triangleTilingGen(width : number, height : number, nbOfPatterns : number, color1 : Color, color2 : Color): Image {
     function tilingInt(x: number, y: number): Color {
         let scale = width/nbOfPatterns;
@@ -209,6 +262,16 @@ export function triangleTilingGen(width : number, height : number, nbOfPatterns 
     return consImage(width, height, contourTiling(tilingInt));
 }
 
+/**
+ * Generates an  hexagonal tiling 
+ * @param width - The width of the image returned
+ * @param height - The hight of the image returned
+ * @param nbOfPatterns - An approximation of the number of pattern that we want to display, so it determines the size of the tiling
+ * @param color1 - The first color of the tiling
+ * @param color2 - The second color of the tiling
+ * @param color3 - The third color of the tiling
+ * @returns - An image of an hexagonal tiling
+ */
 export function hexaTilingGen(width : number, height : number, nbOfPatterns : number, color1 : Color, color2 : Color, color3 : Color): Image {
     function tilingInt(x: number, y: number): Color {
         let scale = width/(2*nbOfPatterns); 
@@ -267,7 +330,16 @@ export function hexaTilingGen(width : number, height : number, nbOfPatterns : nu
     return consImage(width, height, contourTiling(tilingInt));
 }
 
-//semi-regular pavages
+/**
+ * Generates a snub square tiling 
+ * @param width - The width of the image returned
+ * @param height - The hight of the image returned
+ * @param nbOfPatterns - An approximation of the number of pattern that we want to display, so it determines the size of the tiling
+ * @param color1 - The first color of the tiling
+ * @param color2 - The second color of the tiling
+ * @param color3 - The third color of the tiling
+ * @returns - An image of a snub square tiling
+ */
 export function snubSquareTilingGen(width : number, height : number, nbOfPatterns : number, color1 : Color, color2 : Color, color3 : Color) : Image {
     function tilingInt(x : number, y : number) : Color {
         let size = width/nbOfPatterns;
@@ -335,7 +407,16 @@ export function snubSquareTilingGen(width : number, height : number, nbOfPattern
     return consImage(width, height, contourTiling(tilingInt));
 }
 
-
+/**
+ * Generates a truncated trihexagonal tiling 
+ * @param width - The width of the image returned
+ * @param height - The hight of the image returned
+ * @param nbOfPatterns - An approximation of the number of pattern that we want to display, so it determines the size of the tiling
+ * @param color1 - The first color of the tiling
+ * @param color2 - The second color of the tiling
+ * @param color3 - The third color of the tiling
+ * @returns - An image of a truncated trihexagonal tiling 
+ */
 export function truncatedTrihexagonalTilingGen(width : number, height : number, nbOfPatterns : number, color1 : Color, color2 : Color, color3 : Color) : Image {
     function tilingInt(x : number, y : number) : Color {
         let size = width/(2*nbOfPatterns); //size is the scale
@@ -398,19 +479,32 @@ export function truncatedTrihexagonalTilingGen(width : number, height : number, 
 }
 
 
-
-
-
 //pentagonal pavages
 //type1
-
-export function pentagonalTilingType1Gen(width : number, height : number, longueur1 : number, longueur2 : number, longueur3 : number, longueur4 : number, angle1 : number, angle2 : number, scale1 : number, color1 : Color, color2 : Color) : Image {
+/**
+ * Generates a type 1 penatgonal tiling. The dimensions of the pentagon are given in parameters
+ * 
+ *To understand how the dimensions are give, we suppose that the origin point of the pentagon is in botom-right
+ * @param width - The width of the image returned
+ * @param height - The hight of the image returned
+ * @param length1 - The length of the edge starting horizontally to the left of the origin.
+ * @param length2 - The length of the next edge right after the first vertex
+ * @param length3 - The length of the following edge
+ * @param length4 - The length of the following edge, the length of the last edge is determined automatically 
+ * @param angle1 - The angle (in degrees) between the two first edges
+ * @param angle2 - The angle (in degrees) between the second edge and the third, the others angles are determined automatically
+ * @param scale1 - The scale of the tiling (in %), so it determines the size of the tiling
+ * @param color1 - The color of the outlines 
+ * @param color2 - The main color
+ * @returns 
+ */
+export function pentagonalTilingType1Gen(width : number, height : number, length1 : number, length2 : number, length3 : number, length4 : number, angle1 : number, angle2 : number, scale1 : number, color1 : Color, color2 : Color) : Image {
     function generatePent(x : number, y : number) : Color {
         let scale = scale1/100;
-        let a = longueur1*scale;
-        let b = longueur2*scale;
-        let c = longueur3*scale;
-        let d = longueur4*scale;
+        let a = length1*scale;
+        let b = length2*scale;
+        let c = length3*scale;
+        let d = length4*scale;
         let A = angle1*(Math.PI/180);
         let B = angle2*(Math.PI/180);
         let h = b*Math.sin(A);

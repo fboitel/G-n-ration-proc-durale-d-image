@@ -4,6 +4,8 @@ import { GREEN, RED } from './color';
 
 
 export function parseParams(isGenerator: boolean, params: any): Array<any> {
+    	// TODO : check the order of the args + if keys are valid
+
     let array = [];
 
     for (const p in params) {
@@ -25,11 +27,31 @@ export function parseParams(isGenerator: boolean, params: any): Array<any> {
     return array;
 }
 
+
+function getGeneratorMethod(s: string): string | null {
+    for (const generatorId in generators) {
+        if (generators[generatorId].name === s ) {
+            return generatorId;
+        }
+    }
+    return null;
+}
+
+function getFilterMethod(s: string): string | null {
+    for (const filterId in filters) {
+        if (filters[filterId].name === s) {
+            return filterId;
+        }
+    }
+    return null;
+}
+
 export function readJSON(json: any): Image | null {
     let img: Image | null = null;
 
     let type = json["type"];
     let name = json["name"];
+    let methodName: string | null ;
     let params = json["params"];
     let parsedParams = null;
 
@@ -38,30 +60,39 @@ export function readJSON(json: any): Image | null {
 
         case "generator":
             parsedParams = parseParams(true, params);
-            img = generators[name].generator.apply(null, parsedParams);
+            methodName = getGeneratorMethod(name);
+            if (methodName === null) {
+                return null;
+            }
+            img = generators[methodName].generator.apply(null, parsedParams);
             break;
 
         case "filter":
+            methodName = getFilterMethod(name);
+
+            if (methodName === null) {
+                return null;
+            }
+
             parsedParams = parseParams(false, params);
 
             let inputs = json["inputs"];
 
-            if (inputs.length == filters[name].additionalInputs + 1) {
-                for (let i = 0; i < inputs.length; ++i) {
-
-                    let inp = readJSON(inputs[i]);
-                    
-                    if( inp == null) {
-                        return null;
-                    }
-
-                    parsedParams.unshift(inp);
-                }
-            } else {
+            if (inputs.length !== filters[methodName].additionalInputs + 1) {
                 return null;
             }
 
-            img = filters[name].filter.apply(null, parsedParams);
+            for (let i = 0; i < inputs.length; ++i) {
+                let inp = readJSON(inputs[i]);
+
+                if (inp == null) {
+                    return null;
+                }
+
+                parsedParams.unshift(inp);
+            }
+
+            img = filters[methodName].filter.apply(null, parsedParams);
             break;
     }
 

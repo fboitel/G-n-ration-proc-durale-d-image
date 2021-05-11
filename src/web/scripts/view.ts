@@ -1,9 +1,9 @@
 import { Image, toRaster } from '../../common/image';
-import { getElementById } from './dom-utils'
+import { getElementById } from './dom-utils';
 
 const canvas = getElementById('img') as HTMLCanvasElement;
 
-export function display(image: Image) {
+export function display(image: Image): void {
 	const ctx = canvas.getContext('2d');
 
 	if (!ctx) {
@@ -18,6 +18,6 @@ export function display(image: Image) {
 	ctx.putImageData(raster, 0, 0);
 }
 
-export function clear() {
+export function clear(): void {
 	canvas.style.display = 'none';
 }

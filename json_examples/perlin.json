@@ -1,0 +1,23 @@
+{
+	"type": "filter",
+	"name": "Colorer",
+	"params": {
+		"Couleur": [
+			0,
+			255,
+			0,
+			255
+		]
+	},
+	"inputs": [
+		{
+			"type": "generator",
+			"name": "Bruit de Perlin",
+			"params": {
+				"width": 500,
+				"height": 500,
+				"Taille": 30
+			}
+		}
+	]
+}

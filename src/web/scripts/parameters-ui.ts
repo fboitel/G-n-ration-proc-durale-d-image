@@ -1,7 +1,7 @@
-import { ColorParameter, NumberParameter, Parameter, ParameterType } from '../../common/parameters'
-import { Color, consColor, getRGB } from '../../common/color'
+import { BooleanParameter, ColorParameter, NumberParameter, Parameter, ParameterType } from '../../common/parameters';
+import { Color, consColor, getRGB } from '../../common/color';
 
-export function createParameterUI(parameter: Parameter<any>): ParameterUI<any, any> {
+export function createParameterUI(parameter: Parameter<any>): ParameterUI<any, any, any> {
 	switch (parameter.type) {
 		case ParameterType.NUMBER:
 			return new NumberParameterUI(parameter as NumberParameter);
@@ -10,7 +10,7 @@ export function createParameterUI(parameter: Parameter<any>): ParameterUI<any, a
 			return new ColorParameterUI(parameter as ColorParameter);
 
 		case ParameterType.BOOLEAN:
-			// TODO
+			return new BooleanParameterUI(parameter as BooleanParameter);
 
 		default:
 			throw new Error('Unexpected parameter type.');
@@ -19,7 +19,7 @@ export function createParameterUI(parameter: Parameter<any>): ParameterUI<any, a
 
 let paramIndex = 0;
 
-export abstract class ParameterUI<T, P extends Parameter<T>> {
+export abstract class ParameterUI<T, D, P extends Parameter<T>> {
 	public readonly parameter: P;
 	public readonly container: HTMLElement;
 	public readonly input: HTMLInputElement;
@@ -29,8 +29,8 @@ export abstract class ParameterUI<T, P extends Parameter<T>> {
 
 		this.input = document.createElement('input');
 		this.input.type = this.getHtmlInputType();
-		this.input.value = this.valueToString(parameter.default);
 		this.input.id = `param-${paramIndex++}`;
+		this.setDomValue(this.toDomValue(parameter.default));
 
 		const label = document.createElement('label');
 		label.textContent = parameter.name + ' :';
@@ -41,21 +41,33 @@ export abstract class ParameterUI<T, P extends Parameter<T>> {
 		this.container.append(label, this.input);
 
 		this.input.addEventListener('change', () => {
-			this.input.value = this.valueToString(this.getSanitizedValue());
+			this.setDomValue(this.toDomValue(this.getSanitizedValue()));
 		});
 	}
 
 	public getSanitizedValue(): T {
-		return this.sanitizeValue(this.parseValue(this.input.value));
+		return this.sanitizeValue(this.parseValue(this.getDomValue()));
 	}
 
 	protected abstract getHtmlInputType(): string
-	protected abstract valueToString(value: T): string
-	protected abstract parseValue(value: string): T | null
+	protected abstract getDomValue(): D;
+	protected abstract setDomValue(value: D): void;
+	protected abstract toDomValue(value: T): D
+	protected abstract parseValue(value: D): T | null
 	protected abstract sanitizeValue(value: T | null): T
 }
 
-class NumberParameterUI extends ParameterUI<number, NumberParameter> {
+abstract class ClassicParameterUI<T, P extends Parameter<T>> extends ParameterUI<T, string, P> {
+	protected getDomValue(): string {
+		return this.input.value;
+	}
+
+	protected setDomValue(value: string) {
+		this.input.value = value;
+	}
+}
+
+class NumberParameterUI extends ClassicParameterUI<number, NumberParameter> {
 	protected getHtmlInputType(): string {
 		return 'number';
 	}
@@ -65,7 +77,7 @@ class NumberParameterUI extends ParameterUI<number, NumberParameter> {
 	}
 
 	protected sanitizeValue(value: number | null): number {
-		if (value == null || isNaN(value)) {
+		if (value === null || isNaN(value)) {
 			return this.parameter.default;
 		}
 
@@ -80,12 +92,12 @@ class NumberParameterUI extends ParameterUI<number, NumberParameter> {
 		return value;
 	}
 
-	protected valueToString(value: number): string {
+	protected toDomValue(value: number): string {
 		return value.toString(10);
 	}
 }
 
-class ColorParameterUI extends ParameterUI<Color, ColorParameter> {
+class ColorParameterUI extends ClassicParameterUI<Color, ColorParameter> {
 	protected getHtmlInputType(): string {
 		return 'color';
 	}
@@ -112,13 +124,39 @@ class ColorParameterUI extends ParameterUI<Color, ColorParameter> {
 		return value ?? this.parameter.default;
 	}
 
-	protected valueToString(value: Color): string {
+	protected toDomValue(value: Color): string {
 		return '#' + getRGB(value).map(c => {
 			let str = c.toString(16);
 			if (str.length === 1) {
 				str = '0' + str;
 			}
 			return str;
-		}).join('')
+		}).join('');
+	}
+}
+
+class BooleanParameterUI extends ParameterUI<boolean, boolean, BooleanParameter> {
+	protected getHtmlInputType(): string {
+		return 'checkbox';
+	}
+
+	protected getDomValue(): boolean {
+		return this.input.checked;
+	}
+
+	protected setDomValue(value: boolean): void {
+		this.input.checked = value;
+	}
+
+	protected parseValue(value: boolean): boolean | null {
+		return value;
+	}
+
+	protected toDomValue(value: boolean): boolean {
+		return value;
+	}
+
+	protected sanitizeValue(value: boolean | null): boolean {
+		return value === null ? this.parameter.default : value;
 	}
 }
