@@ -36,7 +36,7 @@ export function hexToColor(hex: string): Color | null {
 }
 
 export function mapColor(color: Color, mapper: (channel: number, index: number) => number): Color {
-    return consColor(mapper(R, color[R]), mapper(G, color[G]), mapper(B, color[B]), color[A]);
+    return consColor(mapper(color[R], R), mapper(color[G], G), mapper(color[B], B), color[A]);
 }
 
 export function getRGB(color: Color): number[] {
