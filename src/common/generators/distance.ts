@@ -43,10 +43,13 @@ function isOnAPoint(x: number, y: number, p: number[][]): boolean {
 }
 
 function generateRandomPoints(w: number, h: number, n: number): number[][] {
-	return (new Array(n)).fill(undefined)
+	return (new Array(n))
+		.fill(undefined)
 		.map(() => {
-			return [Math.round((rand() * w)),
-			Math.round(rand() * h)];
+			return [
+				Math.round((rand() * w)),
+				Math.round(rand() * h),
+			];
 		}, 0);
 }
 

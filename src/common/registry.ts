@@ -29,11 +29,11 @@ export const generators: Registry<GeneratorMeta> = {};
 export const filters: Registry<FilterMeta> = {};
 
 function registerGenerator(name: string, generator: Generator<any>, ...parameters: Parameter<any>[]) {
-    generators[generator.name] = { name, generator, parameters };
+	generators[generator.name] = { name, generator, parameters };
 }
 
 function registerFilter(name: string, filter: Filter<any>, additionalInputs = 0, ...parameters: Parameter<any>[]) {
-    filters[filter.name] = { name, filter, additionalInputs, parameters };
+	filters[filter.name] = { name, filter, additionalInputs, parameters };
 }
 
 // Noises
