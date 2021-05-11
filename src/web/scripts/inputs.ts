@@ -1,4 +1,4 @@
-import { evaluateGraph } from './graph';
+import { updateView } from './graph';
 
 export const getWidth  = checkInput('width', 500, 1);
 export const getHeight = checkInput('height', 500, 1);
@@ -10,7 +10,7 @@ function checkInput(inputId: string, defaultValue: number, min: number = -Infini
 	// overwrite bad values and recompute image with new value
 	input.addEventListener('change', () => {
 		input.value = getValue().toString();
-		evaluateGraph();
+		updateView();
 	});
 
 	function getValue(): number {

@@ -1,5 +1,5 @@
 import { FilterMeta, filters, GeneratorMeta, generators, Registry } from '../../common/registry';
-import { BlockType, createBlock } from './graph';
+import { BlockType, createBlock, evaluateGraph } from './graph';
 import { clear } from './view';
 import './background';
 
@@ -34,6 +34,14 @@ button.addEventListener('click', () => {
 		1,
 		meta
 	);
+});
+
+
+const exportBtn = document.getElementById('export') as HTMLButtonElement;
+exportBtn.disabled = true;
+
+exportBtn.addEventListener('click', () => {
+	alert(JSON.stringify(evaluateGraph()));
 });
 
 // clear canvas

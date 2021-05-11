@@ -40,6 +40,7 @@ export interface Edge {
 
 const graph = document.getElementById('graph');
 const lines = document.getElementById('lines');
+const exportBtn = document.getElementById('export') as HTMLButtonElement;
 const output = createBlock(BlockType.OUTPUT,1, 0);
 let zIndex = 1;
 let overedIO: IO = null;
@@ -98,14 +99,14 @@ function createBlockBody(block: Block, title: string, parametersUI: ParameterUI<
 		exitBtn.textContent = '×';
 		exitBtn.addEventListener('click', () => {
 			removeBlock(block);
-			evaluateGraph();
+			updateView();
 		});
 		body.appendChild(exitBtn);
 	}
 
 	for (const parameterUI of parametersUI) {
 		body.appendChild(parameterUI.container);
-		parameterUI.input.addEventListener('change', () => evaluateGraph());
+		parameterUI.input.addEventListener('change', () => updateView());
 	}
 
 	return body;
@@ -215,7 +216,7 @@ function makeLinkable(io: IO) {
 				updateConnectionFlag(overedIO.parent);
 			}
 
-			evaluateGraph();
+			updateView();
 		}
 	});
 }
@@ -270,16 +271,23 @@ function updateEdgeCoordinates(io: IO, edgeElement?: SVGLineElement) {
 	setCoordinate(edgeElement, input ? 'y1' : 'y2', ioBox.y + ioBox.height / 2 - linesBox.y);
 }
 
-export function evaluateGraph() {
+export function updateView() {
 	srand(getSeed());
+	const json = evaluateGraph();
+	exportBtn.disabled = !json;
+	console.log(exportBtn);
+
+	if (json) {
+		display(readJSON(json));
+	} else {
+		clear();
+	}
+}
+
+export function evaluateGraph(): any {
 	const width = getWidth();
 	const height = getHeight();
-	const json = evaluateBlock(output);
-
-	console.log(json);
-
-	if (json) display(readJSON(json));
-	else clear();
+	return evaluateBlock(output);
 
 	function evaluateBlock(block: Block): any {
 		let json: any;
