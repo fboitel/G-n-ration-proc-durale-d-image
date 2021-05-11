@@ -4,6 +4,7 @@ import { getHeight, getSeed, getWidth } from './inputs';
 import { createParameterUI, ParameterUI } from './parameters-ui'
 import { clear, display } from './view'
 import { readJSON } from '../../common/imageFactory'
+import { getElementById, removeNode } from './dom-utils'
 
 export enum BlockType {
 	GENERATOR,
@@ -38,12 +39,14 @@ export interface Edge {
 	element: SVGLineElement;
 }
 
-const graph = document.getElementById('graph');
-const lines = document.getElementById('lines');
-const exportBtn = document.getElementById('export') as HTMLButtonElement;
+const graph = getElementById('graph');
+const lines = getElementById('lines');
+const exportBtn = getElementById('export') as HTMLButtonElement;
+
+
 const output = createBlock(BlockType.OUTPUT,1, 0);
 let zIndex = 1;
-let overedIO: IO = null;
+let overedIO: IO | null = null;
 
 function createIO(type: IOType, parent: Block): IO {
 	const element = document.createElement('div');
@@ -69,7 +72,7 @@ function createIO(type: IOType, parent: Block): IO {
 	return io;
 }
 
-function createIOBar(type: IOType, parent: Block, nbOfIO: number): HTMLDivElement {
+function createIOBar(type: IOType, parent: Block, nbOfIO: number): HTMLDivElement | null {
 	if (nbOfIO === 0) return null;
 
 	const bar = document.createElement('div');
@@ -179,7 +182,7 @@ function makeLinkable(io: IO) {
 
 		graph.classList.add('link-building');
 
-		removeEdge(io.edge);
+		removeEdge(io.edge ?? null);
 
 		const linesBox = lines.getClientRects()[0];
 		const line = createLine(io, e.clientX - linesBox.x, e.clientY - linesBox.y);
@@ -202,7 +205,7 @@ function makeLinkable(io: IO) {
 				lines.removeChild(line);
 
 			} else {
-				removeEdge(overedIO.edge);
+				removeEdge(overedIO.edge ?? null);
 
 				io.edge = overedIO.edge = {
 					from: io,
@@ -221,7 +224,7 @@ function makeLinkable(io: IO) {
 	});
 }
 
-function removeEdge(edge: Edge) {
+function removeEdge(edge: Edge | null) {
 	if (!edge) return;
 
 	edge.from.parent.element.classList.add('disconnected');
@@ -233,8 +236,8 @@ function removeEdge(edge: Edge) {
 }
 
 function removeBlock(block: Block) {
-	[...block.inputs, ...block.outputs].forEach(e => removeEdge(e.edge))
-	block.element.parentNode.removeChild(block.element);
+	[...block.inputs, ...block.outputs].forEach(e => removeEdge(e.edge ?? null));
+	removeNode(block.element);
 }
 
 function updateConnectionFlag(block: Block) {
@@ -275,10 +278,13 @@ export function updateView() {
 	srand(getSeed());
 	const json = evaluateGraph();
 	exportBtn.disabled = !json;
-	console.log(exportBtn);
 
 	if (json) {
-		display(readJSON(json));
+		const image = readJSON(json);
+		if (!image) {
+			throw new Error('Failed to construct image');
+		}
+		display(image);
 	} else {
 		clear();
 	}
