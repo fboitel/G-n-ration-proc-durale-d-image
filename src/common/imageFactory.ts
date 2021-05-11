@@ -126,9 +126,8 @@ export function parseParams(isGenerator: boolean, params: any): Array<any> {
     return array;
 }
 
-export function readJSON(json: any): Image {
-
-    let img: Image;
+export function readJSON(json: any): Image | null {
+    let img: Image | null = null;
 
     let type = json["type"];
     let name = json["name"];
@@ -164,8 +163,8 @@ export function readJSON(json: any): Image {
             }
 
             img = filters[name].filter.apply(this, parsedParams);
-
             break;
     }
+
     return img;
 }
