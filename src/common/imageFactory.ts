@@ -105,6 +105,8 @@ export function parseParams(params: any): Array<any> {
 
 
 export function parseParams(isGenerator: boolean, params: any): Array<any> {
+    	// TODO : check the order of the args + if keys are valid
+
     let array = [];
 
     for (let p in params) {
@@ -126,12 +128,32 @@ export function parseParams(isGenerator: boolean, params: any): Array<any> {
     return array;
 }
 
+
+function getGeneratorMethod(s: string): string {
+    for( let generator in generators) {
+        if (generators[generator].name == s ) {
+            return generators[generator].name;
+        }
+    }
+    return null;
+}
+
+function getFilterMethod(s: string): string {
+    for( let filter in filters) {
+        if (filters[filter].name == s ) {
+            return filters[filter].name;
+        }
+    }
+    return null;
+}
+
 export function readJSON(json: any): Image {
 
     let img: Image;
 
     let type = json["type"];
     let name = json["name"];
+    let methodName = "";
     let params = json["params"];
     let parsedParams = null;
 
@@ -140,15 +162,25 @@ export function readJSON(json: any): Image {
 
         case "generator":
             parsedParams = parseParams(true, params);
-            img = generators[name].generator.apply(this, parsedParams);
+            methodName = getGeneratorMethod(name);
+            if (methodName == null) {
+                return null;
+            }
+            img = generators[methodName].generator.apply(this, parsedParams);
             break;
 
         case "filter":
+
+            methodName = getFilterMethod(name);
+            if (methodName == null) {
+                return null;
+            }
+
             parsedParams = parseParams(false, params);
 
             let inputs = json["inputs"];
 
-            if (inputs.length == filters[name].additionalInputs + 1) {
+            if (inputs.length == filters[methodName].additionalInputs + 1) {
                 for (let i = 0; i < inputs.length; ++i) {
 
                     let inp = readJSON(inputs[i]);

@@ -36,7 +36,6 @@ function main(): void {
 
 	const json = JSON.parse(jsonBuffer);
 
-	// TODO : check the order of the args
 	let img = readJSON(json);
 
 	//loadFromFile("./public/fleur.png").then(img => exportToPNG(filters.bilinearResize.filter(img,500,500), 'newfleur'));
