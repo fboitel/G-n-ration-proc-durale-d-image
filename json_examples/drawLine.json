@@ -1,20 +1,22 @@
 {
-    "type": "filter",
-    "name": "Redimensionner bilinéairement",
-    "inputs": [{
-        "type": "generator",
-        "name": "Ligne",
-        "params": {
-            "width": 16,
-            "height": 16,
-            "xStart": 0,
-            "yStart": 0,
-            "xEnd": 5,
-            "yEnd": 5
-        }
-    }],
-    "params": {
-        "newW": 1000,
-        "newH": 1000
-    }
+	"type": "filter",
+	"name": "Redimensionner bilinéairement",
+	"inputs": [
+		{
+			"type": "generator",
+			"name": "Ligne",
+			"params": {
+				"width": 16,
+				"height": 16,
+				"Debut X": 0,
+				"Debut Y": 0,
+				"Fin X": 5,
+				"Fin Y": 5
+			}
+		}
+	],
+	"params": {
+		"Largeur": 1000,
+		"Hauteur": 1000
+	}
 }
