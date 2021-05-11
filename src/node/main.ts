@@ -27,7 +27,6 @@ function main(): void {
 	const fileName = basename(path);
 	const json = JSON.parse(jsonBuffer);
 
-	// TODO : check the order of the args
 	let img = readJSON(json);
 
 	if (img != null) {

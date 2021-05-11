@@ -4,6 +4,8 @@ import { GREEN, RED } from './color';
 
 
 export function parseParams(isGenerator: boolean, params: any): Array<any> {
+    	// TODO : check the order of the args + if keys are valid
+
     let array = [];
 
     for (const p in params) {
@@ -25,11 +27,31 @@ export function parseParams(isGenerator: boolean, params: any): Array<any> {
     return array;
 }
 
+
+function getGeneratorMethod(s: string): string | null {
+    for( let generator in generators) {
+        if (generators[generator].name == s ) {
+            return generators[generator].name;
+        }
+    }
+    return null;
+}
+
+function getFilterMethod(s: string): string | null {
+    for( let filter in filters) {
+        if (filters[filter].name == s ) {
+            return filters[filter].name;
+        }
+    }
+    return null;
+}
+
 export function readJSON(json: any): Image | null {
     let img: Image | null = null;
 
     let type = json["type"];
     let name = json["name"];
+    let methodName: string | null ;
     let params = json["params"];
     let parsedParams = null;
 
@@ -38,15 +60,25 @@ export function readJSON(json: any): Image | null {
 
         case "generator":
             parsedParams = parseParams(true, params);
-            img = generators[name].generator.apply(null, parsedParams);
+            methodName = getGeneratorMethod(name);
+            if (methodName == null) {
+                return null;
+            }
+            img = generators[methodName].generator.apply(null, parsedParams);
             break;
 
         case "filter":
+
+            methodName = getFilterMethod(name);
+            if (methodName == null) {
+                return null;
+            }
+
             parsedParams = parseParams(false, params);
 
             let inputs = json["inputs"];
 
-            if (inputs.length == filters[name].additionalInputs + 1) {
+            if (inputs.length == filters[methodName].additionalInputs + 1) {
                 for (let i = 0; i < inputs.length; ++i) {
 
                     let inp = readJSON(inputs[i]);

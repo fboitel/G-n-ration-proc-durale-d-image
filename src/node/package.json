@@ -1,7 +1,7 @@
 {
 	"targets": {
 		"node-target": {
-			"source":  ["main.ts", "mainTiling.ts", "mainLoad.ts"],
+			"source":  ["main.ts"],
 			"distDir": "../../build/",
 			"context": "node",
 			"engines": {

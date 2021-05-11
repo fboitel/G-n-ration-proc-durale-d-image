@@ -1,9 +1,9 @@
 {
     "type": "filter",
-    "name": "bilinearResize",
+    "name": "Redimensionner bilinéairement",
     "inputs": [{
         "type": "generator",
-        "name": "drawLine",
+        "name": "Ligne",
         "params": {
             "width": 16,
             "height": 16,
