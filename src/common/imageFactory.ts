@@ -38,7 +38,7 @@ export function readJSON(json: any): Image | null {
 
         case "generator":
             parsedParams = parseParams(true, params);
-            img = generators[name].generator.apply(this, parsedParams);
+            img = generators[name].generator.apply(null, parsedParams);
             break;
 
         case "filter":
@@ -61,7 +61,7 @@ export function readJSON(json: any): Image | null {
                 return null;
             }
 
-            img = filters[name].filter.apply(this, parsedParams);
+            img = filters[name].filter.apply(null, parsedParams);
             break;
     }
 

@@ -159,7 +159,7 @@ function makeDraggable(block: Block) {
 		};
 
 		function drag(e: MouseEvent) {
-			const box = element.parentElement.getClientRects()[0];
+			const box = graph.getClientRects()[0];
 			element.style.left = Math.min(box.x + box.width - element.clientWidth - 2, Math.max(box.x, e.clientX + mouseElementOffset.x)) + 'px';
 			element.style.top = Math.min(box.y + box.height - element.clientHeight - 2, Math.max(box.y, e.clientY + mouseElementOffset.y)) + 'px';
 
