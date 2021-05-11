@@ -1,9 +1,8 @@
 import { createCanvas, createImageData } from 'canvas';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { toRaster, Image } from '../common/image';
-import { generators, filters } from '../common/registry';
-import { loadFromFile } from './file';
-import { generateJSON, readJSON } from '../common/imageFactory'
+import { generateJSON, readJSON } from '../common/imageFactory';
+import { basename } from 'path';
 
 
 function exportToPNG(img: Image, name: string): void {
@@ -25,7 +24,7 @@ function main(): void {
 
 		if (existsSync(path)) {
 			jsonBuffer = readFileSync(path, 'utf8');
-			fileName = path.split('\\').pop().split('/').pop().split('.').shift();
+			fileName = basename(path);
 		} else {
 			console.log("Unable to open file : " + path);
 			return process.exit(1)

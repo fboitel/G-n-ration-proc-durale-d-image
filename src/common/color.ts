@@ -10,7 +10,7 @@ export function consColor(r: number, g: number, b: number, a: number = 255): Col
     return [r, g, b, a].map(c => Math.max(0, Math.min(255, c)));
 }
 
-function mapColor(color: Color, mapper: (channel: number, index: number) => number): Color {
+export function mapColor(color: Color, mapper: (channel: number, index: number) => number): Color {
     return consColor(mapper(R, color[R]), mapper(G, color[G]), mapper(B, color[B]), color[A]);
 }
 
