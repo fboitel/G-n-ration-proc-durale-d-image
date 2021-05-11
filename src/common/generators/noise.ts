@@ -1,4 +1,4 @@
-import { Image } from '../image';
+import { consImage, Image } from '../image';
 import { rand } from '../random';
 import { Color, consColor, meanColor } from '../color';
 
@@ -10,32 +10,32 @@ function randomColor(): Color {
 }
 
 export function whiteNoise(width: number, height: number): Image {
-	return {
+	return consImage(
 		width,
 		height,
-		function: randomColor,
-	};
+		randomColor
+	);
 }
 
 export function limitedByFrequencyWhiteNoise(width: number, height: number, frequency: number): Image {
-	let cache: Color[] = []
+	const cache: Color[] = [];
 
-	return {
+	return consImage(
 		width,
 		height,
-		function: (x, y) => {
+		(x, y) => {
 			const index = width * Math.floor(y / frequency) + Math.floor(x / frequency);
 			if (x % frequency === 0 && y % frequency === 0) {
-				cache[index] = randomColor()
+				cache[index] = randomColor();
 			}
-			return cache[index]
+			return cache[index];
 		}
-	};
+	);
 }
 
 export function perlinNoise(width: number, height: number, gridSize: number): Image {
 	type Vector = [number, number];
-	const gradients: Vector[] = []
+	const gradients: Vector[] = [];
 
 	function randomGradient(x: number, y: number): Vector {
 		const index = Math.round(y / gridSize) * Math.ceil(width / gridSize) + Math.round(x / gridSize);
@@ -63,8 +63,8 @@ export function perlinNoise(width: number, height: number, gridSize: number): Im
 		return distanceX * gradientX + distanceY * gradientY;
 	}
 
-	function interpolate(min: number, max: number, cursor: number) {
-		return (max - min) * ((cursor * (cursor * 6 - 15) + 10) * cursor**3) + min;
+	function interpolate(min: number, max: number, cursor: number): number {
+		return (max - min) * ((cursor * (cursor * 6 - 15) + 10) * cursor ** 3) + min;
 	}
 
 	function perlin(x: number, y: number): Color {
@@ -98,26 +98,25 @@ export function perlinNoise(width: number, height: number, gridSize: number): Im
 		return consColor(greyLevel, greyLevel, greyLevel);
 	}
 
-	return {
+	return consImage(
 		width,
 		height,
-		function: perlin,
-	}
+		perlin
+	);
 }
 
 export function fractalNoise(width: number, height: number, steps: number): Image {
 	const size = (width + height) / 2;
 	const layers: Image[] = (new Array(steps))
 		.fill(undefined)
-		.map((_, step) => perlinNoise(width, height, size / 10 / (steps - step)))
+		.map((_, step) => perlinNoise(width, height, size / 10 / (steps - step)));
 
-	return {
+	return consImage(
 		width,
 		height,
-		function: (x, y) => {
-			return layers
+		(x, y) =>
+			layers
 				.map(img => img.function(x, y))
 				.reduce(meanColor)
-		}
-	}
+	);
 }
