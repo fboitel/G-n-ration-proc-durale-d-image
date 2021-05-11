@@ -1,7 +1,5 @@
 import { Image, consImage } from '../image';
-import { WHITE, BLACK, RED, GREEN, BLUE, Color } from '../color';
-import { ESTALE, SSL_OP_MSIE_SSLV2_RSA_PADDING } from 'node:constants';
-import { signedDistance } from './distance';
+import { BLACK, Color } from '../color';
 
 
 
@@ -65,6 +63,7 @@ function isBetweenPoints(points : number[][], P : number[]) : boolean {
             return bbis > b;
         if (sensX < 0 && sensY > 0)
             return bbis < b;
+        return false;
     }
     function reducer(acc : boolean, point : number[], i : number, array : number[][]) : boolean {
         if (acc == false)
@@ -110,6 +109,7 @@ function isLinkPoints(points : number[][], P : number[], eps : number) : boolean
             else
                 return margin < eps && p3[0] > p1[0] && p3[0] < p2[0] && p3[1] > p1[1] - eps && p3[1] < p2[1] + eps;
             }
+        return false;
     }
     function reducer(acc : boolean, point : number[], i : number, array : number[][]) : boolean {
         if (acc == true)

@@ -1,6 +1,6 @@
-import { Image, consImage, fromRaster } from '../image';
-import { consColor, Color, BLUE } from '../color';
-import { loadFromFile, saveToPNG } from '../../node/file';
+import { Image, consImage } from '../image';
+import { consColor, Color } from '../color';
+import { rand } from '../random'
 
 
 const TREE = consColor(16, 104, 39);
@@ -9,7 +9,7 @@ const EMPTY = consColor(64, 41, 27);
 
 export function initForest(width : number, height : number) : Image {
     function aux(x : number, y : number) : Color {
-        if (Math.random() < 0.8)
+        if (rand() < 0.8)
             return TREE;
         return EMPTY;
     }
@@ -27,7 +27,7 @@ export function firedForestApp(forest : Image, prob1 : number, prob2 : number) :
             if (forest.function(x, y) == BURNING)  
                 return EMPTY;
             if (forest.function(x, y) == EMPTY){
-                if (Math.random() < prob1/100)
+                if (rand() < prob1/100)
                     return TREE;
                 else 
                     return EMPTY;
@@ -38,7 +38,7 @@ export function firedForestApp(forest : Image, prob1 : number, prob2 : number) :
                     forest.function(x - 1, y) == BURNING || forest.function(x - 1, y - 1) == BURNING || forest.function(x - 1, y + 1) == BURNING)
                 return BURNING;
 
-                if (Math.random() < prob2/100)
+                if (rand() < prob2/100)
                     return BURNING;
                 
                 else 

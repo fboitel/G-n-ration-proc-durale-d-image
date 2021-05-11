@@ -4,6 +4,7 @@ import { getHeight, getSeed, getWidth } from './inputs';
 import { createParameterUI, ParameterUI } from './parameters-ui'
 import { clear, display } from './view'
 import { readJSON } from '../../common/imageFactory'
+import { getElementById, removeNode } from './dom-utils'
 
 export enum BlockType {
 	GENERATOR,
@@ -38,11 +39,14 @@ export interface Edge {
 	element: SVGLineElement;
 }
 
-const graph = document.getElementById('graph');
-const lines = document.getElementById('lines');
+const graph = getElementById('graph');
+const lines = getElementById('lines');
+const exportBtn = getElementById('export') as HTMLButtonElement;
+
+
 const output = createBlock(BlockType.OUTPUT,1, 0);
 let zIndex = 1;
-let overedIO: IO = null;
+let overedIO: IO | null = null;
 
 function createIO(type: IOType, parent: Block): IO {
 	const element = document.createElement('div');
@@ -68,7 +72,7 @@ function createIO(type: IOType, parent: Block): IO {
 	return io;
 }
 
-function createIOBar(type: IOType, parent: Block, nbOfIO: number): HTMLDivElement {
+function createIOBar(type: IOType, parent: Block, nbOfIO: number): HTMLDivElement | null {
 	if (nbOfIO === 0) return null;
 
 	const bar = document.createElement('div');
@@ -98,14 +102,14 @@ function createBlockBody(block: Block, title: string, parametersUI: ParameterUI<
 		exitBtn.textContent = '×';
 		exitBtn.addEventListener('click', () => {
 			removeBlock(block);
-			evaluateGraph();
+			updateView();
 		});
 		body.appendChild(exitBtn);
 	}
 
 	for (const parameterUI of parametersUI) {
 		body.appendChild(parameterUI.container);
-		parameterUI.input.addEventListener('change', () => evaluateGraph());
+		parameterUI.input.addEventListener('change', () => updateView());
 	}
 
 	return body;
@@ -155,7 +159,7 @@ function makeDraggable(block: Block) {
 		};
 
 		function drag(e: MouseEvent) {
-			const box = element.parentElement.getClientRects()[0];
+			const box = graph.getClientRects()[0];
 			element.style.left = Math.min(box.x + box.width - element.clientWidth - 2, Math.max(box.x, e.clientX + mouseElementOffset.x)) + 'px';
 			element.style.top = Math.min(box.y + box.height - element.clientHeight - 2, Math.max(box.y, e.clientY + mouseElementOffset.y)) + 'px';
 
@@ -178,7 +182,7 @@ function makeLinkable(io: IO) {
 
 		graph.classList.add('link-building');
 
-		removeEdge(io.edge);
+		removeEdge(io.edge ?? null);
 
 		const linesBox = lines.getClientRects()[0];
 		const line = createLine(io, e.clientX - linesBox.x, e.clientY - linesBox.y);
@@ -201,7 +205,7 @@ function makeLinkable(io: IO) {
 				lines.removeChild(line);
 
 			} else {
-				removeEdge(overedIO.edge);
+				removeEdge(overedIO.edge ?? null);
 
 				io.edge = overedIO.edge = {
 					from: io,
@@ -215,12 +219,12 @@ function makeLinkable(io: IO) {
 				updateConnectionFlag(overedIO.parent);
 			}
 
-			evaluateGraph();
+			updateView();
 		}
 	});
 }
 
-function removeEdge(edge: Edge) {
+function removeEdge(edge: Edge | null) {
 	if (!edge) return;
 
 	edge.from.parent.element.classList.add('disconnected');
@@ -232,8 +236,8 @@ function removeEdge(edge: Edge) {
 }
 
 function removeBlock(block: Block) {
-	[...block.inputs, ...block.outputs].forEach(e => removeEdge(e.edge))
-	block.element.parentNode.removeChild(block.element);
+	[...block.inputs, ...block.outputs].forEach(e => removeEdge(e.edge ?? null));
+	removeNode(block.element);
 }
 
 function updateConnectionFlag(block: Block) {
@@ -270,16 +274,26 @@ function updateEdgeCoordinates(io: IO, edgeElement?: SVGLineElement) {
 	setCoordinate(edgeElement, input ? 'y1' : 'y2', ioBox.y + ioBox.height / 2 - linesBox.y);
 }
 
-export function evaluateGraph() {
+export function updateView() {
 	srand(getSeed());
+	const json = evaluateGraph();
+	exportBtn.disabled = !json;
+
+	if (json) {
+		const image = readJSON(json);
+		if (!image) {
+			throw new Error('Failed to construct image');
+		}
+		display(image);
+	} else {
+		clear();
+	}
+}
+
+export function evaluateGraph(): any {
 	const width = getWidth();
 	const height = getHeight();
-	const json = evaluateBlock(output);
-
-	console.log(json);
-
-	if (json) display(readJSON(json));
-	else clear();
+	return evaluateBlock(output);
 
 	function evaluateBlock(block: Block): any {
 		let json: any;

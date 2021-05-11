@@ -1,9 +1,15 @@
 import { Image, toRaster } from '../../common/image';
+import { getElementById } from './dom-utils'
 
-const canvas = document.getElementById('img') as HTMLCanvasElement;
-const ctx = canvas.getContext('2d');
+const canvas = getElementById('img') as HTMLCanvasElement;
 
 export function display(image: Image) {
+	const ctx = canvas.getContext('2d');
+
+	if (!ctx) {
+		throw new Error('Failed to get 2D context from canvas.');
+	}
+
 	canvas.style.display = 'block';
 	canvas.width = image.width;
 	canvas.height = image.height;

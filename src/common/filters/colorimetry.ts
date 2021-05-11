@@ -1,4 +1,4 @@
-import { R, G, B, A, grayLevel, consColor, getRGB, Color } from '../color';
+import { R, G, B, A, grayLevel, consColor, Color, mapColor } from '../color';
 import { Image } from '../image';
 import { applyFunction } from './utils';
 
@@ -27,14 +27,14 @@ export function grayScale(image: Image): Image {
 export function colorize(image: Image, coloration: Color): Image {
     return applyFunction(image, color => {
         const gray = grayLevel(color);
-        return consColor(...getRGB(coloration).map(c => gray * c / 255), color[A]);
+        return mapColor(coloration, c => gray * c / 255);
     })
 }
 
 /** Adjust brightness by the given percentage */
 export function brightness(image: Image, brightnessFactor: number): Image {
     return applyFunction(image, color => {
-        return consColor(...getRGB(color).map(c => c * (1 + brightnessFactor / 100)), color[A]);
+        return mapColor(color, c => c * (1 + brightnessFactor / 100));
     });
 }
 
@@ -42,18 +42,20 @@ export function brightness(image: Image, brightnessFactor: number): Image {
 export function contrast(image: Image, contrastFactor: number): Image {
     const correctionFactor = 259 * (contrastFactor * 255 / 100 + 255) / (255 * (259 - contrastFactor * 255 / 100));
     return applyFunction(image, color => {
-        return consColor(...getRGB(color).map(c => correctionFactor * (c - 128) + 128), color[A]);
+        return mapColor(color, c => correctionFactor * (c - 128) + 128);
     });
 }
 
 /** Adjust opacity by given percentage. */
 export function opacity(image: Image, opacityFactor: number): Image {
     return applyFunction(image, color => {
-        return consColor(...getRGB(color), color[A] * (opacityFactor / 100));
+        return consColor(color[R], color[G], color[B], color[A] * (opacityFactor / 100));
     });
 }
 
 /** Get the negative of an image. */
 export function negative(image: Image): Image {
-    return applyFunction(image, color =>  consColor(...getRGB(color).map(c => c ^ 255)));
+    return applyFunction(image, color =>  {
+        return mapColor(color, c => c ^ 255);
+    });
 }

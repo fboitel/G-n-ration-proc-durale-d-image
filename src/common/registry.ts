@@ -87,5 +87,5 @@ registerFilter('Fusionner', merge, 1);
 // Redimentions
 registerFilter('Redimensionner', resize, 0, { type: ParameterType.NUMBER, name: 'Largeur', default: 500 },  { type: ParameterType.NUMBER, name: 'Hauteur', default: 500 });
 registerFilter('Redimensionner bilinéairement', bilinearResize, 0, { type: ParameterType.NUMBER, name: 'Largeur', default: 500 },  { type: ParameterType.NUMBER, name: 'Hauteur', default: 500 });
-registerFilter('Rotation', rotate, 0,{ type: ParameterType.NUMBER, name: 'angle (DEG)', default: 50 })
-registerFilter('Translation', translate, 0, { type: ParameterType.NUMBER, name: 'abscisse', default: 50 }, { type: ParameterType.NUMBER, name: 'ordonnée', default: 50 } )
+registerFilter('Rotation sur pavage ', rotate, 0,{ type: ParameterType.NUMBER, name: 'angle (DEG)', default: 50 })
+registerFilter('Translation sur pavage', translate, 0, { type: ParameterType.NUMBER, name: 'abscisse', default: 50 }, { type: ParameterType.NUMBER, name: 'ordonnée', default: 50 } )

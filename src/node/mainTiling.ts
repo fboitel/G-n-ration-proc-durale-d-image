@@ -23,13 +23,3 @@ const img = rotate(pentagonalTilingType1Gen(500, 500, 180, 120, 150, 70, 90, 150
 // OUTPUT
 
 saveToPNG(img, "rotatedPentagonalType1")
-//saveToPNG(initForest(500, 500), 'forest');
-
-/*
-let forest = initForest(500, 500);
-saveToPNG(forest, 'forest');
-for (let i = 0; i < 20; i++){
-        forest = firedForestApp(forest, 5, 5);
-        saveToPNG(forest, 'forest');
-}
-*/
