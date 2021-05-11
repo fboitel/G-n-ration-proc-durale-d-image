@@ -11,16 +11,16 @@ import { bilinearResize, resize } from './filters/resize';
 import { drawLine } from './generators/shapes';
 
 export interface GeneratorMeta {
-    name: string;
-    generator: Generator<any[]>;
-    parameters: Parameter<any>[];
+	name: string;
+	generator: Generator<any[]>;
+	parameters: Parameter<any>[];
 }
 
 export interface FilterMeta {
-    name: string;
-    filter: Filter<any[]>;
-    additionalInputs: number;
-    parameters: Parameter<any>[];
+	name: string;
+	filter: Filter<any[]>;
+	additionalInputs: number;
+	parameters: Parameter<any>[];
 }
 
 export type Registry<T> = { [key: string]: T };
@@ -65,7 +65,7 @@ registerFilter('Canal bleu', blue);
 registerFilter('Canal vert', green);
 registerFilter('Colorer', colorize, 0, { type: ParameterType.COLOR, name: 'Couleur', default: GREEN });
 registerFilter('Niveaux de gris', grayScale);
-registerFilter('Luminosité', brightness, 0, { type: ParameterType.NUMBER, name: 'Pourcentage', default: 0 });
+registerFilter('Luminosité', brightness, 0, { type: ParameterType.NUMBER, name: 'Pourcentage', default: 100 });
 registerFilter('Contraste', contrast,  0, { type: ParameterType.NUMBER, name: 'Pourcentage', default: 0 });
 registerFilter('Transparence', opacity,  0, { type: ParameterType.NUMBER, name: 'Pourcentage', default: 100 });
 registerFilter('Negatif', negative);
