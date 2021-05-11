@@ -325,7 +325,7 @@ export function evaluateGraph(): any {
 		if (block.meta && block.meta.parameters.length > 0) {
 			if (!json.params) json.params = {};
 			for (let i = 0; i < block.meta.parameters.length; ++i) {
-				json.params[block.meta.parameters[i].name] = block.parametersUI[i].getSanitizedValue();
+				json.params[block.meta.parameters[i].name] = block.parametersUI[i].getSanitizedValueForJSON();
 			}
 		}
 

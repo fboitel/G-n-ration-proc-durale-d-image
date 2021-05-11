@@ -1,5 +1,5 @@
 import { BooleanParameter, ColorParameter, NumberParameter, Parameter, ParameterType } from '../../common/parameters';
-import { Color, consColor, getRGB } from '../../common/color';
+import { Color, colorToHex, consColor, getRGB, hexToColor } from '../../common/color';
 
 export function createParameterUI(parameter: Parameter<any>): ParameterUI<any, any, any> {
 	switch (parameter.type) {
@@ -47,6 +47,10 @@ export abstract class ParameterUI<T, D, P extends Parameter<T>> {
 
 	public getSanitizedValue(): T {
 		return this.sanitizeValue(this.parseValue(this.getDomValue()));
+	}
+
+	public getSanitizedValueForJSON(): any {
+		return this.getSanitizedValue();
 	}
 
 	protected abstract getHtmlInputType(): string
@@ -98,26 +102,16 @@ class NumberParameterUI extends ClassicParameterUI<number, NumberParameter> {
 }
 
 class ColorParameterUI extends ClassicParameterUI<Color, ColorParameter> {
+	public getSanitizedValueForJSON(): any {
+		return colorToHex(this.getSanitizedValue());
+	}
+
 	protected getHtmlInputType(): string {
 		return 'color';
 	}
 
 	protected parseValue(value: string): Color | null {
-		if (value.length !== 7) {
-			return null;
-		}
-
-		value = value.substring(1);
-
-		const r = parseInt(value.substring(0, 2), 16);
-		const g = parseInt(value.substring(2, 4), 16);
-		const b = parseInt(value.substring(4, 6), 16);
-
-		if (isNaN(r) || isNaN(g) || isNaN(b)) {
-			return null;
-		}
-
-		return consColor(r, g, b);
+		return hexToColor(value);
 	}
 
 	protected sanitizeValue(value: Color | null): Color {
@@ -125,13 +119,7 @@ class ColorParameterUI extends ClassicParameterUI<Color, ColorParameter> {
 	}
 
 	protected toDomValue(value: Color): string {
-		return '#' + getRGB(value).map(c => {
-			let str = c.toString(16);
-			if (str.length === 1) {
-				str = '0' + str;
-			}
-			return str;
-		}).join('');
+		return colorToHex(value);
 	}
 }
 
