@@ -9,7 +9,6 @@ function createOptionGroup(name: string, registry: Registry<GeneratorMeta> | Reg
 	group.label = name;
 
 	for (const key in registry) {
-		if (!registry.hasOwnProperty(key)) continue;
 		const option = document.createElement('option');
 		option.value = key;
 		option.textContent = registry[key].name;

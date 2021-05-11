@@ -317,9 +317,10 @@ export function evaluateGraph(): any {
 				};
 				break;
 
-			case BlockType.OUTPUT:
+			case BlockType.OUTPUT: {
 				const parent = output.inputs[0].edge?.from?.parent;
 				return parent ? evaluateBlock(parent) : null;
+			}
 		}
 
 		if (block.meta && block.meta.parameters.length > 0) {

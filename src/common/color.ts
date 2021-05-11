@@ -6,7 +6,7 @@ export const B = 2;
 export const A = 3;
 
 // Create a color
-export function consColor(r: number, g: number, b: number, a: number = 255): Color {
+export function consColor(r: number, g: number, b: number, a = 255): Color {
     return [r, g, b, a].map(c => Math.max(0, Math.min(255, c)));
 }
 

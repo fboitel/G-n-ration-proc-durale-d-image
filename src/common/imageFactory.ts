@@ -1,7 +1,7 @@
 import { Image } from './image';
 import { FilterMeta, filters, GeneratorMeta, generators, Registry } from './registry';
 import { hexToColor } from './color';
-import { Parameter, ParameterType } from './parameters'
+import { Parameter, ParameterType } from './parameters';
 
 
 function parseParam<T>(rawParam: any, paramMeta: Parameter<any>, expectedType: string, parser?: (rawParam: any) => T | null): T {
@@ -92,7 +92,8 @@ export function readJSON(json: any): Image | null {
 	const funcName = json.name;
 	const params = json.params;
 	let funcKey: string | null;
-	let parsedParams: any[] | null;
+	let parsedParams: any[];
+	let inputs: any[];
 
 	switch (type) {
 		case 'generator':
@@ -113,20 +114,18 @@ export function readJSON(json: any): Image | null {
 
 			parsedParams = parseFilterParams(params, filters[funcKey]);
 
-			let inputs = json.inputs;
+			inputs = json.inputs;
 
 			if (inputs.length !== filters[funcKey].additionalInputs + 1) {
 				return null;
 			}
 
 			for (let i = 0; i < inputs.length; ++i) {
-				let inp = readJSON(inputs[i]);
-
-				if (inp == null) {
+				const input = readJSON(inputs[i]);
+				if (input === null) {
 					return null;
 				}
-
-				parsedParams.unshift(inp);
+				parsedParams.unshift(input);
 			}
 
 			img = filters[funcKey].filter.apply(null, parsedParams);

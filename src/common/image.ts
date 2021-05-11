@@ -21,8 +21,8 @@ export function consImage(width: number, height: number, func: (x: number, y: nu
     return {
         width,
         height,
-        function: func
-    }
+        function: func,
+    };
 }
 
 // Convert a functional image to ImageData
@@ -47,7 +47,7 @@ export function fromRaster(raster: ImageDataCommon): Image {
     const { width, height, data } = raster;
 
     return consImage(width, height, (x: number, y: number) => {
-        let px = (y * width + x) * 4;
+        const px = (y * width + x) * 4;
         return consColor(data[px], data[px + 1], data[px + 2], data[px + 3]);
     });
 }

@@ -1,5 +1,5 @@
 import { BooleanParameter, ColorParameter, NumberParameter, Parameter, ParameterType } from '../../common/parameters';
-import { Color, colorToHex, consColor, getRGB, hexToColor } from '../../common/color';
+import { Color, colorToHex, hexToColor } from '../../common/color';
 
 export function createParameterUI(parameter: Parameter<any>): ParameterUI<any, any, any> {
 	switch (parameter.type) {

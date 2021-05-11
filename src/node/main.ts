@@ -27,11 +27,12 @@ function main(): void {
 	const fileName = basename(path).replace(/\.[^.]+$/, '');
 	const json = JSON.parse(jsonBuffer);
 
-	let img = readJSON(json);
-
-	if (img) {
-		exportToPNG(img, fileName);
+	const img = readJSON(json);
+	if (!img) {
+		throw new Error('Failed to construct image.');
 	}
+
+	exportToPNG(img, fileName);
 }
 
 main();

@@ -9,7 +9,7 @@ let d: number;
 // default seed
 srand((new Date()).getTime());
 
-export function srand(seed: number) {
+export function srand(seed: number): void {
 	// nothing-up-my-sleeve numbers
 	// https://en.wikipedia.org/wiki/Nothing-up-my-sleeve_number
 	a = 0x9E3779B9;

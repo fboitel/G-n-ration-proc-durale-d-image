@@ -20,7 +20,7 @@ export async function loadFromFile(path: string): Promise<Image> {
 }
 
 // Save an image as PNG
-export function saveToPNG(img: Image, title: string) {
+export function saveToPNG(img: Image, title: string): void {
     const canvas = createCanvas(img.width, img.height);
     const context = canvas.getContext('2d');
     context.putImageData(toRaster(img, createImageData), 0, 0);
