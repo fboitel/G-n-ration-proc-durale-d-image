@@ -65,4 +65,4 @@ export function makeForest(prob1 : number, prob2 : number): (x : number, y : num
 }
 
 
-export const nextForest = makeForest(1, 0.003);
+export const nextForest = makeForest(1, 0.0008);
