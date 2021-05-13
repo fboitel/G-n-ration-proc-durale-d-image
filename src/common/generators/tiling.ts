@@ -31,7 +31,7 @@ export function rotate(image: Image, angle: number): Image {
 		);
 	}
 	return consImage(image.width, image.height, rotInt);
- }
+}
 
 //// Local functions
 
