@@ -9,7 +9,14 @@ const EMPTY = consColor(64, 41, 27);
 
 
 
-
+/**
+ * Produces a generator of the forest-fire model, using memoization to be able to acceed at the previous state of the forest without recalculate all of them. The size of the image is limited to 500x500 to do not be too time-consumer
+ * 
+ * prob1 is the probability for a tree to grow on an empty place
+ * 
+ * prob2 is the probability for a tree to ignite
+ * @returns - An image generator that take the size of the image but also the  necessary probability to compute de model
+ */
 export function makeForest(): (x : number, y : number, prob1 : number, prob2 : number, nextStep : number) => Image {
 
 	let cache : Color[] = Array(250000).fill(TREE);
@@ -24,7 +31,6 @@ export function makeForest(): (x : number, y : number, prob1 : number, prob2 : n
 		cache = newCache;
 		return consImage(width, height, (x : number, y : number) => cache[700*x + y]);
 	}
-	
 	function nextState(width : number, height : number, prob1 : number, prob2 : number, nextOne : number): Image {
 		if (nextOne === -1000)
 			return consImage(1, 1, () => BLUE);
