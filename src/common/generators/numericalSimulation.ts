@@ -10,7 +10,7 @@ const EMPTY = consColor(64, 41, 27);
 
 
 
-export function makeForest(prob1 : number, prob2 : number): (x : number, y : number, nextStep : number) => Image {
+export function makeForest(): (x : number, y : number, prob1 : number, prob2 : number, nextStep : number) => Image {
 
 	let cache : Color[] = Array(250000).fill(TREE);
 	cache[10000] = BURNING;
@@ -22,10 +22,10 @@ export function makeForest(prob1 : number, prob2 : number): (x : number, y : num
 		}
 		newCache.forEach(initEacher);
 		cache = newCache;
-		return consImage(width, height, (x : number, y : number) => cache[500*x + y]);
+		return consImage(width, height, (x : number, y : number) => cache[700*x + y]);
 	}
 	
-	function nextState(width : number, height : number, nextOne : number): Image {
+	function nextState(width : number, height : number, prob1 : number, prob2 : number, nextOne : number): Image {
 		if (nextOne === -1000)
 			return consImage(1, 1, () => BLUE);
 		const newCache : Color[] = Array(250000).fill(GREEN);
@@ -34,7 +34,7 @@ export function makeForest(prob1 : number, prob2 : number): (x : number, y : num
 				newCache[ind] = EMPTY;
 			}
 			else if (col === EMPTY) {
-				newCache[ind] = rand() < prob1 / 100 ? TREE : EMPTY;
+				newCache[ind] = rand() < prob1 / 1000000 ? TREE : EMPTY;
 			}
 
 			else {
@@ -51,7 +51,7 @@ export function makeForest(prob1 : number, prob2 : number): (x : number, y : num
 					newCache[ind] = BURNING;
 				}
 				else {
-					newCache[ind] = rand() < prob2 / 100 ? BURNING : TREE;
+					newCache[ind] = rand() < prob2 / 1000000 ? BURNING : TREE;
 				}
 			}
 		}
@@ -65,4 +65,4 @@ export function makeForest(prob1 : number, prob2 : number): (x : number, y : num
 }
 
 
-export const nextForest = makeForest(1, 0.0008);
+export const nextForest = makeForest();

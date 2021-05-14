@@ -59,7 +59,7 @@ registerGenerator('Ligne', drawLine, { type: ParameterType.NUMBER, name: 'Debut 
 
 // Numerical simulation
 
-registerGenerator('Forest-Fire', nextForest, { type : ParameterType.NUMBER, name: 'time', default: 0});//Probability that a tree grow in an empty space in %', default: 1}, { type : ParameterType.NUMBER, name: 'Probability that a single tree ignites in %', default: 1 });//, { type: ParameterType.NUMBER, name: 't', default: 0 })
+registerGenerator('Forest-Fire', nextForest, {type : ParameterType.NUMBER, name: 'Probability that a tree grow in an empty space (in per million)', default: 8000}, { type : ParameterType.NUMBER, name: 'Probability that a single tree ignites (in per million)', default: 5 }, { type : ParameterType.NUMBER, name: 'time', default: 0});//, { type: ParameterType.NUMBER, name: 't', default: 0 })
 
 // Colorimetry
 registerFilter('Canal rouge', red);
