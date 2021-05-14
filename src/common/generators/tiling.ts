@@ -179,17 +179,13 @@ export function triangleTilingGen(width: number, height: number, nbOfPatterns: n
 			x = scale - x;
 		y %= (2 * scale * Math.sin((Math.PI) / 3));
 		if (y > scale * Math.sin((Math.PI) / 3)) {
-			if (x === 0)
-				return color1;
 			y = 2 * scale * Math.sin((Math.PI) / 3) - y;
-			if ((y / x) < (2 * Math.sin((Math.PI) / 3)))
+			if (y < x*(2 * Math.sin((Math.PI) / 3)))
 				return color2;
 			else
 				return color1;
 		}
-		if (x === 0)
-			return color2;
-		if ((y / x) < (2 * Math.sin((Math.PI) / 3)))
+		if (y < x*(2 * Math.sin((Math.PI) / 3)))
 			return color1;
 		else
 			return color2;
