@@ -114,17 +114,20 @@ export function isLinkPoints(points: number[][], P: number[], eps: number): bool
  * @returns 
  */
 export function isInTracedPath(anglesAndLengths: number[][], P: number[], eps: number): boolean {
-	function nextPoint(angleAndLength: number[], i: number, array: number[][]): void {
+	const points : number[][] = [];
+	function nextPoint(angleAndLength: number[], i: number): void {
 		if (i !== 0) {
-			const p = array[i - 1];
+			const p = points[i - 1];
 			const angle = angleAndLength[0];
 			const length = angleAndLength[1];
-			array[i] = [length * Math.cos(angle) + p[0], length * Math.sin(angle) + p[1]];
+			points[i] = [length * Math.cos(angle) + p[0], length * Math.sin(angle) + p[1]];
 		}
+		else
+			points[i] = angleAndLength;
 	}
-	anglesAndLengths.forEach(nextPoint);
+	anglesAndLengths.map(nextPoint);
 	//console.log(anglesAndLengths);
-	return isLinkPoints(anglesAndLengths, P, eps);
+	return isLinkPoints(points, P, eps);
 	//return isBetweenPoints(anglesAndLengths, P);
 }
 
