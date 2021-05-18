@@ -419,7 +419,7 @@ export function truncatedTrihexagonalTilingGen(width: number, height: number, nb
 /**
  * Generates a type 1 penatgonal tiling. The dimensions of the pentagon are given in parameters
  * 
- *To understand how the dimensions are give, we suppose that the origin point of the pentagon is in botom-right
+ *To understand how the dimensions are give, we suppose that the origin point of the pentagon is in botom-left
  * @param width - The width of the image returned
  * @param height - The hight of the image returned
  * @param length1 - The length of the edge starting horizontally to the left of the origin.
@@ -436,64 +436,59 @@ export function truncatedTrihexagonalTilingGen(width: number, height: number, nb
 export function pentagonalTilingType1Gen(width: number, height: number, length1: number, length2: number, length3: number, length4: number, angle1: number, angle2: number, scale1: number, color1: Color, color2: Color): Image {
 	function generatePent(x: number, y: number): Color {
 		const scale = scale1 / 100;
-		const a = length1 * scale;
-		const b = length2 * scale;
-		const c = length3 * scale;
-		const d = length4 * scale;
+		const a = length1 * scale * ((width + height)/1000);
+		const b = length2 * scale * ((width + height)/1000);
+		const c = length3 * scale * ((width + height)/1000);
+		const d = length4 * scale * ((width + height)/1000);
+
 		const A = angle1 * (Math.PI / 180);
 		const B = angle2 * (Math.PI / 180);
-		const h = b * Math.sin(A);
-		const g = c - a + b * Math.cos(A);
-		const hr = h - d * Math.sin(Math.PI - B);
-		const gr = g + d * Math.cos(Math.PI - B);
-		const X1 = width / 2;
-		const Y1 = h / 2;
+
+		const verticalGapX = c - a + b * Math.cos(A);
+		const verticalGapY = b * Math.sin(A);
+
+		const gr = verticalGapX + d * Math.cos(Math.PI - B);
+		const hr = verticalGapY - d * Math.sin(Math.PI - B);
+
+		const horizontalGapX = (2 * a - b * Math.cos(A)) + gr;
+		const horizontalGapY = - verticalGapY + hr;
+
+		const X1 = - width / 2;
+		const Y1 = 0;
+
 		const X2 = X1 + (2 * a - b * Math.cos(A));
-		const Y2 = Y1 - h;
-		const X3 = X1 - gr;
-		const Y3 = Y1 - hr;
-		const X4 = X1 + (X2 - X3);
-		const Y4 = Y1 + (Y2 - Y3);
-		const X5 = X1 - (X2 - X3);
-		const Y5 = Y1 - (Y2 - Y3);
-		const X6 = X2 + (X2 - X3);
-		const Y6 = Y2 + (Y2 - Y3);
-		const X7 = X3 - (X2 - X3);
-		const Y7 = Y3 - (Y2 - Y3);
-		const X8 = X4 + (X2 - X3);
-		const Y8 = Y4 + (Y2 - Y3);
-		const tab = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-		function reducer(acc: boolean, ind: number) {
+		const Y2 = Y1 - verticalGapY;
+
+		const indPentHeight: number[] = Array(Math.trunc(height/verticalGapY)*3).fill(0);
+		const indPentWidth: number[] = Array(Math.trunc(width/(Math.max(a, c)))*3).fill(0);
+		function verticalReducer(acc: boolean, elemv: number, indv: number) {
 			if (acc === true)
 				return true;
-			if (ind - 1 > height / h)
-				return false;
-			if (isInTracedPath([[X1 + ind * g, Y1 + ind * h], [0, a], [-(Math.PI - A), b], [-Math.PI, c], [-(2 * Math.PI - B), d]], [x, y], 2))
-				return true;
-			if (isInTracedPath([[X2 + ind * g, Y2 + ind * h], [0, -a], [-(Math.PI - A), -b], [-Math.PI, -c], [-(2 * Math.PI - B), -d]], [x, y], 2))
-				return true;
-			//if (X3 + ind*g < 0 - a) return false;
-			if (isInTracedPath([[X3 + ind * g, Y3 + ind * h], [0, -a], [-(Math.PI - A), -b], [-Math.PI, -c], [-(2 * Math.PI - B), -d]], [x, y], 2))
-				return true;
-			//if (X4 + ind*g > width + a) return false;
-			if (isInTracedPath([[X4 + ind * g, Y4 + ind * h], [0, a], [-(Math.PI - A), b], [-Math.PI, c], [-(2 * Math.PI - B), d]], [x, y], 2))
-				return true;
-			//if (X5 + ind*g < 0 - a) return false;
-			if (isInTracedPath([[X5 + ind * g, Y5 + ind * h], [0, a], [-(Math.PI - A), b], [-Math.PI, c], [-(2 * Math.PI - B), d]], [x, y], 2))
-				return true;
-			//if (X6 + ind*g > width + a) return false;
-			if (isInTracedPath([[X6 + ind * g, Y6 + ind * h], [0, -a], [-(Math.PI - A), -b], [-Math.PI, -c], [-(2 * Math.PI - B), -d]], [x, y], 2))
-				return true;
-			//if (X7 + ind*g < 0 - a) return false;
-			if (isInTracedPath([[X7 + ind * g, Y7 + ind * h], [0, -a], [-(Math.PI - A), -b], [-Math.PI, -c], [-(2 * Math.PI - B), -d]], [x, y], 2))
-				return true;
-			//if (X8 + ind*g > width + a) return false;
-			if (isInTracedPath([[X8 + ind * g, Y8 + ind * h], [0, a], [-(Math.PI - A), b], [-Math.PI, c], [-(2 * Math.PI - B), d]], [x, y], 2))
-				return true;
-			return false;
+			function horizontalReducer(acc : boolean, elemh: number, indh: number){
+				if (acc === true)
+					return true;
+				
+				const indBegin = Math.trunc((- (a + c + d) - X1 - indv * verticalGapX)/horizontalGapX);
+
+				const x1 = X1 + (indh + indBegin - 1) * horizontalGapX + indv * verticalGapX;
+				const y1 = Y1 + (indh + indBegin - 1) * horizontalGapY + indv * verticalGapY;
+
+				const x2 = X2 + (indh + indBegin - 1) * horizontalGapX + indv * verticalGapX;
+				const y2 = Y2 + (indh + indBegin - 1) * horizontalGapY + indv * verticalGapY;
+
+				if (x1 > - (a + c + 2 * d) && x2 < width + a + c + 2 * d)
+					if (isInTracedPath([[x1, y1], [0, a], [-(Math.PI - A), b], [-Math.PI, c], [-(2 * Math.PI - B), d]], [x, y], 2))
+						return true;
+				
+				if (y1 > 0 && y2 < height)
+					if (isInTracedPath([[x2, y2], [0, -a], [-(Math.PI - A), -b], [-Math.PI, -c], [-(2 * Math.PI - B), -d]], [x, y], 2))
+						return true;
+				return false
+			}
+			return indPentWidth.reduce(horizontalReducer, false);
 
 		}
-		return tab.reduce(reducer, false) === true ? color1 : color2;
+		return indPentHeight.reduce(verticalReducer, false) === true ? color1 : color2;
 	}
 	return consImage(width, height, generatePent);
 }
