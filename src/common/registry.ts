@@ -1,5 +1,5 @@
 import { Generator, Filter } from './image';
-import { fractalNoise, perlinNoise } from './generators/noise';
+import { fractalNoise, perlinNoise, whiteNoise } from './generators/noise';
 import { hexaTilingGen, pentagonalTilingType1Gen, rotate, snubSquareTilingGen, squareTilingGen, translate, triangleTilingGen, truncatedTrihexagonalTilingGen } from './generators/tiling';
 import { radialDistance, signedDistance, voronoi } from './generators/distance';
 import { Parameter, ParameterType } from './parameters';
@@ -38,6 +38,7 @@ function registerFilter(name: string, filter: Filter<any>, additionalInputs = 0,
 }
 
 // Noises
+registerGenerator('Bruit blanc', whiteNoise);
 registerGenerator('Bruit de Perlin', perlinNoise, { type: ParameterType.NUMBER, name: 'Taille', default: 30 });
 registerGenerator('Bruit fractal', fractalNoise, { type: ParameterType.NUMBER, name: 'Couches', default: 3 });
 
