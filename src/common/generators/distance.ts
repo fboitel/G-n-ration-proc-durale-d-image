@@ -14,7 +14,7 @@ export function voronoi(width: number, height: number, nbPoints: number): Image 
 			return BLACK;
 		}
 
-		const c = generateRandomColor(nbPoints, points, width, height);
+		const c = generateColors(nbPoints, points, width, height);
 
 		let min_distance = Math.sqrt((x - points[0][0]) ** 2 + (y - points[0][1]) ** 2);
 		let min_id = 0;
@@ -53,7 +53,7 @@ function generateRandomPoints(w: number, h: number, n: number): number[][] {
 		}, 0);
 }
 
-function generateRandomColor(n: number, p: number[][], w: number, h: number) {
+function generateColors(n: number, p: number[][], w: number, h: number) {
 	const colors = new Array(n).fill(0);
 
 	for (let i = 0; i < colors.length; ++i) {
@@ -103,7 +103,7 @@ export function radialDistance(width: number, height: number, colorStart: Color,
 export function signedDistance(width: number, height: number, colorStart: Color, colorEnd: Color,
 	centerX: number, centerY: number, sizeX: number, sizeY: number, inscribed: boolean): Image {
 
-	// care about max_distance ???
+	// care about max_distance
 	let max_distance = 0;
 
 	if (inscribed) {

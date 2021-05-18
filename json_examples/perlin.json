@@ -1,4 +1,6 @@
 {
+	"seed": 300,
+	"root": {
 	"type": "filter",
 	"name": "Colorer",
 	"params": {
@@ -15,4 +17,5 @@
 			}
 		}
 	]
+	}
 }

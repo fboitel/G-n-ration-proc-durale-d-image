@@ -27,7 +27,7 @@ function main(): void {
 	const fileName = basename(path).replace(/\.[^.]+$/, '');
 	const json = JSON.parse(jsonBuffer);
 
-	const img = readJSON(json);
+	const img = readJSON(json.root, json.seed);
 	if (!img) {
 		throw new Error('Failed to construct image.');
 	}

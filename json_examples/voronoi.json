@@ -1,0 +1,12 @@
+{
+	"seed": 300,
+	"root": {
+		"type": "generator",
+		"name": "Diagrammes de Voronoi",
+		"params": {
+			"width": 1000,
+			"height": 1000,
+			"Nombre de points": 5
+		}
+	}
+}

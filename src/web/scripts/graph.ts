@@ -275,12 +275,12 @@ function updateEdgeCoordinates(io: IO, edgeElement?: SVGLineElement) {
 }
 
 export function updateView(): void {
-	srand(getSeed());
+
 	const json = evaluateGraph();
 	exportBtn.disabled = !json;
 
 	if (json) {
-		const image = readJSON(json);
+		const image = readJSON(json.root, json.seed);
 		if (!image) {
 			throw new Error('Failed to construct image');
 		}
@@ -293,7 +293,7 @@ export function updateView(): void {
 export function evaluateGraph(): any {
 	const width = getWidth();
 	const height = getHeight();
-	return evaluateBlock(output);
+	return { seed: getSeed(), root: evaluateBlock(output)};
 
 	function evaluateBlock(block: Block): any {
 		let json: any;

@@ -2,6 +2,7 @@ import { Image } from './image';
 import { FilterMeta, filters, GeneratorMeta, generators, Registry } from './registry';
 import { hexToColor } from './color';
 import { Parameter, ParameterType } from './parameters';
+import { srand } from './random';
 
 
 function parseParam<T>(rawParam: any, paramMeta: Parameter<any>, expectedType: string, parser?: (rawParam: any) => T | null): T {
@@ -85,7 +86,7 @@ function getFuncKey(registry: Registry<any>, funcName: string): string | null {
 	return null;
 }
 
-export function readJSON(json: any): Image | null {
+export function readJSON(json: any, seed: number): Image | null {
 	let img: Image | null = null;
 
 	const type = json.type;
@@ -94,6 +95,7 @@ export function readJSON(json: any): Image | null {
 	let funcKey: string | null;
 	let parsedParams: any[];
 	let inputs: any[];
+	srand(seed);
 
 	switch (type) {
 		case 'generator':
@@ -121,7 +123,7 @@ export function readJSON(json: any): Image | null {
 			}
 
 			for (let i = 0; i < inputs.length; ++i) {
-				const input = readJSON(inputs[i]);
+				const input = readJSON(inputs[i], seed);
 				if (input === null) {
 					return null;
 				}
