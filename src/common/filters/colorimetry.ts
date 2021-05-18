@@ -95,7 +95,7 @@ export function opacity(image: Image, opacityFactor: number): Image {
 /**
  * Compute the negative of an image
  * @param image Any image
- * @returns The negatuive of the given image
+ * @returns The negative of the given image
  */
 export function negative(image: Image): Image {
 	return applyFunction(image, color => {
