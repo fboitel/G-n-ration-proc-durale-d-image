@@ -1,35 +1,39 @@
 import { Color, meanColorWeighted } from "../color";
-import { Image } from "../image";
+import { consImage, Image } from "../image";
 
-// Rezise oldImage without interpolation
-export function resize(oldImage: Image, newWidth: number, newHeight: number): Image {
+/**
+ * Rezise image with interpolation
+ * @param image Image to resize
+ * @param newWidth Width for the new image
+ * @param newHeight Height for the new image
+ * @returns The given image resized with the given dimensions
+ */
+export function resize(image: Image, newWidth: number, newHeight: number): Image {
 	let widthCoeff = 1;
 	let heightCoeff = 1;
-	if (oldImage.width < newWidth) {
-		widthCoeff = oldImage.width / newWidth;
-	} else {
-		widthCoeff = newWidth / oldImage.width;
+
+	widthCoeff = image.width < newWidth ? image.width / newWidth : newWidth / image.width;
+	heightCoeff = image.height < newHeight ? image.height / newHeight : newHeight / image.height;
+
+	function newFunction(x: number, y: number): Color {
+		return image.function(Math.floor(x * widthCoeff), Math.floor(y * heightCoeff));
 	}
 
-	if (oldImage.height < newHeight) {
-		heightCoeff = oldImage.height / newHeight;
-	} else {
-		heightCoeff = newHeight / oldImage.height;
-	}
-
-	function image(x: number, y: number): Color {
-		return oldImage.function(Math.floor(x * widthCoeff), Math.floor(y * heightCoeff));
-	}
-
-	return { width: newWidth, height: newHeight, function: image };
+	return consImage(newWidth, newHeight, newFunction);
 }
 
-export function bilinearResize(oldImage: Image, newWidth: number, newHeight: number): Image {
+/**
+ * Rezise image with bilinear interpolation
+ * @param image Image to resize
+ * @param newWidth Width for the new image
+ * @param newHeight Height for the new image
+ * @returns The given image resized with the given dimensions
+ */
+export function bilinearResize(image: Image, newWidth: number, newHeight: number): Image {
+	const widthCoeff = image.width / newWidth;
+	const heightCoeff = image.height / newHeight;
 
-	const widthCoeff = oldImage.width / newWidth;
-	const heightCoeff = oldImage.height / newHeight;
-
-	function image(x: number, y: number): Color {
+	function newFunction(x: number, y: number): Color {
 		// https://www.iro.umontreal.ca/~mignotte/IFT6150/Chapitre7_IFT6150.pdf
 		// https://www.f-legrand.fr/scidoc/docimg/image/niveaux/interpolation/interpolation.html
 		// https://fr.wikipedia.org/wiki/Interpolation_multivariée
@@ -41,15 +45,15 @@ export function bilinearResize(oldImage: Image, newWidth: number, newHeight: num
 		y = Math.floor(y * heightCoeff);
 
 		const va = meanColorWeighted(
-			oldImage.function(x, y),
+			image.function(x, y),
 			1 - ycoeff,
-			oldImage.function(x, Math.min(oldImage.height - 1, y + 1)),
+			image.function(x, Math.min(image.height - 1, y + 1)),
 			ycoeff
 		);
 		const vb = meanColorWeighted(
-			oldImage.function(Math.min(oldImage.width - 1, x + 1), y),
+			image.function(Math.min(image.width - 1, x + 1), y),
 			1 - ycoeff,
-			oldImage.function(Math.min(oldImage.width - 1, x + 1), Math.min(oldImage.height - 1, y + 1)),
+			image.function(Math.min(image.width - 1, x + 1), Math.min(image.height - 1, y + 1)),
 			ycoeff
 		);
 
@@ -57,5 +61,6 @@ export function bilinearResize(oldImage: Image, newWidth: number, newHeight: num
 
 		return vt;
 	}
-	return { width: newWidth, height: newHeight, function: image };
+
+	return consImage(newWidth, newHeight, newFunction);
 }
