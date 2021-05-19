@@ -1,0 +1,105 @@
+{
+    "seed": 23,
+    "root": {
+        "type": "filter",
+        "name": "Ajouter",
+        "inputs": [
+            {
+                "type": "filter",
+                "name": "Colorer",
+                "params": {
+                    "Couleur": "#a5e8ff"
+                },
+                "inputs": [
+                    {
+                        "type": "filter",
+                        "name": "Niveaux de gris",
+                        "inputs": [
+                            {
+                                "type": "filter",
+                                "name": "Soustraire",
+                                "inputs": [
+                                    {
+                                        "type": "generator",
+                                        "name": "Diagrammes de Voronoi",
+                                        "params": {
+                                            "width": 500,
+                                            "height": 500,
+                                            "Nombre de points": 50
+                                        }
+                                    },
+                                    {
+                                        "type": "filter",
+                                        "name": "Negatif",
+                                        "inputs": [
+                                            {
+                                                "type": "filter",
+                                                "name": "Luminosité",
+                                                "params": {
+                                                    "Pourcentage": 1000
+                                                },
+                                                "inputs": [
+                                                    {
+                                                        "type": "filter",
+                                                        "name": "Colorer",
+                                                        "params": {
+                                                            "Couleur": "#ffffff"
+                                                        },
+                                                        "inputs": [
+                                                            {
+                                                                "type": "filter",
+                                                                "name": "Détection des contours",
+                                                                "inputs": [
+                                                                    {
+                                                                        "type": "generator",
+                                                                        "name": "Diagrammes de Voronoi",
+                                                                        "params": {
+                                                                            "width": 500,
+                                                                            "height": 500,
+                                                                            "Nombre de points": 50
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "filter",
+                "name": "Luminosité",
+                "params": {
+                    "Pourcentage": 10
+                },
+                "inputs": [
+                    {
+                        "type": "filter",
+                        "name": "Contraste",
+                        "params": {
+                            "Pourcentage": 50
+                        },
+                        "inputs": [
+                            {
+                                "type": "generator",
+                                "name": "Bruit de Perlin",
+                                "params": {
+                                    "width": 500,
+                                    "height": 500,
+                                    "Taille": 100
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

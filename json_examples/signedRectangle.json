@@ -1,15 +1,18 @@
 {
-	"type": "generator",
-	"name": "Distance signée",
-	"params": {
-		"width": 1000,
-		"height": 1000,
-		"Couleur de départ": "#ff0000",
-		"Couleur de fin": "#00ff00",
-		"Centre X": 500,
-		"Centre Y": 500,
-		"Largeur": 300,
-		"Hauteur": 50,
-		"Inscrit": false
+	"seed": 300,
+	"root": {
+		"type": "generator",
+		"name": "Distance signée",
+		"params": {
+			"width": 1000,
+			"height": 1000,
+			"Couleur de départ": "#ff0000",
+			"Couleur de fin": "#00ff00",
+			"Centre X": 500,
+			"Centre Y": 500,
+			"Largeur": 300,
+			"Hauteur": 50,
+			"Inscrit": false
+		}
 	}
 }

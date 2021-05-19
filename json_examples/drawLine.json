@@ -13,7 +13,8 @@
 					"Debut X": 0,
 					"Debut Y": 0,
 					"Fin X": 5,
-					"Fin Y": 5
+					"Fin Y": 5,
+					"Epaisseur": 2
 				}
 			}
 		],
