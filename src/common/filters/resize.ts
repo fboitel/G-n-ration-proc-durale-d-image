@@ -50,6 +50,7 @@ export function bilinearResize(image: Image, newWidth: number, newHeight: number
 			image.function(x, Math.min(image.height - 1, y + 1)),
 			ycoeff
 		);
+		
 		const vb = meanColorWeighted(
 			image.function(Math.min(image.width - 1, x + 1), y),
 			1 - ycoeff,

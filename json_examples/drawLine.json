@@ -8,18 +8,18 @@
 				"type": "generator",
 				"name": "Ligne",
 				"params": {
-					"width": 10,
-					"height": 10,
+					"width": 100,
+					"height": 100,
 					"Debut X": 0,
 					"Debut Y": 0,
-					"Fin X": 5,
-					"Fin Y": 5,
-					"Epaisseur": 2
+					"Fin X": 1000,
+					"Fin Y": 1000,
+					"Epaisseur": 1
 				}
 			}
 		],
 		"params": {
-			"Largeur": 1000,
+			"Largeur": 100,
 			"Hauteur": 1000
 		}
 	}
