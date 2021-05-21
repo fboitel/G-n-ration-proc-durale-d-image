@@ -1,4 +1,4 @@
-import { Color, consColor } from '../color';
+import { Color, consColor, R, G, B } from '../color';
 import { Image, consImage } from '../image';
 
 type Kernel = number[];
@@ -47,19 +47,19 @@ function getNeighborhood(image: Image, x: number, y: number): Color[] {
 }
 
 /**
- * Apply a kernel on a pixel
+ * Do a convolution product between a kernel and the neighbors of a pixel
  * @param image Any image
  * @param x x coordinates of the pixel
  * @param y y coordinates of the pixel
  * @param kernel The kernel to apply
- * @returns The color of the pixel after applying the kernel on it
+ * @returns The color of the pixel after the convolution product
  */
 function applyKernel(image: Image, x: number, y: number, kernel: Kernel): Color {
 	const neighborhood = getNeighborhood(image, x, y);
 	return consColor(
-		neighborhood.reduce((acc, c, i) => acc += c[0] * kernel[i], 0),
-		neighborhood.reduce((acc, c, i) => acc += c[1] * kernel[i], 0),
-		neighborhood.reduce((acc, c, i) => acc += c[2] * kernel[i], 0)
+		neighborhood.reduce((acc, c, i) => acc += c[R] * kernel[i], 0),
+		neighborhood.reduce((acc, c, i) => acc += c[G] * kernel[i], 0),
+		neighborhood.reduce((acc, c, i) => acc += c[B] * kernel[i], 0)
 	);
 }
 

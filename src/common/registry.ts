@@ -10,6 +10,7 @@ import { plus, minus, multiply, divide, merge } from './filters/composition';
 import { bilinearResize, resize } from './filters/resize';
 import { drawLine } from './generators/shapes';
 import { nextForest } from './generators/numericalSimulation';
+import { monochromatic, monochromaticBlue, monochromaticGreen, monochromaticRed } from './generators/monocromatic';
 
 export interface GeneratorMeta {
 	name: string;
@@ -36,6 +37,12 @@ function registerGenerator(name: string, generator: Generator<any>, ...parameter
 function registerFilter(name: string, filter: Filter<any>, additionalInputs = 0, ...parameters: Parameter<any>[]) {
 	filters[filter.name] = { name, filter, additionalInputs, parameters };
 }
+
+// Monochromatics
+registerGenerator('Rouge', monochromaticRed);
+registerGenerator('Vert', monochromaticGreen);
+registerGenerator('Bleu', monochromaticBlue);
+registerGenerator('Monochrome', monochromatic, { type: ParameterType.COLOR, name: 'Couleur', default: GREEN });
 
 // Noises
 registerGenerator('Bruit blanc', whiteNoise);
@@ -70,7 +77,7 @@ registerFilter('Colorer', colorize, 0, { type: ParameterType.COLOR, name: 'Coule
 registerFilter('Niveaux de gris', grayScale);
 registerFilter('Luminosité', brightness, 0, { type: ParameterType.NUMBER, name: 'Pourcentage', default: 100 });
 registerFilter('Contraste', contrast,  0, { type: ParameterType.NUMBER, name: 'Pourcentage', default: 0 });
-registerFilter('Transparence', opacity,  0, { type: ParameterType.NUMBER, name: 'Pourcentage', default: 100 });
+registerFilter('Opacité', opacity,  0, { type: ParameterType.NUMBER, name: 'Pourcentage', default: 100 });
 registerFilter('Negatif', negative);
 
 // Convolution

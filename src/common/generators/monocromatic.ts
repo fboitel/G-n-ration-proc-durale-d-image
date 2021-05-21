@@ -1,14 +1,18 @@
-import { BLUE, GREEN, RED } from '../color';
+import { Color, BLUE, GREEN, RED } from '../color';
 import { Image, consImage } from '../image';
 
+export function monochromatic(width: number, height: number, color: Color): Image {
+	return consImage(width, height, () => color);
+}
+
 export function monochromaticRed(width: number, height: number): Image {
-	return consImage(width, height, () => RED);
+	return monochromatic(width, height, RED);
 }
 
 export function monochromaticGreen(width: number, height: number): Image {
-	return consImage(width, height, () => GREEN);
+	return monochromatic(width, height, GREEN);
 }
 
 export function monochromaticBlue(width: number, height: number): Image {
-	return consImage(width, height, () => BLUE);
+	return monochromatic(width, height, BLUE);
 }
