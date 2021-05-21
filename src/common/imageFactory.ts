@@ -101,7 +101,6 @@ export function readJSON(json: any, seed: number): Image | null {
 		case 'generator':
 			funcKey = getFuncKey(generators, funcName);
 			if (funcKey === null) {
-				console.log('ERROR 1');
 				return null;
 			}
 
@@ -111,9 +110,7 @@ export function readJSON(json: any, seed: number): Image | null {
 
 		case 'filter':
 			funcKey = getFuncKey(filters, funcName);
-			console.log(filters);
 			if (funcKey === null) {
-				console.log('ERROR 2');
 				return null;
 			}
 
@@ -128,7 +125,6 @@ export function readJSON(json: any, seed: number): Image | null {
 			for (let i = 0; i < inputs.length; ++i) {
 				const input = readJSON(inputs[i], seed);
 				if (input === null) {
-					console.log('ERROR 3');
 					return null;
 				}
 				parsedParams.unshift(input);
