@@ -1,0 +1,44 @@
+{
+    "seed": 1234,
+    "root": {
+        "type": "filter",
+        "name": "Ajouter",
+        "inputs": [
+            {
+                "type": "filter",
+                "name": "Détection des contours",
+                "inputs": [
+                    {
+                        "type": "generator",
+                        "name": "Forest-Fire",
+                        "params": {
+                            "width": 500,
+                            "height": 500,
+                            "Probability that a tree grow in an empty space (in per million)": 8000,
+                            "Probability that a single tree ignites (in per million)": 1000,
+                            "time": 0
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "filter",
+                "name": "Contraste",
+                "params": {
+                    "Pourcentage": 50
+                },
+                "inputs": [
+                    {
+                        "type": "generator",
+                        "name": "Bruit fractal",
+                        "params": {
+                            "width": 500,
+                            "height": 500,
+                            "Couches": 3
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
