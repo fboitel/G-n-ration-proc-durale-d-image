@@ -274,7 +274,6 @@ function updateEdgeCoordinates(io: IO, edgeElement?: SVGLineElement) {
 }
 
 export function updateView(): void {
-
 	const json = evaluateGraph();
 	exportBtn.disabled = !json;
 
@@ -292,7 +291,9 @@ export function updateView(): void {
 export function evaluateGraph(): any {
 	const width = getWidth();
 	const height = getHeight();
-	return { seed: getSeed(), root: evaluateBlock(output)};
+
+	const root = evaluateBlock(output);
+	return root ? { seed: getSeed(), root} : null;
 
 	function evaluateBlock(block: Block): any {
 		let json: any;
