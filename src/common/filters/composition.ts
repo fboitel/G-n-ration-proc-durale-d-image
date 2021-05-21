@@ -28,7 +28,7 @@ export function minus(image1: Image, image2: Image): Image {
 
 /**
  * Multiply two images
- * A pixel of the new image is obtained by multyplying each channel of a pixel in the first image
+ * A pixel of the new image is obtained by multiplying each channel of a pixel in the first image
  * to that of the corresponding pixel in the second image
  * @param image1 First image
  * @param image2 Second image

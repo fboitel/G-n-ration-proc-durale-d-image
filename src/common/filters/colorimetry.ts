@@ -54,7 +54,7 @@ export function colorize(image: Image, coloration: Color): Image {
 	});
 }
 
-/** 
+/**
  * Adjust brightness of an image
  * @param image Any image
  * @param brightnessFactor The brightness adjustement factor in percentage
@@ -67,7 +67,7 @@ export function brightness(image: Image, brightnessFactor: number): Image {
 	});
 }
 
-/** 
+/**
  * Adjust constrast of an image
  * @param image Any image
  * @param contrastFactor The constrast adjustement factor in percentage (current is 0%)
