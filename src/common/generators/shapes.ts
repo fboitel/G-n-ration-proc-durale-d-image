@@ -1,13 +1,12 @@
 import { Color, BLACK, TRANSPARENT } from '../color';
 import { Image, consImage } from '../image';
 
-export function drawLine(width: number, height: number,
-	xStart: number, yStart: number, xEnd: number, yEnd: number, eps: number): Image {
+export function drawLine(width: number, height: number, xStart: number, yStart: number, xEnd: number, yEnd: number, eps: number): Image {
 
 	
 	// Find the equation ax + b
-	const a = (yEnd - yStart) / (xEnd - xStart);
-	const b = yStart - a * xStart;
+	//const a = (yEnd - yStart) / (xEnd - xStart);
+	//const b = yStart - a * xStart;
 
 	// Another method would be start from (xStart, yStart) and reach (xEnd, yEnd)
 	function image(x: number, y: number): Color {

@@ -1,16 +1,7 @@
-import { createCanvas, createImageData } from 'canvas';
-import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { toRaster, Image } from '../common/image';
+import { readFileSync, existsSync } from 'fs';
 import { readJSON } from '../common/imageFactory';
 import { basename } from 'path';
-
-function exportToPNG(img: Image, name: string): void {
-	const canvas = createCanvas(img.width, img.height);
-	const context = canvas.getContext('2d');
-	context.putImageData(toRaster(img, createImageData), 0, 0);
-	const buffer = canvas.toBuffer('image/png');
-	writeFileSync('public/' + name + '.png', buffer);
-}
+import { saveToPNG } from './file';
 
 function main(): void {
 	if (process.argv.length <= 2) {
@@ -32,7 +23,7 @@ function main(): void {
 		throw new Error('Failed to construct image.');
 	}
 
-	exportToPNG(img, fileName);
+	saveToPNG(img, fileName);
 }
 
 main();

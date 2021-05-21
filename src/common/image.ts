@@ -16,7 +16,9 @@ export type Generator<T extends any[]> = (width: number, height: number, ...para
 
 export type Filter<T extends any[]> = (image: Image, ...params: T) => Image;
 
-// Create an image
+/**
+ * Create an image
+ */ 
 export function consImage(width: number, height: number, func: (x: number, y: number) => Color): Image {
 	return {
 		width,
@@ -25,7 +27,9 @@ export function consImage(width: number, height: number, func: (x: number, y: nu
 	};
 }
 
-// Convert a functional image to ImageData
+/**
+ * Convert a functional image to ImageData
+ */ 
 export function toRaster(img: Image, imageDataConstructor: (width: number, height: number) => ImageDataCommon): ImageDataCommon {
 	const raster = imageDataConstructor(img.width, img.height);
 	let n = 0; // Index inside the image array
@@ -42,7 +46,9 @@ export function toRaster(img: Image, imageDataConstructor: (width: number, heigh
 	return raster;
 }
 
-// Convert ImageData to a functional image
+/**
+ * Convert ImageData to a functional image
+ */ 
 export function fromRaster(raster: ImageDataCommon): Image {
 	const { width, height, data } = raster;
 

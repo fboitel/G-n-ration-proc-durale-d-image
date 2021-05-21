@@ -2,7 +2,9 @@ import { Image, fromRaster, toRaster } from '../common/image';
 import { writeFileSync } from 'fs';
 import { createCanvas, createImageData, loadImage } from 'canvas';
 
-// Load a local image and convert it to a functional image
+/**
+ * Load a local image and convert it to a functional image
+ */	
 export async function loadFromFile(path: string): Promise<Image> {
 	// Load the image
 	const img = await loadImage(path);
@@ -19,7 +21,9 @@ export async function loadFromFile(path: string): Promise<Image> {
 	return fromRaster(raster);
 }
 
-// Save an image as PNG
+/**
+ * Save an image as PNG
+ */ 
 export function saveToPNG(img: Image, title: string): void {
 	const canvas = createCanvas(img.width, img.height);
 	const context = canvas.getContext('2d');

@@ -6,12 +6,17 @@ let b: number;
 let c: number;
 let d: number;
 
-// default seed
+/**
+ *  default seed
+ */ 
 srand((new Date()).getTime());
 
+
+/**
+ * nothing-up-my-sleeve numbers
+ * https://en.wikipedia.org/wiki/Nothing-up-my-sleeve_number
+ */
 export function srand(seed: number): void {
-	// nothing-up-my-sleeve numbers
-	// https://en.wikipedia.org/wiki/Nothing-up-my-sleeve_number
 	a = 0x9E3779B9;
 	b = 0x243F6A88;
 	c = 0xB7E15162;
@@ -19,9 +24,11 @@ export function srand(seed: number): void {
 	d = seed;
 }
 
-// xorshiro128** implementation
-// https://en.wikipedia.org/wiki/Xorshift
-// returns a float between 0 included and 1 excluded
+/**
+* xorshiro128** implementation
+* https://en.wikipedia.org/wiki/Xorshift
+* returns a float between 0 included and 1 excluded
+*/
 export function rand(): number {
 	const t = b << 9;
 	let r = a * 5;

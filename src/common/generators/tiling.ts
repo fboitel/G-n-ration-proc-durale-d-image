@@ -5,7 +5,6 @@ import { Color, BLACK } from '../color';
 
 /**
  * This function is used to translate tilings
- * @param image - A tiling image
  * @param abs - x component of translation vector 
  * @param ord - y component of translation vector
  * @returns Image translated by the (abs, ord) vector
@@ -19,7 +18,6 @@ export function translate(image: Image, abs: number, ord: number): Image {
 
 /**
  * This function is used to rotate tilings
- * @param image - A tiling image
  * @param angle - The angle of the rotation in degrees
  * @returns - An image rotated around the origin of the coordinate system (left right)
  */
@@ -38,7 +36,7 @@ export function rotate(image: Image, angle: number): Image {
 /**
  * This function is used to delimit the shapes in a tiling 
  * @param func - Function inside an image
- * @returns - The function given in parameter but this function returns BLACK if (x, y) are in a delimiation area
+ * @returns - The function given in parameter but this function returns BLACK if (x, y) are in a delimiation line
  */
 export function contourTiling(image: (x: number, y: number) => Color): (x: number, y: number) => Color {
 	function contourAux(x: number, y: number): Color {
@@ -111,7 +109,6 @@ export function isLinkPoints(points: number[][], P: number[], eps: number): bool
  * @param anglesAndLengths - An array whose first element is the coordinate of a point, and the others, size 2 tables that contain angles and distances
  * @param P - The coordinates of the point that we want to test
  * @param eps -  The width of the zone of truth
- * @returns 
  */
 export function isInTracedPath(anglesAndLengths: number[][], P: number[], eps: number): boolean {
 	const points : number[][] = [];
@@ -165,12 +162,6 @@ export function squareTilingGen(width: number, height: number, nbOfPatterns: num
 
 /**
  * Generates a triangle tiling 
- * @param width - The width of the image returned
- * @param height - The hight of the image returned
- * @param nbOfPatterns - An approximation of the number of pattern that we want to display, so it determines the size of the tiling
- * @param color1 - The first color of the tiling
- * @param color2 - The second color of the tiling
- * @returns - An image of a triangle tiling 
  */
 export function triangleTilingGen(width: number, height: number, nbOfPatterns: number, color1: Color, color2: Color): Image {
 	function tilingInt(x: number, y: number): Color {
@@ -198,13 +189,6 @@ export function triangleTilingGen(width: number, height: number, nbOfPatterns: n
 
 /**
  * Generates an  hexagonal tiling 
- * @param width - The width of the image returned
- * @param height - The hight of the image returned
- * @param nbOfPatterns - An approximation of the number of pattern that we want to display, so it determines the size of the tiling
- * @param color1 - The first color of the tiling
- * @param color2 - The second color of the tiling
- * @param color3 - The third color of the tiling
- * @returns - An image of an hexagonal tiling
  */
 export function hexaTilingGen(width: number, height: number, nbOfPatterns: number, color1: Color, color2: Color, color3: Color): Image {
 	function tilingInt(x: number, y: number): Color {
@@ -267,13 +251,6 @@ export function hexaTilingGen(width: number, height: number, nbOfPatterns: numbe
 
 /**
  * Generates a snub square tiling 
- * @param width - The width of the image returned
- * @param height - The hight of the image returned
- * @param nbOfPatterns - An approximation of the number of pattern that we want to display, so it determines the size of the tiling
- * @param color1 - The first color of the tiling
- * @param color2 - The second color of the tiling
- * @param color3 - The third color of the tiling
- * @returns - An image of a snub square tiling
  */
 export function snubSquareTilingGen(width: number, height: number, nbOfPatterns: number, color1: Color, color2: Color, color3: Color): Image {
 	function tilingInt(x: number, y: number): Color {
@@ -344,12 +321,6 @@ export function snubSquareTilingGen(width: number, height: number, nbOfPatterns:
 
 /**
  * Generates a truncated trihexagonal tiling 
- * @param width - The width of the image returned
- * @param height - The hight of the image returned
- * @param nbOfPatterns - An approximation of the number of pattern that we want to display, so it determines the size of the tiling
- * @param color1 - The first color of the tiling
- * @param color2 - The second color of the tiling
- * @param color3 - The third color of the tiling
  * @returns - An image of a truncated trihexagonal tiling 
  */
 export function truncatedTrihexagonalTilingGen(width: number, height: number, nbOfPatterns: number, color1: Color, color2: Color, color3: Color): Image {
@@ -420,8 +391,6 @@ export function truncatedTrihexagonalTilingGen(width: number, height: number, nb
  * Generates a type 1 penatgonal tiling. The dimensions of the pentagon are given in parameters
  * 
  *To understand how the dimensions are give, we suppose that the origin point of the pentagon is in botom-left
- * @param width - The width of the image returned
- * @param height - The hight of the image returned
  * @param length1 - The length of the edge starting horizontally to the left of the origin.
  * @param length2 - The length of the next edge right after the first vertex
  * @param length3 - The length of the following edge
@@ -429,8 +398,6 @@ export function truncatedTrihexagonalTilingGen(width: number, height: number, nb
  * @param angle1 - The angle (in degrees) between the two first edges
  * @param angle2 - The angle (in degrees) between the second edge and the third, the others angles are determined automatically
  * @param scale1 - The scale of the tiling (in %), so it determines the size of the tiling
- * @param color1 - The color of the outlines 
- * @param color2 - The main color
  * @returns 
  */
 export function pentagonalTilingType1Gen(width: number, height: number, length1: number, length2: number, length3: number, length4: number, angle1: number, angle2: number, scale1: number, color1: Color, color2: Color): Image {
@@ -483,7 +450,7 @@ export function pentagonalTilingType1Gen(width: number, height: number, length1:
 				if (y1 > 0 && y2 < height)
 					if (isInTracedPath([[x2, y2], [0, -a], [-(Math.PI - A), -b], [-Math.PI, -c], [-(2 * Math.PI - B), -d]], [x, y], 2))
 						return true;
-				return false
+				return false;
 			}
 			return indPentWidth.reduce(horizontalReducer, false);
 
@@ -492,76 +459,4 @@ export function pentagonalTilingType1Gen(width: number, height: number, length1:
 	}
 	return consImage(width, height, generatePent);
 }
-
-/*
-/**
- * A function used to know if a point is inside a polygon
- * @param points -  The coordinates of the vertices of the polygon, given in counterclockwise order
- * @param P - The coordinates of the point that we want to know if it is in the polygon
- * @returns 
- */
-/*
-function isBetweenPoints(points: number[][], P: number[]): boolean {
-	function isInsideTwoPoints(p1: number[], p2: number[], p3: number[]): boolean {
-		const sensX = p1[0] - p2[0];
-		const sensY = p1[1] - p2[1];
-		if (Math.abs(sensX) < 0.01) {//streight equation is x = constante;
-			if (sensY < 0)
-				return p3[0] > p2[0];
-			else
-				return p3[0] < p2[0];
-		}
-		if (Math.abs(sensY) < 0.01) {//streight equation is f(x) = constante;
-			if (sensX < 0)
-				return p3[1] < p2[1];
-			else
-				return p3[1] > p2[1];
-		}
-		const a = (p2[1] - p1[1]) / (p2[0] - p1[0]);//leading coefficient
-		const b = p1[1] - a * p1[0];//ordered at the origin
-		const bbis = p3[1] - a * p3[0];//ordered at the origin for the streight with the same leading coeficient but passing through point p3
-		if (sensX < 0 && sensY < 0)
-			return bbis < b;
-		if (sensX > 0 && sensY < 0)
-			return bbis > b;
-		if (sensX > 0 && sensY > 0)
-			return bbis > b;
-		if (sensX < 0 && sensY > 0)
-			return bbis < b;
-		return false;
-	}
-	function reducer(acc: boolean, point: number[], i: number, array: number[][]): boolean {
-		if (acc === false)
-			return false;
-		if (i + 1 === array.length)
-			return isInsideTwoPoints(point, array[0], P);
-		else
-			return isInsideTwoPoints(point, array[i + 1], P);
-	}
-	const boo = points.reduce(reducer, true);
-	return boo;
-}*/
-/*
-/**
- * This function does the same that isInTracedPath, but returns also true if the point is inside the polygon
- * @param anglesAndLengths - An array whose first element is the coordinate of a point, and the others, size 2 tables that contain angles and distances
- * @param P - The coordinates of the point that we want to test
- * @returns 
- */
-/*
- function isFillPath(anglesAndLengths: number[][], P: number[]): boolean {
-	function nextPoint(angleAndLength: number[], i: number, array: number[][]): void {
-		if (i !== 0) {
-			const p = array[i - 1];
-			const angle = angleAndLength[0];
-			const length = angleAndLength[1];
-			array[i] = [length * Math.cos(angle) + p[0], length * Math.sin(angle) + p[1]];
-		}
-	}
-	anglesAndLengths.forEach(nextPoint);
-	//console.log(anglesAndLengths);
-	return isBetweenPoints(anglesAndLengths, P);
-}
-*/
-
 

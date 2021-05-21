@@ -1,5 +1,4 @@
 import { FilterMeta, GeneratorMeta } from '../../common/registry';
-import { srand } from '../../common/random';
 import { getHeight, getSeed, getWidth } from './inputs';
 import { createParameterUI, ParameterUI } from './parameters-ui';
 import { clear, display } from './view';
